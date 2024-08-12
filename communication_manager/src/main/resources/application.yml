@@ -1,0 +1,29 @@
+server:
+  port: 8081
+spring:
+  application:
+    name: communication_manager
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:9090/realms/crm
+
+gmail-account:
+  application_name: Job Placement
+  client-id: 563972610835-25tnv4nik8rajt8v7r0cmntilt2hsghb.apps.googleusercontent.com
+  client-secret: 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
+  refresh-token: 1//04ZYhrUGgfZHyCgYIARAAGAQSNwF-L9Ir2kezw2dz9DExbYVCKr3bpk30cOZFI7x32aRxH6PJ7uMtb1I-0aQo_3p0jQ1xAflIXBE
+
+camel:
+  component:
+    google-mail-stream:
+      application-name: ${gmail-account.application_name}
+      client-id: ${gmail-account.client-id}
+      client-secret: ${gmail-account.client-secret}
+      refresh-token: ${gmail-account.refresh-token}
+    google-mail:
+      application-name: ${gmail-account.application_name}
+      client-id: ${gmail-account.client-id}
+      client-secret: ${gmail-account.client-secret}
+      refresh-token: ${gmail-account.refresh-token}

@@ -1,0 +1,16 @@
+services:
+  #  app:
+  #    image: crm:0.0.1-SNAPSHOT
+  #    ports:
+  #      - "8080"
+  #    depends_on:
+  #      - postgres
+  postgres:
+    image: 'postgres:latest'
+    container_name: postgres_db
+    environment:
+      - 'POSTGRES_DB=mydatabase'
+      - 'POSTGRES_PASSWORD=secret'
+      - 'POSTGRES_USER=myuser'
+    ports:
+      - '5432'
