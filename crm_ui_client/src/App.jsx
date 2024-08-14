@@ -1,7 +1,8 @@
-import {useEffect, useState} from 'react'
-import './App.css'
+import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 
-function TopBar(props) {
+import Skeleton from './skeleton/Skeleton'
+
+/* function TopBar(props) {
     return (
         <div style={{
             backgroundColor: 'black',
@@ -40,10 +41,40 @@ function TopBar(props) {
             }
         </div>
     )
+} */
+
+class TopBarClass {
+    constructor(sectionLeft, sectionCenter, sectionRight) {
+        this.sectionLeft = sectionLeft;
+        this.sectionCenter = sectionCenter;
+        this.sectionRight = sectionRight;
+    }
+}
+
+class PageClass {
+    constructor(topBar, bodyLeft, bodyRight) {
+        if (!(topBar instanceof TopBarClass)) {
+            throw new Error('topBar must be an instance of TopBar');
+        }
+
+        this.topBar = topBar;
+        this.bodyLeft = bodyLeft;
+        this.bodyRight = bodyRight;
+    }
+}
+
+function List() {
+    return (
+        <ul>
+            {
+                [1, 2, 3].map(e => <li key={e}>{e}</li>)
+            }
+        </ul>
+    )
 }
 
 function App() {
-    const [currentUser, setCurrentUser] = useState(null)
+    /* const [currentUser, setCurrentUser] = useState(null)
 
     useEffect(() => {
         const fetchCurrentUser = async () => {
@@ -78,6 +109,20 @@ function App() {
                     </div>
             }
         </div>
+    ) */
+
+    let topBar_1 = new TopBarClass(<h1>Left</h1>, <h1>Center</h1>, <h1>Right</h1>);
+
+    let page_1 = new PageClass(topBar_1, <h1>Left</h1>, <h1>Right</h1>)
+    let page_2 = new PageClass(topBar_1, <h1>Left</h1>, <List/>)
+
+    return (
+        <Router>
+            <Routes>
+                <Route path={"/ui"} element={<Skeleton page={page_1}/>}/>
+                <Route path={"/ui/page"} element={<Skeleton page={page_2}/>}/>
+            </Routes>
+        </Router>
     )
 }
 
