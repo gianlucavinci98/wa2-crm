@@ -1,21 +1,25 @@
 import {Category} from "../filter/ContactFilter";
 
 interface ContactRawData {
-    contactId: bigint
+    contactId: bigint | null
     name: string
     surname: string
     ssn: string
-    category: Category
+    category: Category | null
 }
 
 export class Contact implements ContactRawData {
-    contactId: bigint
+    contactId: bigint | null
     name: string
     surname: string
     ssn: string
-    category: Category
+    category: Category | null
 
-    constructor(contactId: bigint, name: string, surname: string, ssn: string, category: Category) {
+    constructor(contactId: bigint | null,
+                name: string,
+                surname: string,
+                ssn: string,
+                category: Category | null) {
         this.contactId = contactId
         this.name = name
         this.surname = surname

@@ -3,21 +3,21 @@ export enum Category {
 }
 
 export class ContactFilter {
-    name: string
-    surname: string
-    ssn: string
-    category: Category
-    address: string
-    emailAddress: string
-    telephoneNumber: string
+    name: string | null
+    surname: string | null
+    ssn: string | null
+    category: Category | null
+    address: string | null
+    emailAddress: string | null
+    telephoneNumber: string | null
 
-    constructor(name: string,
-                surname: string,
-                ssn: string,
-                category: Category,
-                address: string,
-                emailAddress: string,
-                telephoneNumber: string) {
+    constructor(name: string | null,
+                surname: string | null,
+                ssn: string | null,
+                category: Category | null,
+                address: string | null,
+                emailAddress: string | null,
+                telephoneNumber: string | null) {
         this.name = name
         this.surname = surname
         this.ssn = ssn

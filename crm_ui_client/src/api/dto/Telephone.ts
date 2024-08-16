@@ -1,13 +1,13 @@
 interface TelephoneRawData {
-    telephoneId: bigint
+    telephoneId: bigint | null
     telephone: string
 }
 
 export class Telephone implements TelephoneRawData {
-    telephoneId: bigint
+    telephoneId: bigint | null
     telephone: string
 
-    constructor(telephoneId: bigint, telephone: string) {
+    constructor(telephoneId: bigint | null, telephone: string) {
         this.telephoneId = telephoneId
         this.telephone = telephone
     }

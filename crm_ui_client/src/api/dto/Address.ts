@@ -1,13 +1,13 @@
 interface AddressRawData {
-    addressId: bigint
+    addressId: bigint | null
     address: string
 }
 
 export class Address implements AddressRawData {
-    addressId: bigint
+    addressId: bigint | null
     address: string
 
-    constructor(addressId: bigint, address: string) {
+    constructor(addressId: bigint | null, address: string) {
         this.addressId = addressId
         this.address = address
     }
