@@ -1,6 +1,5 @@
-export enum Category {
-    Customer, Professional, Unknown, CustomerProfessional
-}
+import {Category} from "../dto/Contact";
+
 
 export class ContactFilter {
     name: string | null

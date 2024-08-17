@@ -1,6 +1,8 @@
-import {Category} from "../filter/ContactFilter";
+export enum Category {
+    Customer, Professional, Unknown, CustomerProfessional
+}
 
-interface ContactRawData {
+export interface ContactRawData {
     contactId: bigint | null
     name: string
     surname: string
@@ -27,12 +29,12 @@ export class Contact implements ContactRawData {
         this.category = category
     }
 
-    static fromJsonObject(obj: ContactRawData): Contact | undefined {
+    static fromJsonObject(obj: ContactRawData): Contact | null {
         try {
             return new Contact(obj.contactId, obj.name, obj.surname, obj.ssn, obj.category)
         } catch (e) {
             console.error(e)
-            return undefined
+            return null
         }
     }
 }

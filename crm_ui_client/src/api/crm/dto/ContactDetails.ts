@@ -1,7 +1,7 @@
-import {Category} from "../filter/ContactFilter";
 import {Address} from "./Address";
 import {Email} from "./Email";
 import {Telephone} from "./Telephone";
+import {Category} from "./Contact";
 
 interface ContactDetailsRawData {
     contactId: bigint
@@ -31,7 +31,8 @@ export class ContactDetails implements ContactDetailsRawData {
                 category: Category,
                 addresses: Set<Address>,
                 emails: Set<Email>,
-                telephones: Set<Telephone>) {
+                telephones: Set<Telephone>
+    ) {
         this.contactId = contactId
         this.name = name
         this.surname = surname

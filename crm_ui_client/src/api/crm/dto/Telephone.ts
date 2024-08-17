@@ -12,12 +12,12 @@ export class Telephone implements TelephoneRawData {
         this.telephone = telephone
     }
 
-    static fromJsonObject(obj: TelephoneRawData): Telephone | undefined {
+    static fromJsonObject(obj: TelephoneRawData): Telephone | null {
         try {
             return new Telephone(obj.telephoneId, obj.telephone)
         } catch (e) {
             console.error(e)
-            return undefined
+            return null
         }
     }
 }

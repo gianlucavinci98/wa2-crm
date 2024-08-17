@@ -12,12 +12,12 @@ export class Address implements AddressRawData {
         this.address = address
     }
 
-    static fromJsonObject(obj: AddressRawData): Address | undefined {
+    static fromJsonObject(obj: AddressRawData): Address | null {
         try {
             return new Address(obj.addressId, obj.address)
         } catch (e) {
             console.error(e)
-            return undefined
+            return null
         }
     }
 }

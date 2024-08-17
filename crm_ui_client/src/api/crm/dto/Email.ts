@@ -12,12 +12,12 @@ export class Email implements EmailRawData {
         this.email = email
     }
 
-    static fromJsonObject(obj: EmailRawData): Email | undefined {
+    static fromJsonObject(obj: EmailRawData): Email | null {
         try {
             return new Email(obj.emailId, obj.email)
         } catch (e) {
             console.error(e)
-            return undefined
+            return null
         }
     }
 }

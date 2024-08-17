@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("/api/messages")
 class MessageController(private val messageService: MessageService) {
-
+    //TODO: manca la delete?
     @GetMapping("", "/")
     @PreAuthorize("hasAnyRole('ROLE_operator', 'ROLE_guest', 'ROLE_manager')")
     fun getMessages(
@@ -33,7 +33,6 @@ class MessageController(private val messageService: MessageService) {
         @RequestParam("messageStatus", required = false) messageStatus: MessageStatus?,
         auth: Authentication?
     ): List<MessageInfoDTO> {
-
         println("Name: " + auth?.name)
         println("Details: " + auth?.details)
         println("Credential: " + auth?.credentials)
