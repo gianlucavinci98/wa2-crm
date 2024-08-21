@@ -77,8 +77,8 @@
     box-sizing: border-box;
 }
 .side-button{
-    @apply bg-stone-400 rounded-lg text-lg font-semibold text-center text-white h-10;
+    @apply bg-stone-400 rounded-lg text-2xl font-semibold text-center text-white h-12;
 }
 .clicked-side-button{
-    @apply bg-blue-400 rounded-lg text-lg font-semibold text-center text-white h-10;
+    @apply bg-blue-400 rounded-lg text-2xl font-semibold text-center text-white h-12;
 }
