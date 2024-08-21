@@ -5,9 +5,9 @@ import {DocumentMetadata} from "./dto/DocumentMetadata.js"
 const URL_DOCUMENT_STORE = 'http://localhost:8083/document-store/api/contacts'
 
 
-async function GetDocuments(pagination) {
+async function GetDocuments(filter, pagination) {
     const response = await fetch(
-        buildUrl(URL_DOCUMENT_STORE, null, pagination), {
+        buildUrl(URL_DOCUMENT_STORE, filter, pagination), {
             method: 'GET',
             credentials: 'include'
         })
