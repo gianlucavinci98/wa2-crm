@@ -1,18 +1,19 @@
 package it.polito.document_store.services
 
 
-import it.polito.document_store.utils.DocumentNotFoundException
-import it.polito.document_store.utils.DuplicateDocumentException
-import it.polito.document_store.utils.DocumentProcessingException
-import it.polito.document_store.utils.InvalidFileException
 import it.polito.document_store.dtos.DocumentDataDTO
 import it.polito.document_store.dtos.DocumentMetadataDTO
 import it.polito.document_store.dtos.toDto
 import it.polito.document_store.entities.DocumentData
 import it.polito.document_store.entities.DocumentMetadata
 import it.polito.document_store.repositories.DocumentMetadataRepository
+import it.polito.document_store.utils.*
+import jakarta.persistence.EntityManager
+import jakarta.persistence.criteria.CriteriaBuilder
+import jakarta.persistence.criteria.CriteriaQuery
+import jakarta.persistence.criteria.Predicate
+import jakarta.persistence.criteria.Root
 import org.slf4j.LoggerFactory
-import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.multipart.MultipartFile
@@ -21,6 +22,7 @@ import kotlin.jvm.optionals.getOrElse
 
 @Service
 class DocumentServiceImpl(
+    private val entityManager: EntityManager,
     private val documentMetadataRepository: DocumentMetadataRepository,
 ) : DocumentService {
     private val logger = LoggerFactory.getLogger(DocumentServiceImpl::class.java)
@@ -105,9 +107,34 @@ class DocumentServiceImpl(
         }
     }
 
-    override fun getDocuments(pageNumber: Int, pageSize: Int): List<DocumentMetadataDTO> {
-        return documentMetadataRepository.findAll(PageRequest.of(pageNumber, pageSize)).toList()
-            .map { it.toDto() }
+    override fun getDocuments(
+        pageNumber: Int,
+        pageSize: Int,
+        category: DocumentCategory?,
+        id: Long?
+    ): List<DocumentMetadataDTO> {
+        val cb: CriteriaBuilder = entityManager.criteriaBuilder
+
+        val cqDocumentMetadata: CriteriaQuery<DocumentMetadata> = cb.createQuery(DocumentMetadata::class.java)
+        val rootDocumentMetadata: Root<DocumentMetadata> = cqDocumentMetadata.from(DocumentMetadata::class.java)
+
+        val predicates = mutableListOf<Predicate>()
+
+        if (category != null) {
+            predicates.add(cb.equal(rootDocumentMetadata.get<String>("category"), category))
+        }
+
+        if (id != null) {
+            predicates.add(cb.equal(rootDocumentMetadata.get<String>("id"), id))
+        }
+
+        cqDocumentMetadata.where(*predicates.toTypedArray())
+
+        val query = entityManager.createQuery(cqDocumentMetadata)
+        query.firstResult = pageNumber * pageSize
+        query.maxResults = pageSize
+
+        return query.resultList.map { it.toDto() }
     }
 
     override fun getDocumentMetadataById(id: Long): DocumentMetadataDTO {

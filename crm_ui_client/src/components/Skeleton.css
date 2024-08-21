@@ -76,9 +76,11 @@
     border: 1px solid black;
     box-sizing: border-box;
 }
-.side-button{
+
+.side-button {
     @apply bg-stone-400 rounded-lg text-lg font-semibold text-center text-white h-10;
 }
-.clicked-side-button{
+
+.clicked-side-button {
     @apply bg-blue-400 rounded-lg text-lg font-semibold text-center text-white h-10;
 }

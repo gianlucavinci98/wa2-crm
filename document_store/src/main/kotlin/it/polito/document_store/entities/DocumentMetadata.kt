@@ -1,5 +1,6 @@
 package it.polito.document_store.entities
 
+import it.polito.document_store.utils.DocumentCategory
 import jakarta.persistence.*
 import java.time.LocalDateTime
 
@@ -27,7 +28,13 @@ class DocumentMetadata {
     @JoinColumn(name = "document_id")
     lateinit var documentData: DocumentData
 
+    @Column(name = "category")
+    lateinit var category: DocumentCategory
+
+    @Column(name = "id")
+    var id: Long = 0
+
     override fun toString(): String {
-        return "DocumentMetadata(metadataId=$metadataId, name='$name', size=$size, contentType='$contentType', timestamp=$timestamp, documentData=$documentData)"
+        return "DocumentMetadata(metadataId=$metadataId, name='$name', size=$size, contentType='$contentType', timestamp=$timestamp, documentData=$documentData, category=$category, id=$id)"
     }
 }
