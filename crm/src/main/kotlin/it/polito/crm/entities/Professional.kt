@@ -9,7 +9,7 @@ import jakarta.persistence.*
 class Professional {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "professional_id")
+    @Column(name = "professional_id", nullable = false)
     val professionalId: Long = 0
 
     @ElementCollection
@@ -28,17 +28,23 @@ class Professional {
     @JoinColumn(name = "contact_id", referencedColumnName = "contact_id")
     lateinit var contact: Contact
 
-    @OneToMany(mappedBy = "professional")
-    val jobOffers = mutableSetOf<JobOffer>()
+    @OneToMany(mappedBy = "professional", cascade = [CascadeType.ALL], orphanRemoval = true)
+    val jobApplications = mutableSetOf<Application>()
 
-    fun addJobOffer(jobOffer: JobOffer) {
-        jobOffer.professional = this
-        this.jobOffers.add(jobOffer)
+    fun addJobApplication(jobOfferHistory: JobOfferHistory, status: ApplicationStatus = ApplicationStatus.Pending) {
+        val application = Application()
+
+        application.professional = this
+        application.jobOfferHistory = jobOfferHistory
+        application.status = status
+
+        jobApplications.add(application)
+        jobOfferHistory.candidates.add(application)
     }
 
-    fun removeJobOffer(jobOffer: JobOffer) {
-        jobOffer.professional = null
-        this.jobOffers.remove(jobOffer)
+    fun removeJobApplication(application: Application) {
+        jobApplications.remove(application)
+        application.jobOfferHistory.candidates.remove(application)
     }
 
     fun toDto(): ProfessionalDTO = ProfessionalDTO(
@@ -47,6 +53,7 @@ class Professional {
         this.employmentState,
         this.dailyRate,
         this.location,
-        this.contact
+        this.contact,
+        this.jobApplications.map { it.toDto() }.toMutableSet()
     )
 }

@@ -5,5 +5,5 @@ import it.polito.crm.utils.JobOfferStatus
 class UpdateJobOfferDTO(
     val status: JobOfferStatus,
     val notes: String?,
-    val professionalId: Long?
+    val selectedProfessionalId: Long?
 )

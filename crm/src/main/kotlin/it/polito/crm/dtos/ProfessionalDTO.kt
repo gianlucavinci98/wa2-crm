@@ -17,5 +17,6 @@ data class ProfessionalDTO(
     val dailyRate: Float,
     @field:NotBlank(message = "Invalid location, it must not be blank")
     val location: String,
-    val contact: Contact?
+    val contact: Contact?,
+    val jobApplications: MutableSet<ApplicationDTO>?
 )
