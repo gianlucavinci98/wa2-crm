@@ -1,6 +1,7 @@
 import "./Skeleton.css"
 import {BrowserRouter as Router, Route, Routes, useLocation, useNavigate} from "react-router-dom";
 import logo from '../assets/logo.png';
+import ProfessionalsTable from "./Professionals.jsx";
 
 function TopBar() {
 
@@ -53,7 +54,7 @@ function Skeleton() {
                 <Routes>
                     <Route path={"/ui"} element={<div className={"flex-1"}> </div>}/>
                     <Route path={"/ui/Clients"} element={<div className={"flex-1"}>clients</div>}/>
-                    <Route path={"/ui/Candidates"} element={<div>candidates</div>}/>
+                    <Route path={"/ui/Candidates"} element={<ProfessionalsTable/>}/>
                     <Route path={"/ui/JobOffers"} element={<div>jobOffer</div>}/>
                     <Route path={"/ui/Settings"} element={<div></div>}/>
                     <Route path={"/ui/Report"} element={<div></div>}/>

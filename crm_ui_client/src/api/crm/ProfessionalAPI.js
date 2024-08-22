@@ -1,5 +1,5 @@
 import {buildUrl} from "../utils/buildUrlQueryParams.js"
-import {Professional} from "./dto/Professional.js"
+import {Professional} from "./dto/Professional.ts";
 
 
 const URL_PROFESSIONALS = 'http://localhost:8082/crm/api/professionals'
