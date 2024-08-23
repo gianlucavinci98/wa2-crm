@@ -71,7 +71,7 @@ class JobOfferController(val jobOfferService: JobOfferService) {
         @PathVariable(name = "jobOfferId", required = true) jobOfferId: Long,
         @PathVariable(name = "professionalId", required = true) professionalId: Long
     ) {
-        return jobOfferService.insertNewApplication(jobOfferId, professionalId)
+        jobOfferService.insertNewApplication(jobOfferId, professionalId)
     }
 
     @DeleteMapping("/{jobOfferId}/{professionalId}")
@@ -81,7 +81,7 @@ class JobOfferController(val jobOfferService: JobOfferService) {
         @PathVariable(name = "jobOfferId", required = true) jobOfferId: Long,
         @PathVariable(name = "professionalId", required = true) professionalId: Long
     ) {
-        return jobOfferService.deleteApplication(jobOfferId, professionalId)
+        jobOfferService.deleteApplication(jobOfferId, professionalId)
     }
 
     @GetMapping("/{jobOfferId}/value")

@@ -100,6 +100,34 @@ async function DeleteJobOffer(jobOfferId) {
     }
 }
 
+async function InsertNewApplication(jobOfferId, professionalId) {
+    const response = await fetch(
+        buildUrl(`${URL_JOB_OFFERS}/${jobOfferId}/${professionalId}`, null, null), {
+            method: 'POST',
+            credentials: 'include'
+        })
+
+    const obj = await response.json()
+
+    if (!response.ok) {
+        throw obj
+    }
+}
+
+async function DeleteApplication(jobOfferId, professionalId) {
+    const response = await fetch(
+        buildUrl(`${URL_JOB_OFFERS}/${jobOfferId}/${professionalId}`, null, null), {
+            method: 'DELETE',
+            credentials: 'include'
+        })
+
+    const obj = await response.json()
+
+    if (!response.ok) {
+        throw obj
+    }
+}
+
 
 const JobOfferAPI = {
     GetJobOffers,
@@ -107,7 +135,9 @@ const JobOfferAPI = {
     GetJobOfferValue,
     InsertNewJobOffer,
     UpdateJobOffer,
-    DeleteJobOffer
+    DeleteJobOffer,
+    InsertNewApplication,
+    DeleteApplication
 }
 
 export default JobOfferAPI
