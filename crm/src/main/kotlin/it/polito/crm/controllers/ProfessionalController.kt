@@ -31,6 +31,8 @@ class ProfessionalController(private val professionalService: ProfessionalServic
         @RequestParam("employmentState", required = false) employmentState: EmploymentState?,
         auth: Authentication?
     ): List<ProfessionalDTO> {
+        val jwtToken = (auth?.credentials ?: "Auth is null").toString()
+        println("JWT Token: $jwtToken")
         println("Principal OBJ: ${auth?.principal ?: "Auth is null"}")
         return professionalService.getAllProfessionals(pageNumber, pageSize, skills, location, employmentState)
     }
