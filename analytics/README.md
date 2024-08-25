@@ -27,5 +27,3 @@ leggere i dati già ben intabellati nel database e pronti per la visualizzazione
 
 - **Kafka Stream**:
     - Utilizzo di Kafka Stream per la lavorazione dei dati prima dell'inserimento nel database.
-
-prova
