@@ -733,7 +733,7 @@
       "enabled": true,
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
-      "secret": "**********",
+      "secret": "IRENkPNCvWzPe1fjHrmF1jkzR10Vxr1j",
       "redirectUris": [
         "http://localhost:8082/login/oauth2/code/apigateway"
       ],
@@ -867,50 +867,7 @@
         "phone",
         "offline_access",
         "microprofile-jwt"
-      ],
-      "authorizationSettings": {
-        "allowRemoteResourceManagement": true,
-        "policyEnforcementMode": "ENFORCING",
-        "resources": [
-          {
-            "name": "Default Resource",
-            "type": "urn:apigateway:resources:default",
-            "ownerManagedAccess": false,
-            "attributes": {},
-            "_id": "dd266752-0593-4d26-8eea-fe41c688d7dc",
-            "uris": [
-              "/*"
-            ]
-          }
-        ],
-        "policies": [
-          {
-            "id": "fdfdfe75-f31e-4909-b6d1-84bf7edd7ff7",
-            "name": "Default Policy",
-            "description": "A policy that grants access only for users within this realm",
-            "type": "js",
-            "logic": "POSITIVE",
-            "decisionStrategy": "AFFIRMATIVE",
-            "config": {
-              "code": "// by default, grants any permission associated with this policy\n$evaluation.grant();\n"
-            }
-          },
-          {
-            "id": "6cdfda9a-59d4-42eb-aa5d-7121b0070368",
-            "name": "Default Permission",
-            "description": "A permission that applies to the default resource type",
-            "type": "resource",
-            "logic": "POSITIVE",
-            "decisionStrategy": "UNANIMOUS",
-            "config": {
-              "defaultResourceType": "urn:apigateway:resources:default",
-              "applyPolicies": "[\"Default Policy\"]"
-            }
-          }
-        ],
-        "scopes": [],
-        "decisionStrategy": "UNANIMOUS"
-      }
+      ]
     },
     {
       "id": "9ea6bcdf-c6e2-4443-860e-b36574dc9a9e",
