@@ -26,7 +26,7 @@ function SideBar() {
 
     return (
         <div className={"h-full p-6 flex flex-col w-1/5 bg-stone-200"}>
-            <div className={"h-32 flex items-center justify-center p-6"}>
+            <div className={"h-32 flex items-center justify-center pb-6"}>
                 <img className={"h-full object-contain rounded-full"} src={logo} alt="Logo" />
             </div>
             <div className={"w-full flex flex-col gap-6 flex-1"}>
