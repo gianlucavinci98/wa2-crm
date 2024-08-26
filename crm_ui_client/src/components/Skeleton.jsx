@@ -2,8 +2,11 @@ import "./Skeleton.css"
 import {BrowserRouter as Router, Route, Routes, useLocation, useNavigate} from "react-router-dom";
 import logo from '../assets/logo.png';
 import ProfessionalsTable from "./Professionals.jsx";
+import Icon from "./Icon.jsx";
+import {useState} from "react";
 
-function TopBar() {
+// eslint-disable-next-line react/prop-types
+function TopBar({switchFilter, openFilter}) {
 
     let location = useLocation();
 
@@ -11,7 +14,14 @@ function TopBar() {
         <div className={"h-28 border-b-2 border-stone-600 w-[90%] flex items-center justify-center"}>
             <div className={"w-[90%] flex justify-between items-center"}>
                 <h1 className={"font-bold text-5xl text-stone-800"}>Job Placement Tool - {location.pathname.split("/").pop()}</h1>
-                <div></div>
+                <div className={"flex gap-8"}>
+                    {location.pathname==="/ui/Candidates"?
+                        <>
+                            <Icon name='filter' className={`w-10 h-10 ${openFilter ? "fill-blue-500" : "fill-black"} cursor-pointer`} onClick={()=>switchFilter()} />
+                            <Icon name='plus' className="w-10 h-10"/>
+                        </>
+                        :""}
+                </div>
             </div>
         </div>
     )
@@ -44,17 +54,21 @@ function SideBar() {
 }
 
 function Skeleton() {
+    const [openFilter, setOpenFilter] = useState(false);
 
+    const switchFilter = ()=> {
+        setOpenFilter(prevState => !prevState);
+    }
     return (
         <Router>
         <div className={"h-full w-full flex"}>
             <SideBar></SideBar>
             <div className="w-4/5 flex flex-col items-center">
-                <TopBar/>
+                <TopBar switchFilter={switchFilter} openFilter={openFilter} />
                 <Routes>
                     <Route path={"/ui"} element={<div className={"flex-1"}> </div>}/>
                     <Route path={"/ui/Clients"} element={<div className={"flex-1"}>clients</div>}/>
-                    <Route path={"/ui/Candidates"} element={<ProfessionalsTable/>}/>
+                    <Route path={"/ui/Candidates"} element={<ProfessionalsTable  openFilter={openFilter} />}/>
                     <Route path={"/ui/JobOffers"} element={<div>jobOffer</div>}/>
                     <Route path={"/ui/Settings"} element={<div></div>}/>
                     <Route path={"/ui/Report"} element={<div></div>}/>

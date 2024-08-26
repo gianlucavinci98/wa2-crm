@@ -3,16 +3,62 @@ import "./Professionals.css"
 import ProfessionalAPI from "../api/crm/ProfessionalAPI.js";
 import Icon from "./Icon.jsx";
 
-function ProfessionalsTable () {
+
+// eslint-disable-next-line react/prop-types
+function SearchBar({ onFilterChange }) {
+    const [location, setLocation] = useState('');
+    const [skills, setSkills] = useState('');
+    const [employmentState, setEmploymentState] = useState('');
+
+    const handleSearch = () => {
+        // Create filter object based on state
+        const filter = {
+            location: location || null,
+            skills: skills ? new Set(skills.split(',').map(s => s.trim())) : null,
+            employmentState: employmentState || null,
+        };
+        onFilterChange(filter);
+    };
+
+    return (
+        <div className="w-full flex justify-between h-[10%] items-center">
+            <input
+                type="text"
+                placeholder="Skills (comma separated)"
+                value={skills}
+                onChange={(e) => setSkills(e.target.value)}
+            />
+            <select
+                value={employmentState}
+                onChange={(e) => setEmploymentState(e.target.value)}
+            >
+                <option value="">Status</option>
+                <option value="Employed">Employed</option>
+                <option value="Unemployed">Unemployed</option>
+                <option value="NotAvailable">Not Available</option>
+            </select>
+            <input
+                type="text"
+                placeholder="Location"
+                value={location}
+                onChange={(e) => setLocation(e.target.value)}
+            />
+            <button className={"page-button"} onClick={handleSearch}>Filter</button>
+        </div>
+    );
+}
+
+// eslint-disable-next-line react/prop-types
+function ProfessionalsTable({openFilter}) {
     const [professionals, setProfessionals] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [filter, setFilter] = useState({});
     const [page, setPage] = useState(1);
 
     // Function to fetch data
     const fetchProfessionals = async () => {
         setLoading(true);
         try {
-            const filter = {}; // Add any filter criteria here
             const pagination = { page: page, pageSize: 10 }; // Adjust page size as necessary
             const data = await ProfessionalAPI.GetProfessionals(filter, pagination);
             setProfessionals(data);
@@ -25,7 +71,12 @@ function ProfessionalsTable () {
 
     useEffect(() => {
         fetchProfessionals();
-    }, [page]);
+    }, [page, filter]);
+
+    const handleFilterChange = (newFilter) => {
+        setFilter(newFilter);
+        setPage(1)
+    };
 
     if (loading) {
         return <div  className="loading-container">
@@ -47,8 +98,9 @@ function ProfessionalsTable () {
     }
 
     return (
-        <div className={"w-full flex-1 p-6 flex flex-col justify-center items-center"}>
-            <table className={"w-full h-[90%] rounded-2xl border-stone-600 shadow-md  overflow-hidden text-stone-800"}>
+        <div className={"w-full flex-1 p-6 flex flex-col justify-around items-center"}>
+            {openFilter?<SearchBar onFilterChange={handleFilterChange} />:""}
+            <table className={"w-full h-[80%] rounded-2xl border-stone-600 shadow-md  overflow-hidden text-stone-800"}>
                 <thead  className={"w-full h-12 bg-stone-200"}>
                 <tr>
                     <th>Experience</th>
