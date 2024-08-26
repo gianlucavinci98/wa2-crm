@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: 'postgres:latest'
+    container_name: postgres_analytics
+    environment:
+      - 'POSTGRES_DB=analytics'
+      - 'POSTGRES_PASSWORD=secret'
+      - 'POSTGRES_USER=myuser'
+    ports:
+      - '58000:5432'

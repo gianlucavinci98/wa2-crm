@@ -15,7 +15,7 @@ interface JobOfferRawData {
     requiredSkills: Set<string>
     duration: bigint
     value: number | null
-    professionalId: bigint | null
+    selectedProfessionalId: bigint | null
 }
 
 export class JobOffer implements JobOffer {
@@ -26,7 +26,7 @@ export class JobOffer implements JobOffer {
     requiredSkills: Set<string>
     duration: bigint
     value: number | null
-    professionalId: bigint | null
+    selectedProfessionalId: bigint | null
 
     constructor(
         jobOfferId: bigint | null,
@@ -36,7 +36,7 @@ export class JobOffer implements JobOffer {
         requiredSkills: Set<string>,
         duration: bigint,
         value: number | null,
-        professionalId: bigint | null
+        selectedProfessionalId: bigint | null
     ) {
         this.jobOfferId = jobOfferId
         this.description = description
@@ -45,7 +45,7 @@ export class JobOffer implements JobOffer {
         this.requiredSkills = requiredSkills
         this.duration = duration
         this.value = value
-        this.professionalId = professionalId
+        this.selectedProfessionalId = selectedProfessionalId
     }
 
     static fromJsonObject(obj: JobOfferRawData): JobOffer | null {
@@ -58,7 +58,7 @@ export class JobOffer implements JobOffer {
                 obj.requiredSkills,
                 obj.duration,
                 obj.value,
-                obj.professionalId,
+                obj.selectedProfessionalId,
             )
         } catch (e) {
             console.error(e)

@@ -17,8 +17,8 @@ class JobOffer {
     @ManyToOne
     var customer: Customer? = null
 
-    @ManyToOne
-    var professional: Professional? = null
+    @OneToOne
+    var selectedProfessional: Professional? = null
 
     @Column(name = "description")
     lateinit var description: String
@@ -49,18 +49,6 @@ class JobOffer {
         this.customer = customer
     }
 
-    fun addProfessional(professional: Professional) {
-        professional.jobOffers.add(this)
-        this.professional = professional
-    }
-
-    fun removeProfessional() {
-        if (this.professional != null) {
-            this.professional!!.jobOffers.remove(this)
-            this.professional = null
-        }
-    }
-
     fun addHistory(history: JobOfferHistory) {
         history.jobOffer = this
         this.jobHistory.add(history)
@@ -74,6 +62,6 @@ class JobOffer {
         this.requiredSkills,
         this.duration,
         this.value,
-        this.professional?.professionalId
+        this.selectedProfessional?.professionalId
     )
 }

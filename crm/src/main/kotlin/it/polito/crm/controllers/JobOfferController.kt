@@ -64,6 +64,26 @@ class JobOfferController(val jobOfferService: JobOfferService) {
         jobOfferService.deleteJobOfferById(jobOfferId)
     }
 
+    @PostMapping("/{jobOfferId}/{professionalId}")
+    @PreAuthorize("hasAnyRole('ROLE_operator', 'ROLE_manager')")
+    @ResponseStatus(HttpStatus.CREATED)
+    fun insertNewApplication(
+        @PathVariable(name = "jobOfferId", required = true) jobOfferId: Long,
+        @PathVariable(name = "professionalId", required = true) professionalId: Long
+    ) {
+        jobOfferService.insertNewApplication(jobOfferId, professionalId)
+    }
+
+    @DeleteMapping("/{jobOfferId}/{professionalId}")
+    @PreAuthorize("hasAnyRole('ROLE_operator', 'ROLE_manager')")
+    @ResponseStatus(HttpStatus.CREATED)
+    fun deleteNewApplication(
+        @PathVariable(name = "jobOfferId", required = true) jobOfferId: Long,
+        @PathVariable(name = "professionalId", required = true) professionalId: Long
+    ) {
+        jobOfferService.deleteApplication(jobOfferId, professionalId)
+    }
+
     @GetMapping("/{jobOfferId}/value")
     @PreAuthorize("hasAnyRole('ROLE_operator', 'ROLE_guest', 'ROLE_manager')")
     fun getJobOfferValue(@PathVariable("jobOfferId", required = true) jobOfferId: Long): Float {

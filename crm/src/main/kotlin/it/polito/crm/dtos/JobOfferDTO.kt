@@ -18,6 +18,5 @@ data class JobOfferDTO(
     val requiredSkills: MutableSet<String>,
     val duration: Long,
     val value: Float?,
-    val professionalId: Long?
+    val selectedProfessionalId: Long?
 )
-

@@ -5,9 +5,9 @@ import {DocumentMetadata} from "./dto/DocumentMetadata.js"
 const URL_DOCUMENT_STORE = 'http://localhost:8083/document-store/api/contacts'
 
 
-async function GetDocuments(pagination) {
+async function GetDocuments(filter, pagination) {
     const response = await fetch(
-        buildUrl(URL_DOCUMENT_STORE, null, pagination), {
+        buildUrl(URL_DOCUMENT_STORE, filter, pagination), {
             method: 'GET',
             credentials: 'include'
         })
@@ -50,42 +50,44 @@ async function GetDocumentDataById(documentMetadataId) {
     }
 }
 
-//TODO: da vedere i multipart come mandarli
-async function InsertNewDocument(document) {
-    /*const response = await fetch(
+async function InsertNewDocument(file) {
+    const formData = new FormData()
+    formData.append("file", file)
+
+    const response = await fetch(
         buildUrl(URL_DOCUMENT_STORE, null, null), {
             method: 'POST',
             credentials: 'include',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({contact})
+            body: formData
         })
 
     const obj = await response.json()
 
     if (response.ok) {
-        return
+        return obj
     } else {
         throw obj
-    }*/
+    }
 }
 
-//TODO: da vedere i multipart come mandarli
-async function UpdateDocument(documentMetadataId) {
-    /*const response = await fetch(
-        buildUrl(URL_DOCUMENT_STORE, null, null), {
-            method: 'PUT',
+async function UpdateDocument(documentMetadataId, file) {
+    const formData = new FormData()
+    formData.append("file", file)
+
+    const response = await fetch(
+        buildUrl(`${URL_DOCUMENT_STORE}/${documentMetadataId}`, null, null), {
+            method: 'POST',
             credentials: 'include',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({})
+            body: formData
         })
 
     const obj = await response.json()
 
     if (response.ok) {
-        return
+        return obj
     } else {
         throw obj
-    }*/
+    }
 }
 
 async function DeleteDocument(documentMetadataId) {

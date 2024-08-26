@@ -7,3 +7,15 @@ services:
       - 'POSTGRES_USER=myuser'
     ports:
       - '57000:5432'
+    networks:
+      - kfk-net
+    command:
+      - "postgres"
+      - "-c"
+      - "shared_preload_libraries=pgoutput"
+      - "-c"
+      - "wal_level=logical"
+
+networks:
+    kfk-net:
+        driver: bridge

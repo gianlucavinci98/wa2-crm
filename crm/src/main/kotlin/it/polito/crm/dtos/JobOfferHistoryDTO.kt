@@ -11,5 +11,6 @@ data class JobOfferHistoryDTO(
     val jobOfferHistoryId: Long,
     val jobOfferStatus: JobOfferStatus,
     val date: LocalDateTime?,
+    val candidates: MutableSet<ApplicationDTO>,
     val note: String?
 )

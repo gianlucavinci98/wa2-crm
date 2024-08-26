@@ -6,7 +6,7 @@ spring:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: validate
+      ddl-auto: update
   mvc:
     problemdetails:
       enabled: true
@@ -14,9 +14,9 @@ spring:
     url: jdbc:postgresql://postgres_db:5432/mydatabase
     username: myuser
     password: secret
-  sql:
-    init:
-      mode: always
+  #sql:
+  #  init:
+  #    mode: always
   security:
     oauth2:
       resourceserver:

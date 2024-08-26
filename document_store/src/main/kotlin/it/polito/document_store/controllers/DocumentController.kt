@@ -2,6 +2,7 @@ package it.polito.document_store.controllers
 
 import it.polito.document_store.dtos.DocumentMetadataDTO
 import it.polito.document_store.services.DocumentService
+import it.polito.document_store.utils.DocumentCategory
 import it.polito.document_store.utils.DocumentNotFoundException
 import jakarta.validation.constraints.Min
 import org.springframework.http.HttpHeaders
@@ -48,9 +49,15 @@ class DocumentController(private val documentService: DocumentService) {
         @RequestParam("pageSize", required = false) @Min(
             value = 1,
             message = "Page size not valid, value must be great or equal to 1"
-        ) pageSize: Int = 20
+        ) pageSize: Int = 20,
+        @RequestParam(
+            "category", required = false
+        ) category: DocumentCategory,
+        @RequestParam(
+            "id", required = false
+        ) id: Long
     ): List<DocumentMetadataDTO> {
-        return documentService.getDocuments(pageNumber, pageSize)
+        return documentService.getDocuments(pageNumber, pageSize, category, id)
     }
 
     @GetMapping("/{metadataId}")

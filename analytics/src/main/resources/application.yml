@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: analytics
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+  mvc:
+    problemdetails:
+      enabled: true
+  datasource:
+    url: jdbc:postgresql://postgres_db:5432/analytics
+    username: myuser
+    password: secret
+  kafka:
+    consumer:
+      bootstrap-servers: localhost:9092
+      group-id: analytics
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      auto-offset-reset: earliest
+server:
+  port: 8084

@@ -11,6 +11,8 @@ interface JobOfferService {
     fun insertNewJobOffer(customerId: Long, jobOffer: JobOfferDTO): JobOfferDTO
     fun updateJobOfferById(jobOfferId: Long, newJobOffer: UpdateJobOfferDTO): JobOfferDTO
     fun deleteJobOfferById(jobOfferId: Long)
+    fun insertNewApplication(jobOfferId: Long, professionalId: Long)
+    fun deleteApplication(jobOfferId: Long, professionalId: Long)
     fun getJobOfferValue(jobOfferId: Long): Float
     fun insetNewDetails(jobOfferId: Long, details: String): JobOfferDTO
 
