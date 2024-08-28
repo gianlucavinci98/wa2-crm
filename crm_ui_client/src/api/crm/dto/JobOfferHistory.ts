@@ -44,7 +44,7 @@ export class JobOfferHistory implements JobOfferHistoryRawData {
                 obj.jobOfferStatus,
                 obj.date,
                 candidates,
-                obj.note,
+                obj.note
             )
         } catch (e) {
             console.error(e)
