@@ -4,6 +4,7 @@ import logo from '../assets/logo.png';
 import ProfessionalsTable from "./Professionals.jsx";
 import Icon from "./Icon.jsx";
 import {User} from "../api/api_gateway/dto/User.ts";
+import "./Skeleton.css"
 
 
 // eslint-disable-next-line react/prop-types
@@ -28,7 +29,8 @@ function TopBar({switchFilter, openFilter}) {
     )
 }
 
-function SideBar(props) {
+// eslint-disable-next-line react/prop-types
+function SideBar({currentUser}) {
     let navigate = useNavigate();
     let location = useLocation();
 
@@ -38,26 +40,26 @@ function SideBar(props) {
                 <img className={"h-full object-contain rounded-full"} src={logo} alt="Logo"/>
             </div>
             {
-                props.currentUser && props.currentUser.principal &&
+                currentUser && currentUser.principal &&
                 <div>
-                    <h4>Welcome {props.currentUser.name}</h4>
+                    <h4>Welcome {currentUser.name}</h4>
                     <p>
                         Role:
                         {
-                            props.currentUser.roles.map((it, index) => (
+                            currentUser.roles.map((it, index) => (
                                 <span key={index}>{it.toUpperCase()}</span>
                             ))
                         }
                     </p>
-                    <form method={"post"} action={props.currentUser.logoutUrl}>
-                        <input type="hidden" name="_csrf" value={props.currentUser.xsrfToken}/>
+                    <form method={"post"} action={currentUser.logoutUrl}>
+                        <input type="hidden" name="_csrf" value={currentUser.xsrfToken}/>
                         <button type={"submit"} style={{border: "1px solid black"}}>Logout</button>
                     </form>
                 </div>
             }
             {
-                props.currentUser && props.currentUser.principal == null &&
-                <button onClick={() => window.location.href = props.currentUser.loginUrl}
+                currentUser && currentUser.principal == null &&
+                <button onClick={() => window.location.href = currentUser.loginUrl}
                         style={{border: "1px solid black"}}>Login</button>
             }
             <div className={"w-full flex flex-col gap-6 flex-1"}>
