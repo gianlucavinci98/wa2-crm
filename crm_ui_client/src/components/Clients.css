@@ -11,5 +11,5 @@
     @apply w-40 h-40
 }
 input, select{
-    @apply p-1 rounded-lg text-2xl font-semibold text-center text-white h-8  border-stone-500 ;
+    @apply p-2 rounded-lg text-2xl font-semibold text-center text-white h-12 border border-stone-500;
 }
