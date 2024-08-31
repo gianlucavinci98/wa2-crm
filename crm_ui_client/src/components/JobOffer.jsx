@@ -32,8 +32,9 @@ function JobOfferSearchBar({ onFilterChange }) {
         <div className="flex justify-between gap-6 h-[10%] items-center">
             <div className="p-2 flex gap-4 border rounded-md shadow-md">
                 <div className="relative">
-                    <button className="block appearance-none w-full bg-white hover:border-gray-500 px-4 py-2 pr-8 leading-tight focus:outline-none focus:shadow-outline" onClick={()=>setOpenSelectedStatuses(!openSelectedStatuses)}>
+                    <button className=" flex gap-4 w-full items-center appearance-nonebg-white hover:border-gray-500 px-4 py-2 pr-6 leading-tight focus:outline-none focus:shadow-outline" onClick={()=>setOpenSelectedStatuses(!openSelectedStatuses)}>
                         Seleziona Status
+                        <Icon name={'arrowDown'} className={"w-2 h-2"}></Icon>
                     </button>
                     {openSelectedStatuses?<div className="absolute z-10 w-full bg-white border border-gray-300 rounded-md shadow-lg mt-1">
                         <div className="p-2">
