@@ -7,3 +7,9 @@ services:
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: password
     command: start-dev
+    networks:
+      - kfk-net
+
+networks:
+  kfk-net:
+    external: true

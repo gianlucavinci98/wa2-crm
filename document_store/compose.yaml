@@ -1,21 +1,23 @@
 services:
   postgres:
     image: 'postgres:latest'
+    hostname: postgres
+    container_name: document_store_db
     environment:
       - 'POSTGRES_DB=mydatabase'
       - 'POSTGRES_PASSWORD=secret'
       - 'POSTGRES_USER=myuser'
     ports:
-      - '57000:5432'
-    networks:
-      - kfk-net
+      - '56000:5432'
     command:
       - "postgres"
       - "-c"
       - "shared_preload_libraries=pgoutput"
       - "-c"
       - "wal_level=logical"
+    networks:
+      - kfk-net
 
 networks:
-    kfk-net:
-        driver: bridge
+  kfk-net:
+    external: true
