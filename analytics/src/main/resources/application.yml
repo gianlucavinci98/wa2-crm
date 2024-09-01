@@ -1,17 +1,11 @@
+server:
+  port: 8084
 spring:
   application:
     name: analytics
-  jpa:
-    show-sql: true
-    hibernate:
-      ddl-auto: update
-  mvc:
-    problemdetails:
-      enabled: true
-  datasource:
-    url: jdbc:postgresql://postgres_db:5432/analytics
-    username: myuser
-    password: secret
+  data:
+    mongodb:
+      uri: mongodb://root:secret@localhost:27017/mydatabase
   kafka:
     consumer:
       bootstrap-servers: localhost:9092
@@ -19,5 +13,3 @@ spring:
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       auto-offset-reset: earliest
-server:
-  port: 8084

@@ -2,38 +2,46 @@ package it.polito.analytics.services
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
-import it.polito.analytics.DTOs.OggettoDTO
+import it.polito.analytics.documents.JobOffer
+import it.polito.analytics.dtos.JobOfferDTO
+import it.polito.analytics.repositories.JobOfferRepository
 import it.polito.analytics.utilities.KafkaMessage
+import org.slf4j.LoggerFactory
 import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.stereotype.Service
+import java.time.LocalDateTime
+import kotlin.jvm.optionals.getOrNull
 
 @Service
-class KafkaConsumerService {
+class KafkaConsumerService(private val jobOfferRepository: JobOfferRepository) {
+    private val logger = LoggerFactory.getLogger(KafkaConsumerService::class.java)
 
-    @KafkaListener(topics = ["kafka_postgres_.public.contacts"], groupId = "analytics")
-    fun consume(message: String)
-    {
-        println("Messaggio consumato: $message")
+    @KafkaListener(topics = ["kafka_postgres_.public.job_offers"], groupId = "analytics")
+    fun jobOfferConsumer(message: String) {
         try {
-            val kafkaMessage: KafkaMessage = jacksonObjectMapper().readValue(message)
-            println("Sono arrivato qui")
+            val kafkaMessage: KafkaMessage<JobOfferDTO> = jacksonObjectMapper().readValue(message)
 
-            // Mappare anche qui in base all'oggetto che decidiamo di ricevere
-            kafkaMessage.after?.let { contactInfo ->
-                val oggettoDTO = OggettoDTO(
-                    contactId = contactInfo.contact_id,
-                    name = contactInfo.name,
-                    surname = contactInfo.surname,
-                    ssn = contactInfo.ssn,
-                    category = contactInfo.category
-                )
+            kafkaMessage.after?.let {
+                logger.info("JobOfferDTO received: $it")
 
-                println("OggettoDTO ricevuto: $oggettoDTO")
+                var jobOffer = jobOfferRepository.findById(it.job_offer_id.toBigInteger()).getOrNull()
+
+                if (jobOffer != null) {
+                    jobOffer.jobOfferHistory.add(Pair(it.status!!, LocalDateTime.now()!!))
+                } else {
+                    jobOffer = JobOffer(
+                        it.job_offer_id.toBigInteger(),
+                        mutableSetOf(),
+                        mutableListOf(Pair(it.status!!, LocalDateTime.now()!!))
+                    )
+                }
+
+                jobOfferRepository.save(jobOffer)
             } ?: run {
-                println("Nessun dato disponibile nella sezione 'after' del messaggio.")
+                logger.error("No data available in the 'after' section of the message")
             }
         } catch (e: Exception) {
-            println("Errore durante la deserializzazione del messaggio: ${e.message}")
+            logger.error("Error deserializing message: ${e.message}")
         }
     }
 }

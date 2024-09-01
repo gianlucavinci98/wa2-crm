@@ -1,5 +1,5 @@
 {
-  "name": "postgres-source",
+  "name": "crm",
   "config" : {
     "connector.class": "io.debezium.connector.postgresql.PostgresConnector",
     "database.user": "myuser",
@@ -7,7 +7,7 @@
     "database.hostname": "postgres",
     "database.password": "secret",
     "database.port": "5432",
-    "table.include.list": "public.contacts",
+    "table.include.list": "public.job_offers",
     "database.whitelist": "postgres",
     "tasks.max": "1",
     "database.history.kafka.bootstrap.servers": "kafka:29092",
