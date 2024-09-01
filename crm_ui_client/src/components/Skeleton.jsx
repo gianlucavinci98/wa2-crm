@@ -3,12 +3,14 @@ import {BrowserRouter as Router, Route, Routes, useLocation, useNavigate} from "
 import logo from '../assets/logo.png';
 import ProfessionalsTable from "./Professionals.jsx";
 import Icon from "./Icon.jsx";
+import ClientsTable from "./Clients.jsx";
+import JobOffersTable from "./JobOffer.jsx";
 import {User} from "../api/api_gateway/dto/User.ts";
 import "./Skeleton.css"
 
 
 // eslint-disable-next-line react/prop-types
-function TopBar({switchFilter, openFilter}) {
+function TopBar({switchFilter, openFilter, switchJobOfferFilter, openJobOfferFilter}) {
 
     let location = useLocation();
 
@@ -22,7 +24,13 @@ function TopBar({switchFilter, openFilter}) {
                             <Icon name='filter' className={`w-10 h-10 ${openFilter ? "fill-blue-500" : "fill-black"} cursor-pointer`} onClick={()=>switchFilter()} />
                             <Icon name='plus' className="w-10 h-10"/>
                         </>
-                        :""}
+                        :location.pathname==="/ui/Clients"?
+                            <Icon name='plus' className="w-10 h-10"/>
+                            :location.pathname==="/ui/JobOffers"? <>
+                                <Icon name='filter' className={`w-10 h-10 ${openJobOfferFilter ? "fill-blue-500" : "fill-black"} cursor-pointer`} onClick={()=>switchJobOfferFilter()} />
+                                <Icon name='plus' className="w-10 h-10"/>
+                            </>
+                    :""}
                 </div>
             </div>
         </div>
@@ -88,6 +96,7 @@ function SideBar({currentUser}) {
 
 function Skeleton() {
     const [openFilter, setOpenFilter] = useState(false);
+    const [openJobOfferFilter, setOpenJobOfferFilter] = useState(false);
     const [currentUser, setCurrentUser] = useState(null);
 
     useEffect(() => {
@@ -108,17 +117,20 @@ function Skeleton() {
     const switchFilter = ()=> {
         setOpenFilter(prevState => !prevState);
     }
+    const switchJobOfferFilter = ()=> {
+        setOpenJobOfferFilter(prevState => !prevState);
+    }
     return (
         <Router>
         <div className={"h-full w-full flex"}>
             <SideBar currentUser={currentUser} setCurrentUser={setCurrentUser}></SideBar>
             <div className="w-4/5 flex flex-col items-center">
-                <TopBar switchFilter={switchFilter} openFilter={openFilter} />
+                <TopBar switchFilter={switchFilter} openFilter={openFilter} switchJobOfferFilter={switchJobOfferFilter} openJobOfferFilter={openJobOfferFilter}/>
                 <Routes>
                     <Route path={"/ui"} element={<div className={"flex-1"}> </div>}/>
-                    <Route path={"/ui/Clients"} element={<div className={"flex-1"}>clients</div>}/>
+                    <Route path={"/ui/Clients"} element={<ClientsTable/>}/>
                     <Route path={"/ui/Candidates"} element={<ProfessionalsTable  openFilter={openFilter} />}/>
-                    <Route path={"/ui/JobOffers"} element={<div>jobOffer</div>}/>
+                    <Route path={"/ui/JobOffers"} element={<JobOffersTable  openJobOfferFilter={openJobOfferFilter}/>}/>
                     <Route path={"/ui/Settings"} element={<div></div>}/>
                     <Route path={"/ui/Report"} element={<div></div>}/>
                 </Routes>

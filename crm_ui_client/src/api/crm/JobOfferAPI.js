@@ -1,5 +1,5 @@
 import {buildUrl} from "../utils/buildUrlQueryParams.js"
-import {JobOffer} from "./dto/JobOffer.js"
+import {JobOffer} from "./dto/JobOffer.ts"
 
 
 const URL_JOB_OFFERS = 'http://localhost:8082/crm/api/joboffers'

@@ -1,78 +1,89 @@
 import {useEffect, useState} from "react";
-import "./Professionals.css"
-import ProfessionalAPI from "../api/crm/ProfessionalAPI.js";
+import "./JobOffer.css"
+import JobOfferAPI from "../api/crm/JobOfferAPI.js";
 import Icon from "./Icon.jsx";
 
 
 // eslint-disable-next-line react/prop-types
-function SearchBar({ onFilterChange }) {
-    const [location, setLocation] = useState('');
-    const [skills, setSkills] = useState('');
-    const [employmentState, setEmploymentState] = useState('');
+function JobOfferSearchBar({ onFilterChange }) {
+    const [selectedStatuses, setSelectedStatuses] = useState([]);
+    const [openSelectedStatuses, setOpenSelectedStatuses] = useState(false);
+
+    const handleStatusChange = (status) => {
+        // Check if the status is already selected
+        if (selectedStatuses.includes(status)) {
+            // If yes, remove it from the list
+            setSelectedStatuses(selectedStatuses.filter(s => s !== status));
+        } else {
+            // If no, add it to the list
+            setSelectedStatuses([...selectedStatuses, status]);
+        }
+    };
 
     const handleSearch = () => {
         // Create filter object based on state
         const filter = {
-            location: location || null,
-            skills: skills ? new Set(skills.split(',').map(s => s.trim())) : null,
-            employmentState: employmentState || null,
+            status: selectedStatuses.length ? selectedStatuses : null,
         };
         onFilterChange(filter);
     };
 
     return (
-        <div className=" flex justify-between gap-6 h-[10%] items-center ">
-            <div className={"p-2 flex gap-4 border rounded-md shadow-md"}>
-                <input
-                    type="text"
-                    placeholder="Skills (comma separated)"
-                    value={skills}
-                    onChange={(e) => setSkills(e.target.value)}
-                />
-                <input
-                    type="text"
-                    placeholder="Location"
-                    value={location}
-                    onChange={(e) => setLocation(e.target.value)}
-                />
-                <select
-                    value={employmentState}
-                    onChange={(e) => setEmploymentState(e.target.value)}
-                >
-                    <option value="" disabled={true}>Status</option>
-                    <option value="Employed">Employed</option>
-                    <option value="Unemployed">Unemployed</option>
-                    <option value="NotAvailable">Not Available</option>
-                </select>
+        <div className="flex justify-between gap-6 h-[10%] items-center">
+            <div className="p-2 flex gap-4 border rounded-md shadow-md">
+                <div className="relative">
+                    <button className=" flex gap-4 w-full items-center appearance-nonebg-white hover:border-gray-500 px-4 py-2 pr-6 leading-tight focus:outline-none focus:shadow-outline" onClick={()=>setOpenSelectedStatuses(!openSelectedStatuses)}>
+                        Seleziona Status
+                        <Icon name={'arrowDown'} className={"w-2 h-2"}></Icon>
+                    </button>
+                    {openSelectedStatuses?<div className="absolute z-10 w-full bg-white border border-gray-300 rounded-md shadow-lg mt-1">
+                        <div className="p-2">
+                            {['Created', 'SelectionPhase', 'CandidateProposal', 'Consolidated', 'Done', 'Aborted'].map(status => (
+                                <div key={status}>
+                                    <label className="flex items-center space-x-2">
+                                        <input
+                                            type="checkbox"
+                                            value={status}
+                                            checked={selectedStatuses.includes(status)}
+                                            onChange={() => handleStatusChange(status)}
+                                        />
+                                        <span>{status}</span>
+                                    </label>
+                                </div>
+                            ))}
+                        </div>
+                    </div>:""}
+                </div>
             </div>
-            <button className={"page-button"} onClick={handleSearch}>Search</button>
+            <button className="page-button" onClick={handleSearch}>Search</button>
         </div>
     );
 }
 
+
 // eslint-disable-next-line react/prop-types
-function ProfessionalsTable({openFilter}) {
-    const [professionals, setProfessionals] = useState([]);
+function JobOffersTable({openJobOfferFilter}) {
+    const [jobOffers, setJobOffers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [filter, setFilter] = useState({});
     const [page, setPage] = useState(1);
 
     // Function to fetch data
-    const fetchProfessionals = async () => {
+    const fetchJobOffers = async () => {
         setLoading(true);
         try {
             const pagination = {page: page, pageSize: 10}; // Adjust page size as necessary
-            const data = await ProfessionalAPI.GetProfessionals(filter, pagination);
-            setProfessionals(data);
+            const data = await JobOfferAPI.GetJobOffers(filter, pagination);
+            setJobOffers(data);
         } catch (error) {
-            console.error('Failed to fetch professionals:', error);
+            console.error('Failed to fetch jobOffers:', error);
         } finally {
             setLoading(false);
         }
     };
 
     useEffect(() => {
-        fetchProfessionals();
+        fetchJobOffers();
     }, [page, filter]);
 
     const handleFilterChange = (newFilter) => {
@@ -101,41 +112,26 @@ function ProfessionalsTable({openFilter}) {
 
     return (
         <div className={"w-full flex-1 p-6 flex flex-col justify-around items-center"}>
-            {openFilter?<SearchBar onFilterChange={handleFilterChange} />:""}
+            {openJobOfferFilter?<JobOfferSearchBar onFilterChange={handleFilterChange} />:""}
             <table className={"w-full h-[80%] rounded-2xl border-stone-600 shadow-md  overflow-hidden text-stone-800"}>
                 <thead  className={"w-full h-12 bg-stone-200"}>
                 <tr>
-                    <th>Experience</th>
-                    <th>Core skills</th>
+                    <th>Description</th>
+                    <th>Required skills</th>
+                    <th>Duration</th>
+                    <th>Value</th>
                     <th>Status</th>
-                    <th>Candidate</th>
-                    <th>Location</th>
-                    <th>Curriculum</th>
                     <th>Actions</th>
                 </tr>
                 </thead>
                 <tbody>
-                {professionals.map((professional, index) => (
-                    <tr key={professional.professionalId}>
-                        <td>#{3057 + index}</td> {/* Mock Experience ID */}
-                        <td>{Array.from(professional.skills).join(', ')}</td> {/* Core skills */}
-                        <td>
-                                <span className={`status-${professional.employmentState === 'Employed' ? 'active' : 'inactive'}`}>
-                                    {professional.employmentState === 'Employed' ? 'Active' : 'Inactive'}
-                                </span>
-                        </td>
-                        <td>
-                            {professional.contact && (
-                                <div className="candidate-info">
-                                    <img src={`https://ui-avatars.com/api/?name=${professional.contact.name}+${professional.contact.surname}`} alt="avatar" />
-                                    <div>
-                                        <div>{professional.contact.name} {professional.contact.surname}</div>
-                                        <div>{professional.contact.ssn}@untitledui.com</div> {/* Mock email */}
-                                    </div>
-                                </div>
-                            )}
-                        </td>
-                        <td>{professional.location}</td> {/* Location */}
+                {jobOffers.map((jobOffer) => (
+                    <tr key={jobOffer.professionalId}>
+                        <td>{jobOffer.description}</td>
+                        <td>{Array.from(jobOffer.requiredSkills).join(', ')}</td>
+                        <td>{jobOffer.duration}</td>
+                        <td>{jobOffer.value}</td>
+                        <td>{jobOffer.status}</td>
                         <td>
                             <button>Edit</button>
                             <button>Delete</button>
@@ -159,4 +155,4 @@ function ProfessionalsTable({openFilter}) {
     );
 }
 
-export default ProfessionalsTable;
+export default JobOffersTable;

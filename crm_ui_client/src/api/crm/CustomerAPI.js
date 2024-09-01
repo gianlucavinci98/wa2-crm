@@ -1,5 +1,5 @@
 import {buildUrl} from "../utils/buildUrlQueryParams.js"
-import {Customer} from "./dto/Customer.js"
+import {Customer} from "./dto/Customer.ts"
 
 
 const URL_CUSTOMERS = 'http://localhost:8082/crm/api/customers'
