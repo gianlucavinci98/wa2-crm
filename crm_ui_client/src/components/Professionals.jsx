@@ -9,6 +9,7 @@ import {ContactDetails} from "../api/crm/dto/ContactDetails.ts";
 import {Address} from "../api/crm/dto/Address.ts";
 import {Email} from "../api/crm/dto/Email.ts";
 import {Telephone} from "../api/crm/dto/Telephone.ts";
+import {TopBar} from "./Skeleton.jsx";
 
 
 // eslint-disable-next-line react/prop-types
@@ -58,8 +59,9 @@ function SearchBar({ onFilterChange }) {
 }
 
 // eslint-disable-next-line react/prop-types
-function ProfessionalsTable({openFilter}) {
+function ProfessionalsTable() {
     // const [professionals, setProfessionals] = useState([]);
+    const [openFilter, setOpenFilter] = useState(false);
     const [professionals, setProfessionals] = useState([
         new Professional(5, new Set(['Plumber']),EmploymentState.Unemployed, 20,'Turin', new Contact(2, 'mario', 'bianchi', 'vf4328f7f', Category.Professional)),
         new Professional(6, new Set(['Plumber']),EmploymentState.Unemployed, 20,'Turin', new Contact(2, 'mario', 'bianchi', 'vf4328f7f', Category.Professional)),
@@ -77,6 +79,8 @@ function ProfessionalsTable({openFilter}) {
     const [loading, setLoading] = useState(true);
     const [filter, setFilter] = useState({});
     const [page, setPage] = useState(1);
+    const [editProfessional, setEditProfessional] = useState(false);
+    const [editingProfessional, setEditingProfessional] = useState();
 
     const [tooltip, setTooltip] = useState({ visible: false, showDetails:false, details: null, x: 0, y: 0 });
 
@@ -155,6 +159,9 @@ function ProfessionalsTable({openFilter}) {
     }
 
     return (
+        <>
+            <TopBar addNew={editProfessional} setAddNew={(it)=>setEditProfessional(it)} filterPresent={!editProfessional} openFilter={openFilter} switchFilter={()=>setOpenFilter(!openFilter)}></TopBar>
+            {!editProfessional ?
         <div className={"w-full flex-1 p-6 flex flex-col justify-between items-center"}>
             {openFilter ? <SearchBar onFilterChange={handleFilterChange}/> : ""}
             <table className={"w-full rounded-2xl border-stone-600 shadow-md  overflow-hidden text-stone-800"}>
@@ -260,7 +267,11 @@ function ProfessionalsTable({openFilter}) {
                 </button>
             </div>
         </div>
-    );
+                :
+                <></>
+            }
+        </>
+    )
 }
 
 export default ProfessionalsTable;

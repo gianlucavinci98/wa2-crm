@@ -1,4 +1,4 @@
-import Skeleton from './components/Skeleton'
+import {Skeleton} from './components/Skeleton'
 
 
 function App() {
