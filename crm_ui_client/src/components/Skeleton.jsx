@@ -71,21 +71,21 @@ function SideBar({currentUser}) {
                         style={{border: "1px solid black"}}>Login</button>
             }
             <div className={"w-full flex flex-col gap-6 flex-1"}>
-                <button className={location.pathname === "/ui/Clients" ? "clicked-side-button" : "side-button"}
+                <button className={location.pathname.includes("/ui/Clients") ? "clicked-side-button" : "side-button"}
                         onClick={() => navigate("/ui/Clients")}>Clients
                 </button>
-                <button className={location.pathname === "/ui/Candidates" ? "clicked-side-button" : "side-button"}
+                <button className={location.pathname.includes("/ui/Candidates") ? "clicked-side-button" : "side-button"}
                         onClick={() => navigate("/ui/Candidates")}>Candidates
                 </button>
-                <button className={location.pathname === "/ui/JobOffers" ? "clicked-side-button" : "side-button"}
+                <button className={location.pathname.includes("/ui/JobOffers") ? "clicked-side-button" : "side-button"}
                         onClick={() => navigate("/ui/JobOffers")}>Job Offers
                 </button>
             </div>
             <div className={"w-full flex flex-col gap-6 flex-1 justify-end"}>
-                <button className={location.pathname === "/ui/Report" ? "clicked-side-button" : "side-button"}
+                <button className={location.pathname.includes("/ui/Report") ? "clicked-side-button" : "side-button"}
                         onClick={() => navigate("/ui/Report")}>Report
                 </button>
-                <button className={location.pathname === "/ui/Settings" ? "clicked-side-button" : "side-button"}
+                <button className={location.pathname.includes("/ui/Settings") ? "clicked-side-button" : "side-button"}
                         onClick={() => navigate("/ui/Settings")}>Settings
                 </button>
 

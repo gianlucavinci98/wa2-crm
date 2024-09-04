@@ -111,9 +111,9 @@ function JobOffersTable({openJobOfferFilter}) {
     }
 
     return (
-        <div className={"w-full flex-1 p-6 flex flex-col justify-around items-center"}>
+        <div className={"w-full flex-1 p-6 flex flex-col justify-between items-center"}>
             {openJobOfferFilter?<JobOfferSearchBar onFilterChange={handleFilterChange} />:""}
-            <table className={"w-full h-[80%] rounded-2xl border-stone-600 shadow-md  overflow-hidden text-stone-800"}>
+            <table className={"w-full rounded-2xl border-stone-600 shadow-md  overflow-hidden text-stone-800"}>
                 <thead  className={"w-full h-12 bg-stone-200"}>
                 <tr>
                     <th>Description</th>
@@ -126,15 +126,15 @@ function JobOffersTable({openJobOfferFilter}) {
                 </thead>
                 <tbody>
                 {jobOffers.map((jobOffer) => (
-                    <tr key={jobOffer.professionalId}>
+                    <tr key={jobOffer.professionalId} className={'hover:bg-stone-100 cursor-pointer'}>
                         <td>{jobOffer.description}</td>
                         <td>{Array.from(jobOffer.requiredSkills).join(', ')}</td>
                         <td>{jobOffer.duration}</td>
                         <td>{jobOffer.value}</td>
                         <td>{jobOffer.status}</td>
                         <td>
-                            <button>Edit</button>
-                            <button>Delete</button>
+                            <button className={'table-button text-blue-500'}>Edit</button>
+                            <button className={'table-button text-red-500'}>Delete</button>
                         </td>
                     </tr>
                 ))}
