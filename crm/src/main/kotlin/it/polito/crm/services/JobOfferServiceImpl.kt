@@ -2,7 +2,9 @@ package it.polito.crm.services
 
 import it.polito.crm.dtos.JobOfferDTO
 import it.polito.crm.dtos.UpdateJobOfferDTO
-import it.polito.crm.entities.*
+import it.polito.crm.entities.ApplicationStatus
+import it.polito.crm.entities.JobOffer
+import it.polito.crm.entities.JobOfferHistory
 import it.polito.crm.repositories.CustomerRepository
 import it.polito.crm.repositories.JobOfferHistoryRepository
 import it.polito.crm.repositories.JobOfferRepository
@@ -111,6 +113,7 @@ class JobOfferServiceImpl(
             jobOfferHistory.note = newJobOffer.notes
 
             jobOffer.addHistory(jobOfferHistory)
+            jobOffer.status = newJobOffer.status
 
             jobOfferHistoryRepository.save(jobOfferHistory)
 
