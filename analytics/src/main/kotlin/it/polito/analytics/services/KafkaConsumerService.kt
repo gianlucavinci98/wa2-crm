@@ -16,7 +16,10 @@ import java.time.LocalDateTime
 import kotlin.jvm.optionals.getOrNull
 
 @Service
-class KafkaConsumerService(private val jobOfferRepository: JobOfferRepository, private val jobOfferSkillsRepository: JobOfferSkillsRepository) {
+class KafkaConsumerService(
+    private val jobOfferRepository: JobOfferRepository,
+    private val jobOfferSkillsRepository: JobOfferSkillsRepository
+) {
     private val logger = LoggerFactory.getLogger(KafkaConsumerService::class.java)
 
     @KafkaListener(topics = ["kafka_postgres_.public.job_offers"], groupId = "analytics")
@@ -24,7 +27,7 @@ class KafkaConsumerService(private val jobOfferRepository: JobOfferRepository, p
         try {
             val kafkaMessage: KafkaMessage<JobOfferDTO> = jacksonObjectMapper().readValue(message)
 
-            if ( kafkaMessage.op == "d" ) {
+            if (kafkaMessage.op == "d") {
                 logger.info("JobOfferDTO deleted: ${kafkaMessage.before?.job_offer_id}")
                 jobOfferRepository.deleteById(kafkaMessage.before?.job_offer_id?.toBigInteger()!!)
                 return
@@ -58,7 +61,7 @@ class KafkaConsumerService(private val jobOfferRepository: JobOfferRepository, p
         try {
             val kafkaMessage: KafkaMessage<JobOfferSkillDTO> = jacksonObjectMapper().readValue(message)
 
-            if ( kafkaMessage.op == "d" ) {
+            if (kafkaMessage.op == "d") {
                 logger.info("JobOfferSkillDTO deleted: ${kafkaMessage.before?.job_offer_job_offer_id}")
                 jobOfferSkillsRepository.deleteById(kafkaMessage.before?.job_offer_job_offer_id?.toBigInteger()!!)
                 return
@@ -67,8 +70,9 @@ class KafkaConsumerService(private val jobOfferRepository: JobOfferRepository, p
             kafkaMessage.after?.let {
                 logger.info("JobOfferSkillDTO received: ${it.required_skills}")
 
+                var jobOfferSkill =
+                    jobOfferSkillsRepository.findById(it.job_offer_job_offer_id.toBigInteger()).getOrNull()
 
-                var jobOfferSkill = jobOfferSkillsRepository.findById(it.job_offer_job_offer_id.toBigInteger()).getOrNull()
                 if (jobOfferSkill != null) {
                     jobOfferSkill.skills.add(it.required_skills)
                 } else {
@@ -77,6 +81,7 @@ class KafkaConsumerService(private val jobOfferRepository: JobOfferRepository, p
                         mutableSetOf(it.required_skills)
                     )
                 }
+
                 jobOfferSkillsRepository.save(jobOfferSkill)
             } ?: run {
                 logger.error("No data available in the 'after' section of the message")

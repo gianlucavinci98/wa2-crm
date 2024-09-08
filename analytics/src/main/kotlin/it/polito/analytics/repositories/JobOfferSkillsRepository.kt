@@ -8,13 +8,14 @@ import org.springframework.stereotype.Repository
 import java.math.BigInteger
 
 @Repository
-interface JobOfferSkillsRepository : MongoRepository<JobOfferSkill, BigInteger>{
-
-    @Aggregation(pipeline = [
-        "{ '\$unwind': '\$skills' }",
-        "{ '\$group': { _id: '\$skills', count: { '\$sum': 1 } } }",
-        "{ '\$sort': { count: -1 } }"
-    ])
+interface JobOfferSkillsRepository : MongoRepository<JobOfferSkill, BigInteger> {
+    @Aggregation(
+        pipeline = [
+            "{ '\$unwind': '\$skills' }",
+            "{ '\$group': { _id: '\$skills', count: { '\$sum': 1 } } }",
+            "{ '\$sort': { count: -1 } }"
+        ]
+    )
     fun getSkillsCount(): List<SkillCount>
 
     data class SkillCount(
