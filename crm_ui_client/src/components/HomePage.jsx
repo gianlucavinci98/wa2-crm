@@ -68,10 +68,10 @@ function HomePage() {
     return (
         <>
             <TopBar />
-            <div className="w-full flex-1 p-6 flex flex-col gap-12">
-                <div className={"flex flex-col justify-center"}>
-                    <h5 className="text-xl font-semibold mb-4">Contact Our Job Placement Team</h5>
-                    <p className="text-lg text-gray-600 mb-6">Fill in the form below to connect with an operator and
+            <div className="w-full flex-1 p-6 flex flex-col gap-12 ">
+                <div className={"flex flex-col justify-center gap-6"}>
+                    <h5 className="text-2xl font-semibold mb-4">Contact Our Job Placement Team</h5>
+                    <p className="text-xl text-gray-600 mb-6">Fill in the form below to connect with an operator and
                         start
                         your registration process for our job placement services.</p>
 
@@ -79,7 +79,7 @@ function HomePage() {
 
                 {/* Server feedback message */}
 
-                <form onSubmit={onSubmitHandler} className="flex flex-col gap-8 items-center">
+                <form onSubmit={onSubmitHandler} className="flex flex-col gap-12 items-center">
                     {serverResponse && (
                         <div className="p-4 bg-blue-100 text-blue-700 rounded w-full text-center">
                             {serverResponse}
