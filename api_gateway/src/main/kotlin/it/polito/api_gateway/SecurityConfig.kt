@@ -12,8 +12,12 @@ import org.springframework.security.oauth2.client.oidc.web.logout.OidcClientInit
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter
-import org.springframework.security.web.csrf.*
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository
+import org.springframework.security.web.csrf.CsrfToken
+import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler
+import org.springframework.security.web.csrf.CsrfTokenRequestHandler
 import org.springframework.util.StringUtils
+import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.filter.OncePerRequestFilter
 import java.io.IOException
 import java.util.function.Supplier
@@ -33,8 +37,11 @@ class SecurityConfig(val crr: ClientRegistrationRepository) {
                 it.requestMatchers("/secure").authenticated()
 
                 /* Resource Servers */
-                it.requestMatchers("/crm/**").authenticated()
+                it.requestMatchers("/crm/api/messages").permitAll()
+                it.requestMatchers("/crm/**").permitAll()
+
                 it.requestMatchers("/communication-manager/**").authenticated()
+
                 it.requestMatchers("/document-store/**").authenticated()
 
                 /* UI Server */
@@ -46,11 +53,18 @@ class SecurityConfig(val crr: ClientRegistrationRepository) {
             .oauth2Login { }
             .logout { it.logoutSuccessHandler(oidcLogoutSuccessHandler()) }
             .csrf {
+                it.ignoringRequestMatchers("/crm/api/messages")
                 it.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                 it.csrfTokenRequestHandler(SpaCsrfTokenRequestHandler())
             }
             .addFilterAfter(CsrfCookieFilter(), BasicAuthenticationFilter::class.java)
             .build()
+    }
+
+    @Bean
+    fun corsConfiguration() = CorsConfiguration().apply {
+        allowedOrigins = listOf("http://localhost:5173")
+        allowedMethods = listOf("GET", "POST", "PUT", "DELETE", "OPTIONS")
     }
 }
 
@@ -66,7 +80,7 @@ class CsrfCookieFilter : OncePerRequestFilter() {
             val message = e.message!!
             val regex = Regex("HTTP response code: (\\d{3})")
             val match = regex.find(message)
-            val tmp = if (match!=null) match.groupValues[0] else "HTTP response code: 500"
+            val tmp = if (match != null) match.groupValues[0] else "HTTP response code: 500"
 
             val code = tmp.slice(tmp.length - 3..<tmp.length).toLong()
 

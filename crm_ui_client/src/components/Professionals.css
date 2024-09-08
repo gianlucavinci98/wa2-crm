@@ -13,3 +13,18 @@
 input, select{
     @apply p-1 rounded-lg text-2xl font-semibold text-center text-white h-8  border-stone-500 ;
 }
+td{
+    text-align: center;
+    @apply py-2
+}
+td img {
+    display: block;
+    margin: 0 auto;
+}
+td svg{
+    display: block;
+    margin: 0 auto;
+}
+.table-button{
+    @apply mx-1 w-14 rounded-lg font-semibold text-center text-black h-8 justify-around items-center;
+}

@@ -3,12 +3,12 @@ package it.polito.crm
 import it.polito.crm.utils.CustomJwtGrantedAuthoritiesConverter
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.http.HttpMethod
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter
-import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter
 import org.springframework.security.web.SecurityFilterChain
 
 @Configuration
@@ -20,7 +20,10 @@ class SecurityConfig {
         return http
             .authorizeHttpRequests {
                 it.requestMatchers("/api/contacts/**").authenticated()
-                it.requestMatchers("/api/messages/**").authenticated()
+
+                it.requestMatchers(HttpMethod.POST, "/api/messages").permitAll()
+                it.requestMatchers(HttpMethod.GET, "/api/messages").authenticated()
+                it.requestMatchers("/api/messages/**").permitAll()
 
                 it.requestMatchers("/api/customers/**").authenticated()
                 it.requestMatchers("/api/professionals/**").authenticated()

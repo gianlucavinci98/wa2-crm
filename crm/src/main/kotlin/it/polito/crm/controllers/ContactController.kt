@@ -4,13 +4,13 @@ import it.polito.crm.dtos.*
 import it.polito.crm.services.ContactService
 import it.polito.crm.utils.Category
 import jakarta.validation.Valid
-import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.*
 import jakarta.validation.constraints.Min
 import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.Authentication
 import org.springframework.security.oauth2.jwt.Jwt
+import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/api/contacts")
@@ -43,6 +43,7 @@ class ContactController(private val contactService: ContactService) {
         val jwt = auth?.principal as? Jwt
         println("Claims: " + jwt?.claims)
         println("JWT: ${jwt?.tokenValue ?: "Auth is null or not JWT"}")
+
         val contacts = contactService.getAllContacts(
             pageNumber,
             pageSize,

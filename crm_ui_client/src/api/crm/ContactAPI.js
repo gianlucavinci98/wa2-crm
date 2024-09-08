@@ -3,6 +3,7 @@ import {Contact} from "./dto/Contact.ts"
 import {Address} from "./dto/Address.ts"
 import {Email} from "./dto/Email.ts"
 import {Telephone} from "./dto/Telephone.ts"
+import {ContactDetails} from "./dto/ContactDetails.ts";
 
 
 const URL_CONTACTS = 'http://localhost:8082/crm/api/contacts'
@@ -32,7 +33,7 @@ async function GetContactById(contactId) {
     const obj = await response.json()
 
     if (response.ok) {
-        return Contact.fromJsonObject(obj)
+        return ContactDetails.fromJsonObject(obj)
     } else {
         throw obj
     }

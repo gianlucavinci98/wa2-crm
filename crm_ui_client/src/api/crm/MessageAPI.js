@@ -1,7 +1,6 @@
 import {buildUrl} from "../utils/buildUrlQueryParams.js"
-import {Message} from "./dto/Message.js";
-import {JobOffer} from "./dto/JobOffer.js";
-import {MessageHistory} from "./dto/MessageHistory.js";
+import {Message} from "./dto/Message.ts"
+import {MessageHistory} from "./dto/MessageHistory.ts"
 
 
 const URL_MESSAGES = 'http://localhost:8082/crm/api/messages'
@@ -58,13 +57,13 @@ async function InsertNewMessage(message) {
             method: 'POST',
             credentials: 'include',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({message})
+            body: JSON.stringify(message)
         })
 
     const obj = await response.json()
 
     if (response.ok) {
-        return JobOffer.fromJsonObject(obj)
+        return Message.fromJsonObject(obj)
     } else {
         throw obj
     }

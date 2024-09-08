@@ -10,14 +10,11 @@ import jakarta.validation.constraints.Min
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
-import org.springframework.security.core.Authentication
-import org.springframework.security.oauth2.jwt.Jwt
 import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/api/messages")
 class MessageController(private val messageService: MessageService) {
-    //TODO: manca la delete?
     @GetMapping("", "/")
     @PreAuthorize("hasAnyRole('ROLE_operator', 'ROLE_guest', 'ROLE_manager')")
     fun getMessages(
@@ -30,17 +27,8 @@ class MessageController(private val messageService: MessageService) {
             message = "Page size not valid, value must be great or equal to 1"
         ) pageSize: Int = 20,
         @RequestParam("sorting", required = false) sorting: String?,
-        @RequestParam("messageStatus", required = false) messageStatus: MessageStatus?,
-        auth: Authentication?
+        @RequestParam("messageStatus", required = false) messageStatus: MessageStatus?
     ): List<MessageInfoDTO> {
-        println("Name: " + auth?.name)
-        println("Details: " + auth?.details)
-        println("Credential: " + auth?.credentials)
-        println("Autenticato? " + auth?.isAuthenticated)
-        println("Authorities: " + auth?.authorities)
-        val jwt = auth?.principal as? Jwt
-        println("Claims: " + jwt?.claims)
-        println("JWT: ${jwt?.tokenValue ?: "Auth is null or not JWT"}")
         return messageService.getMessages(pageNumber, pageSize, sorting, messageStatus)
     }
 

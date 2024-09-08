@@ -7,10 +7,11 @@ import ClientsTable from "./Clients.jsx";
 import JobOffersTable from "./JobOffer.jsx";
 import {User} from "../api/api_gateway/dto/User.ts";
 import "./Skeleton.css"
+import HomePage from "./HomePage.jsx";
 
 
 // eslint-disable-next-line react/prop-types
-function TopBar({switchFilter, openFilter, switchJobOfferFilter, openJobOfferFilter}) {
+function TopBar({switchFilter, openFilter ,addNew, setAddNew, filterPresent}) {
 
     let location = useLocation();
 
@@ -19,18 +20,12 @@ function TopBar({switchFilter, openFilter, switchJobOfferFilter, openJobOfferFil
             <div className={"w-[90%] flex justify-between items-center"}>
                 <h1 className={"font-bold text-5xl text-stone-800"}>Job Placement Tool - {location.pathname.split("/").pop()}</h1>
                 <div className={"flex gap-8"}>
-                    {location.pathname==="/ui/Candidates"?
-                        <>
+                    <>
+                        {filterPresent &&
                             <Icon name='filter' className={`w-10 h-10 ${openFilter ? "fill-blue-500" : "fill-black"} cursor-pointer`} onClick={()=>switchFilter()} />
-                            <Icon name='plus' className="w-10 h-10"/>
-                        </>
-                        :location.pathname==="/ui/Clients"?
-                            <Icon name='plus' className="w-10 h-10"/>
-                            :location.pathname==="/ui/JobOffers"? <>
-                                <Icon name='filter' className={`w-10 h-10 ${openJobOfferFilter ? "fill-blue-500" : "fill-black"} cursor-pointer`} onClick={()=>switchJobOfferFilter()} />
-                                <Icon name='plus' className="w-10 h-10"/>
-                            </>
-                    :""}
+                        }
+                        <Icon name='plus' className={`w-10 h-10"${addNew ? "fill-blue-500" : "fill-black"} cursor-pointer`} onClick={()=>setAddNew(true)} />
+                    </>
                 </div>
             </div>
         </div>
@@ -71,21 +66,21 @@ function SideBar({currentUser}) {
                         style={{border: "1px solid black"}}>Login</button>
             }
             <div className={"w-full flex flex-col gap-6 flex-1"}>
-                <button className={location.pathname === "/ui/Clients" ? "clicked-side-button" : "side-button"}
+                <button className={location.pathname.includes("/ui/Clients") ? "clicked-side-button" : "side-button"}
                         onClick={() => navigate("/ui/Clients")}>Clients
                 </button>
-                <button className={location.pathname === "/ui/Candidates" ? "clicked-side-button" : "side-button"}
+                <button className={location.pathname.includes("/ui/Candidates") ? "clicked-side-button" : "side-button"}
                         onClick={() => navigate("/ui/Candidates")}>Candidates
                 </button>
-                <button className={location.pathname === "/ui/JobOffers" ? "clicked-side-button" : "side-button"}
+                <button className={location.pathname.includes("/ui/JobOffers") ? "clicked-side-button" : "side-button"}
                         onClick={() => navigate("/ui/JobOffers")}>Job Offers
                 </button>
             </div>
             <div className={"w-full flex flex-col gap-6 flex-1 justify-end"}>
-                <button className={location.pathname === "/ui/Report" ? "clicked-side-button" : "side-button"}
+                <button className={location.pathname.includes("/ui/Report") ? "clicked-side-button" : "side-button"}
                         onClick={() => navigate("/ui/Report")}>Report
                 </button>
-                <button className={location.pathname === "/ui/Settings" ? "clicked-side-button" : "side-button"}
+                <button className={location.pathname.includes("/ui/Settings") ? "clicked-side-button" : "side-button"}
                         onClick={() => navigate("/ui/Settings")}>Settings
                 </button>
 
@@ -95,8 +90,6 @@ function SideBar({currentUser}) {
 }
 
 function Skeleton() {
-    const [openFilter, setOpenFilter] = useState(false);
-    const [openJobOfferFilter, setOpenJobOfferFilter] = useState(false);
     const [currentUser, setCurrentUser] = useState(null);
 
     useEffect(() => {
@@ -114,23 +107,17 @@ function Skeleton() {
         fetchCurrentUser().then()
     }, [])
 
-    const switchFilter = ()=> {
-        setOpenFilter(prevState => !prevState);
-    }
-    const switchJobOfferFilter = ()=> {
-        setOpenJobOfferFilter(prevState => !prevState);
-    }
     return (
         <Router>
         <div className={"h-full w-full flex"}>
             <SideBar currentUser={currentUser} setCurrentUser={setCurrentUser}></SideBar>
             <div className="w-4/5 flex flex-col items-center">
-                <TopBar switchFilter={switchFilter} openFilter={openFilter} switchJobOfferFilter={switchJobOfferFilter} openJobOfferFilter={openJobOfferFilter}/>
                 <Routes>
                     <Route path={"/ui"} element={<div className={"flex-1"}> </div>}/>
+                    <Route path={"/ui/home"} element={<HomePage/>}/>
                     <Route path={"/ui/Clients"} element={<ClientsTable/>}/>
-                    <Route path={"/ui/Candidates"} element={<ProfessionalsTable  openFilter={openFilter} />}/>
-                    <Route path={"/ui/JobOffers"} element={<JobOffersTable  openJobOfferFilter={openJobOfferFilter}/>}/>
+                    <Route path={"/ui/Candidates"} element={<ProfessionalsTable/>}/>
+                    <Route path={"/ui/JobOffers"} element={<JobOffersTable/>}/>
                     <Route path={"/ui/Settings"} element={<div></div>}/>
                     <Route path={"/ui/Report"} element={<div></div>}/>
                 </Routes>
@@ -140,4 +127,4 @@ function Skeleton() {
     )
 }
 
-export default Skeleton
+export {Skeleton, TopBar}
