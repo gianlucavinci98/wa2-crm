@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class KafkaMessage<T>(
-    val before: Any?,
+    val before: T?,
     val after: T?,
     val source: SourceInfo?,
     val op: String?,

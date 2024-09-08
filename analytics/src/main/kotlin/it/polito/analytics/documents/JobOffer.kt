@@ -12,6 +12,5 @@ enum class JobOfferStatus {
 @Document
 data class JobOffer(
     @Id val jobOfferId: BigInteger,
-    val skills: MutableSet<String>,
     val jobOfferHistory: MutableList<Pair<JobOfferStatus, LocalDateTime>>
 )
