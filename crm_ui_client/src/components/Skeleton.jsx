@@ -24,7 +24,9 @@ function TopBar({switchFilter, openFilter ,addNew, setAddNew, filterPresent}) {
                         {filterPresent &&
                             <Icon name='filter' className={`w-10 h-10 ${openFilter ? "fill-blue-500" : "fill-black"} cursor-pointer`} onClick={()=>switchFilter()} />
                         }
-                        <Icon name='plus' className={`w-10 h-10"${addNew ? "fill-blue-500" : "fill-black"} cursor-pointer`} onClick={()=>setAddNew(true)} />
+                        {!location.pathname.includes("/ui/Home") &&
+                            <Icon name='plus' className={`w-10 h-10"${addNew ? "fill-blue-500" : "fill-black"} cursor-pointer`} onClick={()=>setAddNew(true)} />
+                        }
                     </>
                 </div>
             </div>
