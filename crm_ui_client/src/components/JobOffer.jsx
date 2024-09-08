@@ -2,6 +2,7 @@ import {useEffect, useState} from "react";
 import "./JobOffer.css"
 import JobOfferAPI from "../api/crm/JobOfferAPI.js";
 import Icon from "./Icon.jsx";
+import {TopBar} from "./Skeleton.jsx";
 
 
 // eslint-disable-next-line react/prop-types
@@ -62,11 +63,15 @@ function JobOfferSearchBar({ onFilterChange }) {
 
 
 // eslint-disable-next-line react/prop-types
-function JobOffersTable({openJobOfferFilter}) {
+function JobOffersTable() {
+
+    const [openFilter, setOpenFilter] = useState(false);
     const [jobOffers, setJobOffers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [filter, setFilter] = useState({});
     const [page, setPage] = useState(1);
+    const [editJobOffer, setEditJobOffer] = useState(false);
+    const [editingJobOffer, setEditingJobOffer] = useState();
 
     // Function to fetch data
     const fetchJobOffers = async () => {
@@ -111,48 +116,55 @@ function JobOffersTable({openJobOfferFilter}) {
     }
 
     return (
-        <div className={"w-full flex-1 p-6 flex flex-col justify-around items-center"}>
-            {openJobOfferFilter?<JobOfferSearchBar onFilterChange={handleFilterChange} />:""}
-            <table className={"w-full h-[80%] rounded-2xl border-stone-600 shadow-md  overflow-hidden text-stone-800"}>
-                <thead  className={"w-full h-12 bg-stone-200"}>
-                <tr>
-                    <th>Description</th>
-                    <th>Required skills</th>
-                    <th>Duration</th>
-                    <th>Value</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                </tr>
-                </thead>
-                <tbody>
-                {jobOffers.map((jobOffer) => (
-                    <tr key={jobOffer.professionalId}>
-                        <td>{jobOffer.description}</td>
-                        <td>{Array.from(jobOffer.requiredSkills).join(', ')}</td>
-                        <td>{jobOffer.duration}</td>
-                        <td>{jobOffer.value}</td>
-                        <td>{jobOffer.status}</td>
-                        <td>
-                            <button>Edit</button>
-                            <button>Delete</button>
-                        </td>
-                    </tr>
-                ))}
-                </tbody>
-            </table>
-            <div className="w-full h-[10%] flex items-center justify-between">
-                <button className={"page-button"} onClick={() => setPage(page - 1)} disabled={page === 1}>
-                    <Icon name='arrowLeft' className="w-4 h-4" />
-                    Previous
-                </button>
-                <span className={"text-xl text-stone-600"}>Page {page}</span>
-                <button className={"page-button"} onClick={() => setPage(page + 1)}>
-                    Next
-                    <Icon name='arrowRight' className="w-4 h-4" />
-                </button>
-            </div>
-        </div>
-    );
+        <>
+            <TopBar addNew={editJobOffer} setAddNew={(it)=>setEditJobOffer(it)} filterPresent={!editJobOffer} openFilter={openFilter} switchFilter={()=>setOpenFilter(!openFilter)}></TopBar>
+            {!editJobOffer ?
+                <div className={"w-full flex-1 p-6 flex flex-col justify-between items-center"}>
+                    {openFilter?<JobOfferSearchBar onFilterChange={handleFilterChange} />:""}
+                    <table className={"w-full rounded-2xl border-stone-600 shadow-md  overflow-hidden text-stone-800"}>
+                        <thead  className={"w-full h-12 bg-stone-200"}>
+                        <tr>
+                            <th>Description</th>
+                            <th>Required skills</th>
+                            <th>Duration</th>
+                            <th>Value</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {jobOffers.map((jobOffer) => (
+                            <tr key={jobOffer.professionalId} className={'hover:bg-stone-100 cursor-pointer'}>
+                                <td>{jobOffer.description}</td>
+                                <td>{Array.from(jobOffer.requiredSkills).join(', ')}</td>
+                                <td>{jobOffer.duration}</td>
+                                <td>{jobOffer.value}</td>
+                                <td>{jobOffer.status}</td>
+                                <td>
+                                    <button className={'table-button text-blue-500'}>Edit</button>
+                                    <button className={'table-button text-red-500'}>Delete</button>
+                                </td>
+                            </tr>
+                        ))}
+                        </tbody>
+                    </table>
+                    <div className="w-full h-[10%] flex items-center justify-between">
+                        <button className={"page-button"} onClick={() => setPage(page - 1)} disabled={page === 1}>
+                            <Icon name='arrowLeft' className="w-4 h-4" />
+                            Previous
+                        </button>
+                        <span className={"text-xl text-stone-600"}>Page {page}</span>
+                        <button className={"page-button"} onClick={() => setPage(page + 1)}>
+                            Next
+                            <Icon name='arrowRight' className="w-4 h-4" />
+                        </button>
+                    </div>
+                </div>
+                :
+                <></>
+            }
+        </>
+    )
 }
 
 export default JobOffersTable;
