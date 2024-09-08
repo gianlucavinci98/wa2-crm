@@ -2,6 +2,8 @@ import {useState} from "react"
 import {Channel, Message} from "../api/crm/dto/Message.ts"
 import MessageAPI from "../api/crm/MessageAPI.js"
 import "./HomePage.css"
+import JobOfferAPI from "../api/crm/JobOfferAPI.js";
+import JobOffer from "./JobOffer.jsx";
 
 function HomePage() {
     const [message, setMessage] = useState(new Message(null, "", "", "", "", Channel.Email, 0))
@@ -91,6 +93,11 @@ function HomePage() {
                     <input type={"submit"} onClick={onSubmitHandler}/>
                 </div>
             </form>
+
+            <button onClick={() => {
+                JobOfferAPI.InsertNewJobOffer(new JobOffer(null, "description", "details", null, new Set("pizzaiolo", "calzolaio"), 100, 5, null))
+            }}>SEND JOB OFFER
+            </button>
         </div>
     )
 }
