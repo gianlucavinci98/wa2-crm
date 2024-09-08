@@ -7,6 +7,7 @@ import ClientsTable from "./Clients.jsx";
 import JobOffersTable from "./JobOffer.jsx";
 import {User} from "../api/api_gateway/dto/User.ts";
 import "./Skeleton.css"
+import HomePage from "./HomePage.jsx";
 
 
 // eslint-disable-next-line react/prop-types
@@ -17,20 +18,25 @@ function TopBar({switchFilter, openFilter, switchJobOfferFilter, openJobOfferFil
     return (
         <div className={"h-28 border-b-2 border-stone-600 w-[90%] flex items-center justify-center"}>
             <div className={"w-[90%] flex justify-between items-center"}>
-                <h1 className={"font-bold text-5xl text-stone-800"}>Job Placement Tool - {location.pathname.split("/").pop()}</h1>
+                <h1 className={"font-bold text-5xl text-stone-800"}>Job Placement Tool
+                    - {location.pathname.split("/").pop()}</h1>
                 <div className={"flex gap-8"}>
-                    {location.pathname==="/ui/Candidates"?
+                    {location.pathname === "/ui/Candidates" ?
                         <>
-                            <Icon name='filter' className={`w-10 h-10 ${openFilter ? "fill-blue-500" : "fill-black"} cursor-pointer`} onClick={()=>switchFilter()} />
+                            <Icon name='filter'
+                                  className={`w-10 h-10 ${openFilter ? "fill-blue-500" : "fill-black"} cursor-pointer`}
+                                  onClick={() => switchFilter()}/>
                             <Icon name='plus' className="w-10 h-10"/>
                         </>
-                        :location.pathname==="/ui/Clients"?
+                        : location.pathname === "/ui/Clients" ?
                             <Icon name='plus' className="w-10 h-10"/>
-                            :location.pathname==="/ui/JobOffers"? <>
-                                <Icon name='filter' className={`w-10 h-10 ${openJobOfferFilter ? "fill-blue-500" : "fill-black"} cursor-pointer`} onClick={()=>switchJobOfferFilter()} />
-                                <Icon name='plus' className="w-10 h-10"/>
-                            </>
-                    :""}
+                            : location.pathname === "/ui/JobOffers" ? <>
+                                    <Icon name='filter'
+                                          className={`w-10 h-10 ${openJobOfferFilter ? "fill-blue-500" : "fill-black"} cursor-pointer`}
+                                          onClick={() => switchJobOfferFilter()}/>
+                                    <Icon name='plus' className="w-10 h-10"/>
+                                </>
+                                : ""}
                 </div>
             </div>
         </div>
@@ -114,28 +120,31 @@ function Skeleton() {
         fetchCurrentUser().then()
     }, [])
 
-    const switchFilter = ()=> {
+    const switchFilter = () => {
         setOpenFilter(prevState => !prevState);
     }
-    const switchJobOfferFilter = ()=> {
+    const switchJobOfferFilter = () => {
         setOpenJobOfferFilter(prevState => !prevState);
     }
     return (
         <Router>
-        <div className={"h-full w-full flex"}>
-            <SideBar currentUser={currentUser} setCurrentUser={setCurrentUser}></SideBar>
-            <div className="w-4/5 flex flex-col items-center">
-                <TopBar switchFilter={switchFilter} openFilter={openFilter} switchJobOfferFilter={switchJobOfferFilter} openJobOfferFilter={openJobOfferFilter}/>
-                <Routes>
-                    <Route path={"/ui"} element={<div className={"flex-1"}> </div>}/>
-                    <Route path={"/ui/Clients"} element={<ClientsTable/>}/>
-                    <Route path={"/ui/Candidates"} element={<ProfessionalsTable  openFilter={openFilter} />}/>
-                    <Route path={"/ui/JobOffers"} element={<JobOffersTable  openJobOfferFilter={openJobOfferFilter}/>}/>
-                    <Route path={"/ui/Settings"} element={<div></div>}/>
-                    <Route path={"/ui/Report"} element={<div></div>}/>
-                </Routes>
+            <div className={"h-full w-full flex"}>
+                <SideBar currentUser={currentUser} setCurrentUser={setCurrentUser}></SideBar>
+                <div className="w-4/5 flex flex-col items-center">
+                    <TopBar switchFilter={switchFilter} openFilter={openFilter}
+                            switchJobOfferFilter={switchJobOfferFilter} openJobOfferFilter={openJobOfferFilter}/>
+                    <Routes>
+                        <Route path={"/ui/home"} element={<HomePage/>}/>
+                        <Route path={"/ui"} element={<div className={"flex-1"}></div>}/>
+                        <Route path={"/ui/Clients"} element={<ClientsTable/>}/>
+                        <Route path={"/ui/Candidates"} element={<ProfessionalsTable openFilter={openFilter}/>}/>
+                        <Route path={"/ui/JobOffers"}
+                               element={<JobOffersTable openJobOfferFilter={openJobOfferFilter}/>}/>
+                        <Route path={"/ui/Settings"} element={<div></div>}/>
+                        <Route path={"/ui/Report"} element={<div></div>}/>
+                    </Routes>
+                </div>
             </div>
-        </div>
         </Router>
     )
 }

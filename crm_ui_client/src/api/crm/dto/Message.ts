@@ -40,6 +40,7 @@ export class Message implements MessageRawData {
     }
 
     static fromJsonObject(obj: MessageRawData): Message | null {
+        console.log(`CIAO ${obj}`)
         try {
             return new Message(
                 obj.messageId,
