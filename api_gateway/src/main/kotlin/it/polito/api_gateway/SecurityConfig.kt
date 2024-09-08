@@ -38,7 +38,7 @@ class SecurityConfig(val crr: ClientRegistrationRepository) {
 
                 /* Resource Servers */
                 it.requestMatchers("/crm/api/messages").permitAll()
-                it.requestMatchers("/crm/**").permitAll()
+                it.requestMatchers("/crm/**").authenticated()
 
                 it.requestMatchers("/communication-manager/**").authenticated()
 
