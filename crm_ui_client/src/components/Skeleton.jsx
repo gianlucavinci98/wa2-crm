@@ -31,7 +31,7 @@ function TopBar({switchFilter, openFilter ,addNew, setAddNew, filterPresent}) {
                         {!location.pathname.includes("/ui/Home") ?
                             <Icon name='plus' className={`w-10 h-10"${addNew ? "fill-blue-500" : "fill-black"} cursor-pointer`} onClick={()=>setAddNew(true)} />
                             :
-                            <button className={"page-button bg-stone-300 text-white"}>Login</button>
+                            <button className={"page-button hover:bg-blue-500 hover:text-white"}>Login</button>
                         }
                     </>
                 </div>
