@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController
 class JobOfferStatisticController(private val jobOfferStatisticService: JobOfferStatisticService) {
     @GetMapping("/timecount")
     @PreAuthorize("hasAnyRole('ROLE_manager')")
-    fun getAverageStatusTime(): ResponseEntity<JobOfferTimeStatisticDTO> {
+    fun getElapsedStatusTime(): ResponseEntity<JobOfferTimeStatisticDTO> {
         return ResponseEntity.ok(jobOfferStatisticService.getElapsedStatusTime())
     }
 
