@@ -9,10 +9,11 @@ import {User} from "../api/api_gateway/dto/User.ts";
 import "./Skeleton.css"
 import HomePage from "./HomePage.jsx";
 import JobOfferForm from "./JobofferForm.jsx";
+import {JobOffer} from "../api/crm/dto/JobOffer.ts";
 
 
 // eslint-disable-next-line react/prop-types
-function TopBar({switchFilter, openFilter ,addNew, setAddNew, filterPresent}) {
+function TopBar({switchFilter, openFilter, addNew, setAddNew, filterPresent}) {
 
     let location = useLocation();
 
@@ -27,10 +28,14 @@ function TopBar({switchFilter, openFilter ,addNew, setAddNew, filterPresent}) {
                 <div className={"flex gap-8"}>
                     <>
                         {filterPresent &&
-                            <Icon name='filter' className={`w-10 h-10 ${openFilter ? "fill-blue-500" : "fill-black"} cursor-pointer`} onClick={()=>switchFilter()} />
+                            <Icon name='filter'
+                                  className={`w-10 h-10 ${openFilter ? "fill-blue-500" : "fill-black"} cursor-pointer`}
+                                  onClick={() => switchFilter()}/>
                         }
                         {!location.pathname.includes("/ui/Home") ?
-                            <Icon name='plus' className={`w-10 h-10"${addNew ? "fill-blue-500" : "fill-black"} cursor-pointer`} onClick={()=>setAddNew(true)} />
+                            <Icon name='plus'
+                                  className={`w-10 h-10"${addNew ? "fill-blue-500" : "fill-black"} cursor-pointer`}
+                                  onClick={() => setAddNew(true)}/>
                             :
                             <button className={"page-button hover:bg-blue-500 hover:text-white"}>Login</button>
                         }
@@ -118,21 +123,23 @@ function Skeleton() {
 
     return (
         <Router>
-        <div className={"h-full w-full flex"}>
-            <SideBar currentUser={currentUser} setCurrentUser={setCurrentUser}></SideBar>
-            <div className="w-4/5 flex flex-col items-center">
-                <Routes>
-                    <Route path={"/ui"} element={<div className={"flex-1"}> </div>}/>
-                    <Route path={"/ui/home"} element={<HomePage/>}/>
-                    <Route path={"/ui/Clients"} element={<ClientsTable/>}/>
-                    <Route path={"/ui/Candidates"} element={<ProfessionalsTable/>}/>
-                    <Route path={"/ui/JobOffers"} element={<JobOffersTable/>}/>
-                    <Route path={"/ui/JobOffers/new"} element={<JobOfferForm/>}/>
-                    <Route path={"/ui/Settings"} element={<div></div>}/>
-                    <Route path={"/ui/Report"} element={<div></div>}/>
-                </Routes>
+            <div className={"h-full w-full flex"}>
+                <SideBar currentUser={currentUser} setCurrentUser={setCurrentUser}></SideBar>
+                <div className="w-4/5 flex flex-col items-center">
+                    <Routes>
+                        <Route path={"/ui"} element={<div className={"flex-1"}></div>}/>
+                        <Route path={"/ui/home"} element={<HomePage/>}/>
+                        <Route path={"/ui/Clients"} element={<ClientsTable/>}/>
+                        <Route path={"/ui/Candidates"} element={<ProfessionalsTable/>}/>
+                        <Route path={"/ui/JobOffers"} element={<JobOffersTable/>}/>
+                        <Route path={"/ui/JobOffers/add"} element={<JobOfferForm/>}/>
+                        <Route path={"/ui/JobOffers/update/:jobOfferId"} element={<JobOfferForm
+                            jobOffer={new JobOffer(null, "description", "details", null, ["ciao", "bello"], BigInt(50), null, null)}/>}/>
+                        <Route path={"/ui/Settings"} element={<div></div>}/>
+                        <Route path={"/ui/Report"} element={<div></div>}/>
+                    </Routes>
+                </div>
             </div>
-        </div>
         </Router>
     )
 }

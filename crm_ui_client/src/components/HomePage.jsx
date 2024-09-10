@@ -2,8 +2,6 @@ import {useState} from "react"
 import {Channel, Message} from "../api/crm/dto/Message.ts"
 import MessageAPI from "../api/crm/MessageAPI.js"
 import "./HomePage.css"
-import JobOfferAPI from "../api/crm/JobOfferAPI.js";
-import JobOffer from "./JobOffer.jsx";
 import {TopBar} from "./Skeleton.jsx";
 
 function HomePage() {
@@ -53,7 +51,7 @@ function HomePage() {
     };
 
     const onChangeHandler = (event) => {
-        const { name, value } = event.target;
+        const {name, value} = event.target;
 
         // Update the message while keeping its structure
         setMessage((prevMessage) => ({
@@ -69,7 +67,7 @@ function HomePage() {
 
     return (
         <>
-            <TopBar />
+            <TopBar/>
             <div className="w-[90%] flex-1 flex gap-12 justify-around items-center ">
                 <div className={"flex flex-col gap-6 w-1/3 h-1/2"}>
                     <h5 className="text-3xl font-semibold">Contact Our Job Placement Team</h5>
@@ -119,7 +117,7 @@ function HomePage() {
                     <div className="flex">
                         <div className={"flex flex-col justify-between"}>
                             <label className={errors.body ? "text-red-500" : ""}>Message:</label>
-                            <p >{message.body.length}/500</p>
+                            <p>{message.body.length}/500</p>
                         </div>
                         <textarea
                             required
@@ -149,4 +147,4 @@ function HomePage() {
     );
 }
 
-export default HomePage;
+export default HomePage
