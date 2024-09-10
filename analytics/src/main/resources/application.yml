@@ -6,6 +6,11 @@ spring:
   data:
     mongodb:
       uri: mongodb://root:secret@localhost:27017/mydatabase
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:9090/realms/crm
   kafka:
     consumer:
       bootstrap-servers: localhost:9092

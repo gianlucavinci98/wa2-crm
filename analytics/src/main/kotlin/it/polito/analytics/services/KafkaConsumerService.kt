@@ -8,7 +8,7 @@ import it.polito.analytics.dtos.JobOfferDTO
 import it.polito.analytics.dtos.JobOfferSkillDTO
 import it.polito.analytics.repositories.JobOfferRepository
 import it.polito.analytics.repositories.JobOfferSkillsRepository
-import it.polito.analytics.utilities.KafkaMessage
+import it.polito.analytics.utils.KafkaMessage
 import org.slf4j.LoggerFactory
 import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.stereotype.Service

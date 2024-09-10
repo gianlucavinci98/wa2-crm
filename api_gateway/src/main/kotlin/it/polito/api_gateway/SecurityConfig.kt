@@ -44,6 +44,8 @@ class SecurityConfig(val crr: ClientRegistrationRepository) {
 
                 it.requestMatchers("/document-store/**").authenticated()
 
+                it.requestMatchers("/analytics/**").authenticated()
+
                 /* UI Server */
                 it.requestMatchers("/ui/**").permitAll()
 

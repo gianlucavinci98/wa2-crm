@@ -1,4 +1,4 @@
-package it.polito.analytics.utilities
+package it.polito.analytics.utils
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 
