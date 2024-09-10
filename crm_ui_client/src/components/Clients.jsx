@@ -92,7 +92,7 @@ function ClientsTable() {
     }
     else return (
         <>
-            <TopBar addNew={editClient} setAddNew={(it)=>setEditClient(it)}></TopBar>
+            <TopBar addNew={editClient} setAddNew={()=>setEditClient(!editClient)}></TopBar>
             {!editClient ?
                 <div className={"w-full flex-1 p-6 flex flex-col justify-between items-center"}>
                     <table className={"w-full rounded-2xl border-stone-600 shadow-md  overflow-hidden text-stone-800"}>

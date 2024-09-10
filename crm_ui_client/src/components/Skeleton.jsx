@@ -29,7 +29,7 @@ function TopBar({switchFilter, openFilter ,addNew, setAddNew, filterPresent}) {
                             <Icon name='filter' className={`w-10 h-10 ${openFilter ? "fill-blue-500" : "fill-black"} cursor-pointer`} onClick={()=>switchFilter()} />
                         }
                         {!location.pathname.includes("/ui/Home") ?
-                            <Icon name='plus' className={`w-10 h-10"${addNew ? "fill-blue-500" : "fill-black"} cursor-pointer`} onClick={()=>setAddNew(true)} />
+                            <Icon name='plus' className={`w-10 h-10 ${addNew ? "fill-blue-500" : "fill-black"} cursor-pointer`} onClick={()=>setAddNew()} />
                             :
                             <button className={"page-button hover:bg-blue-500 hover:text-white"}>Login</button>
                         }
