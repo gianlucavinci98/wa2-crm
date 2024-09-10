@@ -40,9 +40,9 @@ export class TimeCount implements TimeCountRawData {
 
 export class JobOfferTimeStatistic implements JobOfferTimeStatisticRawData {
     totalJobOffer: bigint
-    timeStatistic: Array<TimeStatistic>
+    timeStatistic: TimeStatistic[]
 
-    constructor(totalJobOffer: bigint, timeStatistic: Array<TimeStatistic>) {
+    constructor(totalJobOffer: bigint, timeStatistic: TimeStatistic[]) {
         this.totalJobOffer = totalJobOffer
         this.timeStatistic = timeStatistic
     }

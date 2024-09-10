@@ -5,7 +5,7 @@ interface JobOfferHistoryRawData {
     jobOfferHistoryId: bigint
     jobOfferStatus: JobOfferStatus
     date: string | null
-    candidates: Set<ApplicationRawData>
+    candidates: ApplicationRawData[]
     note: string | null
 }
 
@@ -13,14 +13,14 @@ export class JobOfferHistory implements JobOfferHistoryRawData {
     jobOfferHistoryId: bigint
     jobOfferStatus: JobOfferStatus
     date: string | null
-    candidates: Set<Application>
+    candidates: Application[]
     note: string | null
 
     constructor(
         jobOfferHistoryId: bigint,
         jobOfferStatus: JobOfferStatus,
         date: string | null,
-        candidates: Set<Application>,
+        candidates: Application[],
         note: string | null
     ) {
         this.jobOfferHistoryId = jobOfferHistoryId
@@ -33,10 +33,10 @@ export class JobOfferHistory implements JobOfferHistoryRawData {
     static fromJsonObject(obj: JobOfferHistoryRawData): JobOfferHistory | null {
         try {
             const tmp: Array<Application> = Array.from(obj.candidates.values()).map((e: ApplicationRawData) => Application.fromJsonObject(e)!)
-            const candidates: Set<Application> | null = new Set()
+            const candidates: Application[] | null = []
 
             tmp.forEach((e: Application) => {
-                candidates.add(e)
+                candidates.push(e)
             })
 
             return new JobOfferHistory(

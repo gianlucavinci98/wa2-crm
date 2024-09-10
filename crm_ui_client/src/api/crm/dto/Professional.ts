@@ -7,30 +7,30 @@ export enum EmploymentState {
 
 interface ProfessionalRawData {
     professionalId: bigint | null
-    skills: Set<string>
+    skills: string[]
     employmentState: EmploymentState | null
     dailyRate: number
     location: string
     contact: ContactRawData | null
-    candidates: Set<ApplicationRawData>
+    candidates: ApplicationRawData[]
 }
 
 export class Professional implements ProfessionalRawData {
     professionalId: bigint | null
-    skills: Set<string>
+    skills: string[]
     employmentState: EmploymentState | null
     dailyRate: number
     location: string
     contact: ContactRawData | null
-    candidates: Set<Application>
+    candidates: Application[]
 
     constructor(
         professionalId: bigint | null,
-        skills: Set<string>,
+        skills: string[],
         employmentState: EmploymentState | null,
         dailyRate: number, location: string,
         contact: ContactRawData | null,
-        candidates: Set<Application>
+        candidates: Application[]
     ) {
         this.professionalId = professionalId
         this.skills = skills
@@ -44,10 +44,10 @@ export class Professional implements ProfessionalRawData {
     static fromJsonObject(obj: ProfessionalRawData): Professional | null {
         try {
             const tmp: Array<Application> = Array.from(obj.candidates.values()).map((e: ApplicationRawData) => Application.fromJsonObject(e)!)
-            const candidates: Set<Application> | null = new Set()
+            const candidates: Application[] | null = []
 
             tmp.forEach((e: Application) => {
-                candidates.add(e)
+                candidates.push(e)
             })
 
             if (obj.contact ?? false) {

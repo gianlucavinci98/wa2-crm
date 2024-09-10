@@ -12,18 +12,18 @@ interface JobOfferRawData {
     description: string
     details: string | null
     status: JobOfferStatus | null
-    requiredSkills: Set<string>
+    requiredSkills: string[]
     duration: bigint
     value: number | null
     selectedProfessionalId: bigint | null
 }
 
-export class JobOffer implements JobOffer {
+export class JobOffer implements JobOfferRawData {
     jobOfferId: bigint | null
     description: string
     details: string | null
     status: JobOfferStatus | null
-    requiredSkills: Set<string>
+    requiredSkills: string[]
     duration: bigint
     value: number | null
     selectedProfessionalId: bigint | null
@@ -33,7 +33,7 @@ export class JobOffer implements JobOffer {
         description: string,
         details: string | null,
         status: JobOfferStatus | null,
-        requiredSkills: Set<string>,
+        requiredSkills: string[],
         duration: bigint,
         value: number | null,
         selectedProfessionalId: bigint | null

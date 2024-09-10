@@ -33,6 +33,8 @@ function HomePage() {
         if (localErrorEmail === "" && localErrorSubject === "" && localErrorBody === "") {
             MessageAPI.InsertNewMessage(message).then((response) => {
                 console.log(response)
+            }).catch((e) => {
+                console.log(e)
             })
         } else {
             setErrorEmail(localErrorEmail)

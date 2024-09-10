@@ -9,9 +9,9 @@ interface ContactDetailsRawData {
     surname: string
     ssn: string
     category: Category
-    addresses: Set<Address>
-    emails: Set<Email>
-    telephones: Set<Telephone>
+    addresses: Address[]
+    emails: Email[]
+    telephones: Telephone[]
 }
 
 export class ContactDetails implements ContactDetailsRawData {
@@ -20,18 +20,18 @@ export class ContactDetails implements ContactDetailsRawData {
     surname: string
     ssn: string
     category: Category
-    addresses: Set<Address>
-    emails: Set<Email>
-    telephones: Set<Telephone>
+    addresses: Address[]
+    emails: Email[]
+    telephones: Telephone[]
 
     constructor(contactId: bigint,
                 name: string,
                 surname: string,
                 ssn: string,
                 category: Category,
-                addresses: Set<Address>,
-                emails: Set<Email>,
-                telephones: Set<Telephone>
+                addresses: Address[],
+                emails: Email[],
+                telephones: Telephone[]
     ) {
         this.contactId = contactId
         this.name = name

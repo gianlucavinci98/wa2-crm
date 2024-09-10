@@ -8,6 +8,7 @@ import JobOffersTable from "./JobOffer.jsx";
 import {User} from "../api/api_gateway/dto/User.ts";
 import "./Skeleton.css"
 import HomePage from "./HomePage.jsx";
+import JobOfferForm from "./JobofferForm.jsx";
 
 
 // eslint-disable-next-line react/prop-types
@@ -118,6 +119,7 @@ function Skeleton() {
                     <Route path={"/ui/Clients"} element={<ClientsTable/>}/>
                     <Route path={"/ui/Candidates"} element={<ProfessionalsTable/>}/>
                     <Route path={"/ui/JobOffers"} element={<JobOffersTable/>}/>
+                    <Route path={"/ui/JobOffers/new"} element={<JobOfferForm/>}/>
                     <Route path={"/ui/Settings"} element={<div></div>}/>
                     <Route path={"/ui/Report"} element={<div></div>}/>
                 </Routes>

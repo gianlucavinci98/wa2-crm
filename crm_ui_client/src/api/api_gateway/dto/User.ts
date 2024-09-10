@@ -7,7 +7,7 @@ interface UserRawData {
     logoutUrl: string
     principal: string
     xsrfToken: string
-    roles: Set<string>
+    roles: string[]
 }
 
 export class User implements UserRawData {
@@ -19,7 +19,7 @@ export class User implements UserRawData {
     logoutUrl: string
     principal: string
     xsrfToken: string
-    roles: Set<string>
+    roles: string[]
 
     constructor(
         username: string,
@@ -30,7 +30,7 @@ export class User implements UserRawData {
         logoutUrl: string,
         principal: string,
         xsrfToken: string,
-        roles: Set<string>
+        roles: string[]
     ) {
         this.username = username
         this.name = name
