@@ -16,3 +16,12 @@
 ::-webkit-scrollbar-thumb:hover {
     background: #555;  /* Colore al passaggio del mouse */
 }
+input, textarea{
+    @apply rounded-md border-[1px] border-stone-800 w-96
+}
+.page-button{
+    @apply p-2 w-56 rounded-lg text-2xl font-semibold text-center text-black h-12 border-[1px] shadow-md flex justify-around items-center;
+}
+label{
+    @apply text-stone-800 font-semibold w-36 text-lg
+}
