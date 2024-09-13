@@ -2,7 +2,7 @@ import {JobOfferStatus} from "./JobOffer";
 import {Application, ApplicationRawData} from "./Application";
 
 interface JobOfferHistoryRawData {
-    jobOfferHistoryId: bigint
+    jobOfferHistoryId: number
     jobOfferStatus: JobOfferStatus
     date: string | null
     candidates: ApplicationRawData[]
@@ -10,14 +10,14 @@ interface JobOfferHistoryRawData {
 }
 
 export class JobOfferHistory implements JobOfferHistoryRawData {
-    jobOfferHistoryId: bigint
+    jobOfferHistoryId: number
     jobOfferStatus: JobOfferStatus
     date: string | null
     candidates: Application[]
     note: string | null
 
     constructor(
-        jobOfferHistoryId: bigint,
+        jobOfferHistoryId: number,
         jobOfferStatus: JobOfferStatus,
         date: string | null,
         candidates: Application[],

@@ -1,6 +1,5 @@
 package it.polito.crm.dtos
 
-import it.polito.crm.entities.Contact
 import it.polito.crm.utils.EmploymentState
 import jakarta.validation.constraints.Min
 import jakarta.validation.constraints.NotBlank
@@ -17,6 +16,6 @@ data class ProfessionalDTO(
     val dailyRate: Float,
     @field:NotBlank(message = "Invalid location, it must not be blank")
     val location: String,
-    val contact: Contact?,
+    val contact: ContactDTO?,
     val jobApplications: MutableSet<ApplicationDTO>?
 )

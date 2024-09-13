@@ -17,32 +17,32 @@ export enum DocumentCategory {
 }
 
 interface DocumentMetadataRawData {
-    metadataId: bigint
+    metadataId: number
     name: string
-    size: bigint
+    size: number
     contentType: string
     timestamp: string
     category: DocumentCategory
-    id: bigint
+    id: number
 }
 
 export class DocumentMetadata implements DocumentMetadataRawData {
-    metadataId: bigint
+    metadataId: number
     name: string
-    size: bigint
+    size: number
     contentType: string
     timestamp: string
     category: DocumentCategory
-    id: bigint
+    id: number
 
     constructor(
-        metadataId: bigint,
+        metadataId: number,
         name: string,
-        size: bigint,
+        size: number,
         contentType: string,
         timestamp: string,
         category: DocumentCategory,
-        id: bigint
+        id: number
     ) {
         this.metadataId = metadataId
         this.name = name

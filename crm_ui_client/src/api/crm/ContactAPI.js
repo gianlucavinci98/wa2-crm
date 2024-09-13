@@ -39,12 +39,12 @@ async function GetContactById(contactId) {
     }
 }
 
-async function InsertNewContact(contact) {
+async function InsertNewContact(contact, xsrfToken) {
     const response = await fetch(
         buildUrl(URL_CONTACTS, null, null), {
             method: 'POST',
             credentials: 'include',
-            headers: {'Content-Type': 'application/json'},
+            headers: {'Content-Type': 'application/json', 'X-XSRF-TOKEN': xsrfToken},
             body: JSON.stringify({contact})
         })
 
@@ -57,12 +57,12 @@ async function InsertNewContact(contact) {
     }
 }
 
-async function UpdateContact(contact) {
+async function UpdateContact(contact, xsrfToken) {
     const response = await fetch(
         buildUrl(`${URL_CONTACTS}/${contact.contactId}`, null, null), {
             method: 'PUT',
             credentials: 'include',
-            headers: {'Content-Type': 'application/json'},
+            headers: {'Content-Type': 'application/json', 'X-XSRF-TOKEN': xsrfToken},
             body: JSON.stringify({contact})
         })
 
@@ -75,11 +75,12 @@ async function UpdateContact(contact) {
     }
 }
 
-async function DeleteContact(contact) {
+async function DeleteContact(contact, xsrfToken) {
     const response = await fetch(
         buildUrl(`${URL_CONTACTS}/${contact.contactId}`, null, null), {
             method: 'DELETE',
-            credentials: 'include'
+            credentials: 'include',
+            headers: {'Content-Type': 'application/json', 'X-XSRF-TOKEN': xsrfToken},
         })
 
     const obj = await response.json()
@@ -89,12 +90,12 @@ async function DeleteContact(contact) {
     }
 }
 
-async function InsertNewAddressToContact(contactId, address) {
+async function InsertNewAddressToContact(contactId, address, xsrfToken) {
     const response = await fetch(
         buildUrl(`${URL_CONTACTS}/${contactId}/address`, null, null), {
             method: 'POST',
             credentials: 'include',
-            headers: {'Content-Type': 'application/json'},
+            headers: {'Content-Type': 'application/json', 'X-XSRF-TOKEN': xsrfToken},
             body: JSON.stringify({address})
         })
 
@@ -107,12 +108,12 @@ async function InsertNewAddressToContact(contactId, address) {
     }
 }
 
-async function InsertNewEmailToContact(contactId, email) {
+async function InsertNewEmailToContact(contactId, email, xsrfToken) {
     const response = await fetch(
         buildUrl(`${URL_CONTACTS}/${contactId}/email`, null, null), {
             method: 'POST',
             credentials: 'include',
-            headers: {'Content-Type': 'application/json'},
+            headers: {'Content-Type': 'application/json', 'X-XSRF-TOKEN': xsrfToken},
             body: JSON.stringify({email})
         })
 
@@ -125,12 +126,12 @@ async function InsertNewEmailToContact(contactId, email) {
     }
 }
 
-async function InsertNewTelephoneToContact(contactId, telephone) {
+async function InsertNewTelephoneToContact(contactId, telephone, xsrfToken) {
     const response = await fetch(
         buildUrl(`${URL_CONTACTS}/${contactId}/telephone`, null, null), {
             method: 'POST',
             credentials: 'include',
-            headers: {'Content-Type': 'application/json'},
+            headers: {'Content-Type': 'application/json', 'X-XSRF-TOKEN': xsrfToken},
             body: JSON.stringify({telephone})
         })
 
@@ -143,12 +144,12 @@ async function InsertNewTelephoneToContact(contactId, telephone) {
     }
 }
 
-async function UpdateAddressOfContact(contactId, addressId, address) {
+async function UpdateAddressOfContact(contactId, addressId, address, xsrfToken) {
     const response = await fetch(
         buildUrl(`${URL_CONTACTS}/${contactId}/address/${addressId}`, null, null), {
             method: 'PUT',
             credentials: 'include',
-            headers: {'Content-Type': 'application/json'},
+            headers: {'Content-Type': 'application/json', 'X-XSRF-TOKEN': xsrfToken},
             body: JSON.stringify({address})
         })
 
@@ -161,12 +162,12 @@ async function UpdateAddressOfContact(contactId, addressId, address) {
     }
 }
 
-async function UpdateEmailOfContact(contactId, emailId, email) {
+async function UpdateEmailOfContact(contactId, emailId, email, xsrfToken) {
     const response = await fetch(
         buildUrl(`${URL_CONTACTS}/${contactId}/email/${emailId}`, null, null), {
             method: 'PUT',
             credentials: 'include',
-            headers: {'Content-Type': 'application/json'},
+            headers: {'Content-Type': 'application/json', 'X-XSRF-TOKEN': xsrfToken},
             body: JSON.stringify({email})
         })
 
@@ -179,12 +180,12 @@ async function UpdateEmailOfContact(contactId, emailId, email) {
     }
 }
 
-async function UpdateTelephoneOfContact(contactId, telephoneId, telephone) {
+async function UpdateTelephoneOfContact(contactId, telephoneId, telephone, xsrfToken) {
     const response = await fetch(
         buildUrl(`${URL_CONTACTS}/${contactId}/telephone/${telephoneId}`, null, null), {
             method: 'PUT',
             credentials: 'include',
-            headers: {'Content-Type': 'application/json'},
+            headers: {'Content-Type': 'application/json', 'X-XSRF-TOKEN': xsrfToken},
             body: JSON.stringify({telephone})
         })
 
@@ -197,11 +198,12 @@ async function UpdateTelephoneOfContact(contactId, telephoneId, telephone) {
     }
 }
 
-async function DeleteAddressFromContact(contactId, addressId) {
+async function DeleteAddressFromContact(contactId, addressId, xsrfToken) {
     const response = await fetch(
         buildUrl(`${URL_CONTACTS}/${contactId}/address/${addressId}`, null, null), {
             method: 'DELETE',
-            credentials: 'include'
+            credentials: 'include',
+            headers: {'Content-Type': 'application/json', 'X-XSRF-TOKEN': xsrfToken},
         })
 
     const obj = await response.json()
@@ -211,11 +213,12 @@ async function DeleteAddressFromContact(contactId, addressId) {
     }
 }
 
-async function DeleteEmailFromContact(contactId, emailId) {
+async function DeleteEmailFromContact(contactId, emailId, xsrfToken) {
     const response = await fetch(
         buildUrl(`${URL_CONTACTS}/${contactId}/email/${emailId}`, null, null), {
             method: 'DELETE',
-            credentials: 'include'
+            credentials: 'include',
+            headers: {'Content-Type': 'application/json', 'X-XSRF-TOKEN': xsrfToken},
         })
 
     const obj = await response.json()
@@ -225,11 +228,12 @@ async function DeleteEmailFromContact(contactId, emailId) {
     }
 }
 
-async function DeleteTelephoneFromContact(contactId, telephoneId) {
+async function DeleteTelephoneFromContact(contactId, telephoneId, xsrfToken) {
     const response = await fetch(
         buildUrl(`${URL_CONTACTS}/${contactId}/telephone/${telephoneId}`, null, null), {
             method: 'DELETE',
-            credentials: 'include'
+            credentials: 'include',
+            headers: {'Content-Type': 'application/json', 'X-XSRF-TOKEN': xsrfToken},
         })
 
     const obj = await response.json()

@@ -6,7 +6,7 @@ export enum EmploymentState {
 }
 
 interface ProfessionalRawData {
-    professionalId: bigint | null
+    professionalId: number | null
     skills: string[]
     employmentState: EmploymentState | null
     dailyRate: number
@@ -16,7 +16,7 @@ interface ProfessionalRawData {
 }
 
 export class Professional implements ProfessionalRawData {
-    professionalId: bigint | null
+    professionalId: number | null
     skills: string[]
     employmentState: EmploymentState | null
     dailyRate: number
@@ -25,7 +25,7 @@ export class Professional implements ProfessionalRawData {
     candidates: Application[]
 
     constructor(
-        professionalId: bigint | null,
+        professionalId: number | null,
         skills: string[],
         employmentState: EmploymentState | null,
         dailyRate: number, location: string,

@@ -4,7 +4,7 @@ import {Telephone} from "./Telephone";
 import {Category} from "./Contact";
 
 interface ContactDetailsRawData {
-    contactId: bigint
+    contactId: number
     name: string
     surname: string
     ssn: string
@@ -15,7 +15,7 @@ interface ContactDetailsRawData {
 }
 
 export class ContactDetails implements ContactDetailsRawData {
-    contactId: bigint
+    contactId: number
     name: string
     surname: string
     ssn: string
@@ -24,7 +24,7 @@ export class ContactDetails implements ContactDetailsRawData {
     emails: Email[]
     telephones: Telephone[]
 
-    constructor(contactId: bigint,
+    constructor(contactId: number,
                 name: string,
                 surname: string,
                 ssn: string,

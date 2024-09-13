@@ -3,7 +3,7 @@ export enum Channel {
 }
 
 interface MessageRawData {
-    messageId: bigint | null
+    messageId: number | null
     sender: string
     date: string
     subject: string | null
@@ -13,7 +13,7 @@ interface MessageRawData {
 }
 
 export class Message implements MessageRawData {
-    messageId: bigint | null
+    messageId: number | null
     sender: string
     date: string
     subject: string | null
@@ -22,7 +22,7 @@ export class Message implements MessageRawData {
     priority: number | null
 
     constructor(
-        messageId: bigint | null,
+        messageId: number | null,
         sender: string,
         date: string,
         subject: string | null,

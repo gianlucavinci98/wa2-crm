@@ -51,12 +51,12 @@ async function GetMessageHistoryById(messageId) {
     }
 }
 
-async function InsertNewMessage(message) {
+async function InsertNewMessage(message, xsrfToken) {
     const response = await fetch(
         buildUrl(URL_MESSAGES, null, null), {
             method: 'POST',
             credentials: 'include',
-            headers: {'Content-Type': 'application/json'},
+            headers: {'Content-Type': 'application/json', 'X-XSRF-TOKEN': xsrfToken},
             body: JSON.stringify(message)
         })
 
@@ -69,12 +69,12 @@ async function InsertNewMessage(message) {
     }
 }
 
-async function UpdatePriorityOfMessage(messageId, priority) {
+async function UpdatePriorityOfMessage(messageId, priority, xsrfToken) {
     const response = await fetch(
         buildUrl(`${URL_MESSAGES}/${messageId}/priority`, null, null), {
             method: 'PUT',
             credentials: 'include',
-            headers: {'Content-Type': 'application/json'},
+            headers: {'Content-Type': 'application/json', 'X-XSRF-TOKEN': xsrfToken},
             body: priority
         })
 
@@ -87,12 +87,12 @@ async function UpdatePriorityOfMessage(messageId, priority) {
     }
 }
 
-async function UpdateStatusOfMessage(messageId, messageHistory) {
+async function UpdateStatusOfMessage(messageId, messageHistory, xsrfToken) {
     const response = await fetch(
         buildUrl(`${URL_MESSAGES}/${messageId}/status`, null, null), {
             method: 'PUT',
             credentials: 'include',
-            headers: {'Content-Type': 'application/json'},
+            headers: {'Content-Type': 'application/json', 'X-XSRF-TOKEN': xsrfToken},
             body: JSON.stringify({messageHistory})
         })
 

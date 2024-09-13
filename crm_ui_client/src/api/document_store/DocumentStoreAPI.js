@@ -50,7 +50,7 @@ async function GetDocumentDataById(documentMetadataId) {
     }
 }
 
-async function InsertNewDocument(file) {
+async function InsertNewDocument(file, xsrfToken) {
     const formData = new FormData()
     formData.append("file", file)
 
@@ -58,6 +58,7 @@ async function InsertNewDocument(file) {
         buildUrl(URL_DOCUMENT_STORE, null, null), {
             method: 'POST',
             credentials: 'include',
+            headers: {'X-XSRF-TOKEN': xsrfToken},
             body: formData
         })
 
@@ -70,7 +71,7 @@ async function InsertNewDocument(file) {
     }
 }
 
-async function UpdateDocument(documentMetadataId, file) {
+async function UpdateDocument(documentMetadataId, file, xsrfToken) {
     const formData = new FormData()
     formData.append("file", file)
 
@@ -78,6 +79,7 @@ async function UpdateDocument(documentMetadataId, file) {
         buildUrl(`${URL_DOCUMENT_STORE}/${documentMetadataId}`, null, null), {
             method: 'POST',
             credentials: 'include',
+            headers: {'X-XSRF-TOKEN': xsrfToken},
             body: formData
         })
 
@@ -90,11 +92,12 @@ async function UpdateDocument(documentMetadataId, file) {
     }
 }
 
-async function DeleteDocument(documentMetadataId) {
+async function DeleteDocument(documentMetadataId, xsrfToken) {
     const response = await fetch(
         buildUrl(`${URL_DOCUMENT_STORE}/${documentMetadataId}`, null, null), {
             method: 'DELETE',
-            credentials: 'include'
+            credentials: 'include',
+            headers: {'Content-Type': 'application/json', 'X-XSRF-TOKEN': xsrfToken},
         })
 
     const obj = await response.json()

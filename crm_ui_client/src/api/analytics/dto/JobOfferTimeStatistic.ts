@@ -1,26 +1,26 @@
 import {JobOfferStatus} from "../../crm/dto/JobOffer";
 
 interface JobOfferTimeStatisticRawData {
-    totalJobOffer: bigint
+    totalJobOffer: number
     timeStatistic: Array<TimeStatisticRawData>
 }
 
 interface TimeStatisticRawData {
-    id: bigint
+    id: number
     jobOfferHistory: Array<TimeCountRawData>
 }
 
 interface TimeCountRawData {
     status: JobOfferStatus
-    timeElapsed: bigint
-    count: bigint
+    timeElapsed: number
+    count: number
 }
 
 export class TimeStatistic implements TimeStatisticRawData {
-    id: bigint
+    id: number
     jobOfferHistory: Array<TimeCount>
 
-    constructor(id: bigint, jobOfferHistory: Array<TimeCount>) {
+    constructor(id: number, jobOfferHistory: Array<TimeCount>) {
         this.id = id
         this.jobOfferHistory = jobOfferHistory
     }
@@ -28,10 +28,10 @@ export class TimeStatistic implements TimeStatisticRawData {
 
 export class TimeCount implements TimeCountRawData {
     status: JobOfferStatus
-    timeElapsed: bigint
-    count: bigint
+    timeElapsed: number
+    count: number
 
-    constructor(status: JobOfferStatus, timeElapsed: bigint, count: bigint) {
+    constructor(status: JobOfferStatus, timeElapsed: number, count: number) {
         this.status = status
         this.timeElapsed = timeElapsed
         this.count = count
@@ -39,10 +39,10 @@ export class TimeCount implements TimeCountRawData {
 }
 
 export class JobOfferTimeStatistic implements JobOfferTimeStatisticRawData {
-    totalJobOffer: bigint
+    totalJobOffer: number
     timeStatistic: TimeStatistic[]
 
-    constructor(totalJobOffer: bigint, timeStatistic: TimeStatistic[]) {
+    constructor(totalJobOffer: number, timeStatistic: TimeStatistic[]) {
         this.totalJobOffer = totalJobOffer
         this.timeStatistic = timeStatistic
     }

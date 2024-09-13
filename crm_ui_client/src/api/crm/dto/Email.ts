@@ -1,13 +1,13 @@
 interface EmailRawData {
-    emailId: bigint | null
+    emailId: number | null
     email: string
 }
 
 export class Email implements EmailRawData {
-    emailId: bigint | null
+    emailId: number | null
     email: string
 
-    constructor(emailId: bigint | null, email: string) {
+    constructor(emailId: number | null, email: string) {
         this.emailId = emailId
         this.email = email
     }

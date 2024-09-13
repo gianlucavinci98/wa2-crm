@@ -3,19 +3,19 @@ export enum ApplicationStatus {
 }
 
 export interface ApplicationRawData {
-    professionalId: bigint
-    jobOfferHistoryId: bigint
+    professionalId: number
+    jobOfferHistoryId: number
     status: ApplicationStatus
     date: string
 }
 
 export class Application implements ApplicationRawData {
-    professionalId: bigint
-    jobOfferHistoryId: bigint
+    professionalId: number
+    jobOfferHistoryId: number
     status: ApplicationStatus
     date: string
 
-    constructor(professionalId: bigint, jobOfferHistoryId: bigint, status: ApplicationStatus, date: string) {
+    constructor(professionalId: number, jobOfferHistoryId: number, status: ApplicationStatus, date: string) {
         this.professionalId = professionalId
         this.jobOfferHistoryId = jobOfferHistoryId
         this.status = status

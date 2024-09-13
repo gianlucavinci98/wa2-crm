@@ -132,7 +132,7 @@ function Skeleton() {
                         <Route path={"/ui/Clients"} element={<ClientsTable/>}/>
                         <Route path={"/ui/Candidates"} element={<ProfessionalsTable/>}/>
                         <Route path={"/ui/JobOffers"} element={<JobOffersTable/>}/>
-                        <Route path={"/ui/JobOffers/add"} element={<JobOfferForm/>}/>
+                        <Route path={"/ui/JobOffers/add"} element={<JobOfferForm currentUser={currentUser}/>}/>
                         <Route path={"/ui/JobOffers/update/:jobOfferId"} element={<JobOfferForm
                             jobOffer={new JobOffer(null, "description", "details", null, ["ciao", "bello"], BigInt(50), null, null)}/>}/>
                         <Route path={"/ui/Settings"} element={<div></div>}/>

@@ -35,12 +35,12 @@ async function GetProfessionalById(professionalId) {
     }
 }
 
-async function InsertNewProfessional(professional) {
+async function InsertNewProfessional(professional, xsrfToken) {
     const response = await fetch(
         buildUrl(URL_PROFESSIONALS, null, null), {
             method: 'POST',
             credentials: 'include',
-            headers: {'Content-Type': 'application/json'},
+            headers: {'Content-Type': 'application/json', 'X-XSRF-TOKEN': xsrfToken},
             body: JSON.stringify({professional})
         })
 
@@ -53,12 +53,12 @@ async function InsertNewProfessional(professional) {
     }
 }
 
-async function UpdateProfessional(professional) {
+async function UpdateProfessional(professional, xsrfToken) {
     const response = await fetch(
         buildUrl(`${URL_PROFESSIONALS}/${professional.professionalId}`, null, null), {
             method: 'PUT',
             credentials: 'include',
-            headers: {'Content-Type': 'application/json'},
+            headers: {'Content-Type': 'application/json', 'X-XSRF-TOKEN': xsrfToken},
             body: JSON.stringify({professional})
         })
 
@@ -71,11 +71,12 @@ async function UpdateProfessional(professional) {
     }
 }
 
-async function DeleteProfessional(professionalId) {
+async function DeleteProfessional(professionalId, xsrfToken) {
     const response = await fetch(
         buildUrl(`${URL_PROFESSIONALS}/${professionalId}`, null, null), {
             method: 'DELETE',
-            credentials: 'include'
+            credentials: 'include',
+            headers: {'Content-Type': 'application/json', 'X-XSRF-TOKEN': xsrfToken},
         })
 
     const obj = await response.json()

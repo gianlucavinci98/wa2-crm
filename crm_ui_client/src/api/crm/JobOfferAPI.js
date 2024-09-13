@@ -50,13 +50,13 @@ async function GetJobOfferValue(jobOfferId) {
     }
 }
 
-async function InsertNewJobOffer(customerId, jobOffer) {
+async function InsertNewJobOffer(customerId, jobOffer, xsrfToken) {
     const response = await fetch(
         buildUrl(`${URL_JOB_OFFERS}/${customerId}`, null, null), {
             method: 'POST',
             credentials: 'include',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({jobOffer})
+            headers: {'Content-Type': 'application/json', 'X-XSRF-TOKEN': xsrfToken},
+            body: JSON.stringify(jobOffer)
         })
 
     const obj = await response.json()
@@ -68,12 +68,30 @@ async function InsertNewJobOffer(customerId, jobOffer) {
     }
 }
 
-async function UpdateJobOffer(jobOfferId, updateJobOffer) {
+async function InsertNewJobOfferDetails(jobOfferId, details, xsrfToken) {
+    const response = await fetch(
+        buildUrl(`${URL_JOB_OFFERS}/${jobOfferId}/details`, null, null), {
+            method: 'POST',
+            credentials: 'include',
+            headers: {'Content-Type': 'application/json', 'X-XSRF-TOKEN': xsrfToken},
+            body: JSON.stringify(details)
+        })
+
+    const obj = await response.json()
+
+    if (response.ok) {
+        return JobOffer.fromJsonObject(obj)
+    } else {
+        throw obj
+    }
+}
+
+async function UpdateJobOffer(jobOfferId, updateJobOffer, xsrfToken) {
     const response = await fetch(
         buildUrl(`${URL_JOB_OFFERS}/${jobOfferId}/status`, null, null), {
             method: 'PUT',
             credentials: 'include',
-            headers: {'Content-Type': 'application/json'},
+            headers: {'Content-Type': 'application/json', 'X-XSRF-TOKEN': xsrfToken},
             body: JSON.stringify({updateJobOffer})
         })
 
@@ -86,11 +104,12 @@ async function UpdateJobOffer(jobOfferId, updateJobOffer) {
     }
 }
 
-async function DeleteJobOffer(jobOfferId) {
+async function DeleteJobOffer(jobOfferId, xsrfToken) {
     const response = await fetch(
         buildUrl(`${URL_JOB_OFFERS}/${jobOfferId}`, null, null), {
             method: 'DELETE',
-            credentials: 'include'
+            credentials: 'include',
+            headers: {'Content-Type': 'application/json', 'X-XSRF-TOKEN': xsrfToken},
         })
 
     const obj = await response.json()
@@ -100,11 +119,12 @@ async function DeleteJobOffer(jobOfferId) {
     }
 }
 
-async function InsertNewApplication(jobOfferId, professionalId) {
+async function InsertNewApplication(jobOfferId, professionalId, xsrfToken) {
     const response = await fetch(
         buildUrl(`${URL_JOB_OFFERS}/${jobOfferId}/${professionalId}`, null, null), {
             method: 'POST',
-            credentials: 'include'
+            credentials: 'include',
+            headers: {'Content-Type': 'application/json', 'X-XSRF-TOKEN': xsrfToken},
         })
 
     const obj = await response.json()
@@ -114,11 +134,12 @@ async function InsertNewApplication(jobOfferId, professionalId) {
     }
 }
 
-async function DeleteApplication(jobOfferId, professionalId) {
+async function DeleteApplication(jobOfferId, professionalId, xsrfToken) {
     const response = await fetch(
         buildUrl(`${URL_JOB_OFFERS}/${jobOfferId}/${professionalId}`, null, null), {
             method: 'DELETE',
-            credentials: 'include'
+            credentials: 'include',
+            headers: {'Content-Type': 'application/json', 'X-XSRF-TOKEN': xsrfToken},
         })
 
     const obj = await response.json()
@@ -134,6 +155,7 @@ const JobOfferAPI = {
     GetJobOfferById,
     GetJobOfferValue,
     InsertNewJobOffer,
+    InsertNewJobOfferDetails,
     UpdateJobOffer,
     DeleteJobOffer,
     InsertNewApplication,

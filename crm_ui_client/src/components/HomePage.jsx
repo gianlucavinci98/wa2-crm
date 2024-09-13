@@ -17,10 +17,10 @@ function HomePage() {
         if (!emailRegex.test(message.sender)) {
             errors.sender = "Invalid email address";
         }
-        if (!message.subject.trim()) {
+        if (message.subject.trim().length === 0) {
             errors.subject = "Subject is required";
         }
-        if (!message.body.trim()) {
+        if (message.body.trim().length === 0) {
             errors.body = "Message body is required";
         }
 
@@ -39,7 +39,7 @@ function HomePage() {
         setIsSubmitting(true);
 
         try {
-            const response = await MessageAPI.InsertNewMessage(message);  // Sends the Message object
+            const response = await MessageAPI.InsertNewMessage(message);
             setServerResponse("Message sent successfully!");
             console.log(response);
         } catch (error) {
@@ -53,15 +53,14 @@ function HomePage() {
     const onChangeHandler = (event) => {
         const {name, value} = event.target;
 
-        // Update the message while keeping its structure
         setMessage((prevMessage) => ({
             ...prevMessage,
-            [name]: value,  // Update only the modified field (sender, subject, body)
+            [name]: value,
         }));
 
         setErrors((prevErrors) => ({
             ...prevErrors,
-            [name]: "",  // Reset error on this field
+            [name]: "",
         }));
     };
 
@@ -77,15 +76,13 @@ function HomePage() {
 
                 </div>
 
-                {/* Server feedback message */}
-
                 <form onSubmit={onSubmitHandler} className="flex flex-col gap-12 items-center">
                     {serverResponse && (
                         <div className="p-4 bg-blue-100 text-blue-700 rounded w-full text-center">
                             {serverResponse}
                         </div>
                     )}
-                    {/* Email */}
+
                     <div className="flex">
                         <label className={errors.sender ? "text-red-500" : ""}>Email:</label>
                         <input
@@ -99,7 +96,6 @@ function HomePage() {
                         {errors.sender && <p className="text-red-500">{errors.sender}</p>}
                     </div>
 
-                    {/* Subject */}
                     <div className="flex">
                         <label className={errors.subject ? "text-red-500" : ""}>Subject:</label>
                         <input
@@ -113,7 +109,6 @@ function HomePage() {
                         {errors.subject && <p className="text-red-500">{errors.subject}</p>}
                     </div>
 
-                    {/* Body */}
                     <div className="flex">
                         <div className={"flex flex-col justify-between"}>
                             <label className={errors.body ? "text-red-500" : ""}>Message:</label>
@@ -133,12 +128,7 @@ function HomePage() {
                         {errors.body && <p className="text-red-500">{errors.body}</p>}
                     </div>
 
-                    {/* Submit button */}
-                    <button
-                        type="submit"
-                        className="page-button"
-                        disabled={isSubmitting}
-                    >
+                    <button type="submit" className="page-button" disabled={isSubmitting}>
                         {isSubmitting ? "Sending..." : "Send message"}
                     </button>
                 </form>

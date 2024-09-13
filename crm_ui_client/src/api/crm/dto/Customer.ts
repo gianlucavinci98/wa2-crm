@@ -1,17 +1,17 @@
 import {Contact, ContactRawData} from "./Contact";
 
 interface CustomerRawData {
-    customerId: bigint | null
+    customerId: number | null
     notes: string[] | null
     contact: ContactRawData | null
 }
 
 export class Customer implements CustomerRawData {
-    customerId: bigint | null
+    customerId: number | null
     notes: string[] | null
     contact: Contact | null
 
-    constructor(customerId: bigint | null, notes: string[] | null, contact: Contact | null) {
+    constructor(customerId: number | null, notes: string[] | null, contact: Contact | null) {
         this.customerId = customerId
         this.notes = notes
         this.contact = contact

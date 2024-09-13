@@ -31,5 +31,5 @@ class Customer {
         this.jobOffers.remove(jobOffer)
     }
 
-    fun toDto(): CustomerDTO = CustomerDTO(this.customerId, this.notes, this.contact)
+    fun toDto(): CustomerDTO = CustomerDTO(this.customerId, this.notes, this.contact.toDto())
 }

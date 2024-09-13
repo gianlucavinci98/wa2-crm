@@ -8,35 +8,35 @@ export enum JobOfferStatus {
 }
 
 interface JobOfferRawData {
-    jobOfferId: bigint | null
+    jobOfferId: number | null
     description: string
     details: string | null
     status: JobOfferStatus | null
     requiredSkills: string[]
-    duration: bigint
+    duration: number
     value: number | null
-    selectedProfessionalId: bigint | null
+    selectedProfessionalId: number | null
 }
 
 export class JobOffer implements JobOfferRawData {
-    jobOfferId: bigint | null
+    jobOfferId: number | null
     description: string
     details: string | null
     status: JobOfferStatus | null
     requiredSkills: string[]
-    duration: bigint
+    duration: number
     value: number | null
-    selectedProfessionalId: bigint | null
+    selectedProfessionalId: number | null
 
     constructor(
-        jobOfferId: bigint | null,
+        jobOfferId: number | null,
         description: string,
         details: string | null,
         status: JobOfferStatus | null,
         requiredSkills: string[],
-        duration: bigint,
+        duration: number,
         value: number | null,
-        selectedProfessionalId: bigint | null
+        selectedProfessionalId: number | null
     ) {
         this.jobOfferId = jobOfferId
         this.description = description

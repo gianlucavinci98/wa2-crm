@@ -1,13 +1,13 @@
 interface JobOfferSkillsStatisticRawData {
-    totalJobOffer: bigint
-    skillCount: Map<string, bigint>
+    totalJobOffer: number
+    skillCount: Map<string, number>
 }
 
 export class JobOfferSkillsStatistic implements JobOfferSkillsStatisticRawData {
-    totalJobOffer: bigint
-    skillCount: Map<string, bigint>
+    totalJobOffer: number
+    skillCount: Map<string, number>
 
-    constructor(totalJobOffer: bigint, skillCount: Map<string, bigint>) {
+    constructor(totalJobOffer: number, skillCount: Map<string, number>) {
         this.totalJobOffer = totalJobOffer
         this.skillCount = skillCount
     }

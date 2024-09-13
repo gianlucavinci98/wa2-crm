@@ -1,6 +1,5 @@
 package it.polito.crm.dtos
 
-import it.polito.crm.entities.Contact
 import jakarta.validation.constraints.Min
 
 data class CustomerDTO(
@@ -9,7 +8,7 @@ data class CustomerDTO(
     )
     val customerId: Long?,
     val notes: MutableSet<String>?,
-    val contact: Contact?
+    val contact: ContactDTO?
 )
 
 

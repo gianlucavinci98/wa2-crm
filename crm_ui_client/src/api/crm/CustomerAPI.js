@@ -35,13 +35,12 @@ async function GetCustomerById(customerId) {
     }
 }
 
-//TODO: da rivedere il passaggio del parametro -> secondo me va messo nel body
-async function InsertNewCustomer(contactId) {
+async function InsertNewCustomer(contactId, xsrfToken) {
     const response = await fetch(
         buildUrl(`${URL_CUSTOMERS}/${contactId}`, null, null), {
             method: 'POST',
             credentials: 'include',
-            headers: {'Content-Type': 'application/json'},
+            headers: {'Content-Type': 'application/json', 'X-XSRF-TOKEN': xsrfToken},
             body: JSON.stringify({})
         })
 
@@ -54,11 +53,12 @@ async function InsertNewCustomer(contactId) {
     }
 }
 
-async function DeleteCustomer(customerId) {
+async function DeleteCustomer(customerId, xsrfToken) {
     const response = await fetch(
         buildUrl(`${URL_CUSTOMERS}/${customerId}`, null, null), {
             method: 'DELETE',
-            credentials: 'include'
+            credentials: 'include',
+            headers: {'Content-Type': 'application/json', 'X-XSRF-TOKEN': xsrfToken},
         })
 
     const obj = await response.json()
@@ -68,12 +68,12 @@ async function DeleteCustomer(customerId) {
     }
 }
 
-async function InsertNewNoteToCustomer(customerId, note) {
+async function InsertNewNoteToCustomer(customerId, note, xsrfToken) {
     const response = await fetch(
         buildUrl(`${URL_CUSTOMERS}/${customerId}`, null, null), {
             method: 'POST',
             credentials: 'include',
-            headers: {'Content-Type': 'application/json'},
+            headers: {'Content-Type': 'application/json', 'X-XSRF-TOKEN': xsrfToken},
             body: note
         })
 

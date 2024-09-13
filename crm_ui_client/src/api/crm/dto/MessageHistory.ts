@@ -8,20 +8,20 @@ export enum MessageStatus {
 }
 
 interface MessageHistoryRawData {
-    messageHistoryId: bigint | null
+    messageHistoryId: number | null
     messageStatus: MessageStatus
     date: string | null
     comment: string | null
 }
 
 export class MessageHistory implements MessageHistoryRawData {
-    messageHistoryId: bigint | null
+    messageHistoryId: number | null
     messageStatus: MessageStatus
     date: string | null
     comment: string | null
 
     constructor(
-        messageHistoryId: bigint | null,
+        messageHistoryId: number | null,
         messageStatus: MessageStatus,
         date: string | null,
         comment: string | null

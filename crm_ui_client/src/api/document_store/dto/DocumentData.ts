@@ -1,13 +1,13 @@
 interface DocumentDataRawData {
-    documentId: bigint
+    documentId: number
     data: Uint8Array
 }
 
 export class DocumentData implements DocumentDataRawData {
-    documentId: bigint
+    documentId: number
     data: Uint8Array
 
-    constructor(documentId: bigint, data: Uint8Array) {
+    constructor(documentId: number, data: Uint8Array) {
         this.documentId = documentId
         this.data = data
     }

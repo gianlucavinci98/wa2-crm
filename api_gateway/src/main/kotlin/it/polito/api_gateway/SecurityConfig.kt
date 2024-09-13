@@ -55,7 +55,7 @@ class SecurityConfig(val crr: ClientRegistrationRepository) {
             .oauth2Login { }
             .logout { it.logoutSuccessHandler(oidcLogoutSuccessHandler()) }
             .csrf {
-                it.ignoringRequestMatchers("/crm/api/messages")
+                //it.ignoringRequestMatchers("/crm/api/messages")
                 it.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                 it.csrfTokenRequestHandler(SpaCsrfTokenRequestHandler())
             }

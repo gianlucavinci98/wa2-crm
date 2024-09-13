@@ -53,7 +53,7 @@ class Professional {
         this.employmentState,
         this.dailyRate,
         this.location,
-        this.contact,
+        this.contact.toDto(),
         this.jobApplications.map { it.toDto() }.toMutableSet()
     )
 }

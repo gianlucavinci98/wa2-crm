@@ -3,7 +3,7 @@ export enum Category {
 }
 
 export interface ContactRawData {
-    contactId: bigint | null
+    contactId: number | null
     name: string
     surname: string
     ssn: string
@@ -11,13 +11,13 @@ export interface ContactRawData {
 }
 
 export class Contact implements ContactRawData {
-    contactId: bigint | null
+    contactId: number | null
     name: string
     surname: string
     ssn: string
     category: Category | null
 
-    constructor(contactId: bigint | null,
+    constructor(contactId: number | null,
                 name: string,
                 surname: string,
                 ssn: string,
