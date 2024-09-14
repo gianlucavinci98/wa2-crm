@@ -13,7 +13,7 @@ gmail-account:
   application_name: Job Placement
   client-id: 563972610835-25tnv4nik8rajt8v7r0cmntilt2hsghb.apps.googleusercontent.com
   client-secret: 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
-  refresh-token: 1//04ZYhrUGgfZHyCgYIARAAGAQSNwF-L9Ir2kezw2dz9DExbYVCKr3bpk30cOZFI7x32aRxH6PJ7uMtb1I-0aQo_3p0jQ1xAflIXBE
+  refresh-token: 1//04_Pk3KwPm8F9CgYIARAAGAQSNwF-L9IrOIGCgxeFK9-AUCtynzRTvc2PH61-pQjn9l8MNzNY2VdKW2PHKxmYR0HdglB2lprU0vI
 
 camel:
   component:

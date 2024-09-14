@@ -1,12 +1,12 @@
-import { useState, useEffect } from "react";
+import {useState, useEffect} from "react";
 import PropTypes from "prop-types";
-import { Customer} from "../api/crm/dto/Customer.ts";
+import {Customer} from "../api/crm/dto/Customer.ts";
 import CustomerAPI from "../api/crm/CustomerAPI";
 import ContactAPI from "../api/crm/ContactAPI.js";
 import {Category, Contact} from "../api/crm/dto/Contact.ts";
 import Icon from "./Icon.jsx";
 
-function ClientDetails({ customer }) {
+function ClientDetails({customer}) {
     const [contactDetails, setContactDetails] = useState(null);
     const [newNote, setNewNote] = useState("");
     const [newContact, setNewContact] = useState({
@@ -29,8 +29,8 @@ function ClientDetails({ customer }) {
         // Confronta gli ID
         for (const id of set1Ids) {
             if (set2Ids.has(id)) {
-                if (arr2.find((it)=>it[key] === id)[value] !== arr1.find((it)=>it[key] === id)[value])
-                    await funzioneA(contactDetails.id, id,  arr2.find((it)=>it[key] === id)[value]); // Presente in entrambi
+                if (arr2.find((it) => it[key] === id)[value] !== arr1.find((it) => it[key] === id)[value])
+                    await funzioneA(contactDetails.id, id, arr2.find((it) => it[key] === id)[value]); // Presente in entrambi
             } else {
                 await funzioneC(contactDetails.id, id); // Presente solo nel primo oggetto
             }
@@ -38,7 +38,7 @@ function ClientDetails({ customer }) {
 
         for (const id of set2Ids) {
             if (!set1Ids.has(id)) {
-                await funzioneB(contactDetails.id, arr2.find((it)=>it[key] === id)[value]); // Presente solo nel secondo oggetto
+                await funzioneB(contactDetails.id, arr2.find((it) => it[key] === id)[value]); // Presente solo nel secondo oggetto
             }
         }
     }
@@ -54,30 +54,30 @@ function ClientDetails({ customer }) {
     const fetchContactDetails = async (contactId) => {
         try {
             const details = await ContactAPI.GetContactById(contactId);
-            if (details?.addresses){
-                setNewContact((prev) => ({ ...prev, addresses: Array.from(details.addresses) }));
+            if (details?.addresses) {
+                setNewContact((prev) => ({...prev, addresses: Array.from(details.addresses)}));
             }
-            if (details?.emails){
-                setNewContact((prev) => ({ ...prev, emails: Array.from(details.emails) }));
+            if (details?.emails) {
+                setNewContact((prev) => ({...prev, emails: Array.from(details.emails)}));
             }
-            if (details?.telephones){
-                setNewContact((prev) => ({ ...prev, telephones: Array.from(details.telephones) }));
+            if (details?.telephones) {
+                setNewContact((prev) => ({...prev, telephones: Array.from(details.telephones)}));
             }
             setContactDetails(details);
         } catch (e) {
-            // const details = new ContactDetails(2, 'mario', 'bianchi', 'gf3827r', Category.Professional, new Set([new Address(2n,'via casa mia')]), new Set([new Email(2,'mario@gmail.com')]),new Set([new Telephone(2,'2224443331')]))
-            // if (details?.addresses){
-            //     setNewContact((prev) => ({ ...prev, addresses: Array.from(details.addresses) }));
-            // }
-            // if (details?.emails){
-            //     setNewContact((prev) => ({ ...prev, emails: Array.from(details.emails) }));
-            // }
-            // if (details?.telephones){
-            //     setNewContact((prev) => ({ ...prev, telephones: Array.from(details.telephones) }));
-            // }
-            // setContactDetails(details);
-            setError("Failed to fetch contact details");
-            console.error(e);
+            const details = new ContactDetails(2, 'mario', 'bianchi', 'gf3827r', Category.Professional, new Set([new Address(2n, 'via casa mia')]), new Set([new Email(2, 'mario@gmail.com')]), new Set([new Telephone(2, '2224443331')]))
+            if (details?.addresses) {
+                setNewContact((prev) => ({...prev, addresses: Array.from(details.addresses)}));
+            }
+            if (details?.emails) {
+                setNewContact((prev) => ({...prev, emails: Array.from(details.emails)}));
+            }
+            if (details?.telephones) {
+                setNewContact((prev) => ({...prev, telephones: Array.from(details.telephones)}));
+            }
+            setContactDetails(details);
+            /*setError("Failed to fetch contact details");
+            console.error(e);*/
         } finally {
             setLoading(false);
         }
@@ -89,7 +89,12 @@ function ClientDetails({ customer }) {
             console.log(newContact)
             let contact;
             if (!customer) {
-                contact = await ContactAPI.InsertNewContact({name: newContact.name, surname: newContact.surname, ssn: newContact.ssn, category: Category.Customer});
+                contact = await ContactAPI.InsertNewContact({
+                    name: newContact.name,
+                    surname: newContact.surname,
+                    ssn: newContact.ssn,
+                    category: Category.Customer
+                });
                 await CustomerAPI.InsertNewCustomer(contact.contactId);
                 for (const address of newContact.addresses) {
                     await ContactAPI.InsertNewAddressToContact(contact.contactId, address)
@@ -103,9 +108,9 @@ function ClientDetails({ customer }) {
                 alert("New customer and contact created successfully!");
             } else {
                 contact = await ContactAPI.UpdateContact(new Contact(contactDetails.contactId, contactDetails.name, contactDetails.surname, contactDetails.ssn, contactDetails.category));
-                await confrontaCampi(newContact.addresses, contactDetails.addresses, 'addressId','address',()=> ContactAPI.UpdateAddressOfContact(), ()=>ContactAPI.DeleteAddressFromContact(), ()=>ContactAPI.InsertNewAddressToContact());
-                await confrontaCampi(newContact.emails, contactDetails.emails, 'emailId', 'email',()=>ContactAPI.UpdateEmailOfContact(), ()=>ContactAPI.DeleteEmailFromContact(), ()=>ContactAPI.InsertNewEmailToContact());
-                await confrontaCampi(newContact.telephones, contactDetails.telephones, 'telephoneId', 'telephone',()=>ContactAPI.UpdateTelephoneOfContact(), ()=>ContactAPI.DeleteTelephoneFromContact(), ()=>ContactAPI.InsertNewTelephoneToContact());
+                await confrontaCampi(newContact.addresses, contactDetails.addresses, 'addressId', 'address', () => ContactAPI.UpdateAddressOfContact(), () => ContactAPI.DeleteAddressFromContact(), () => ContactAPI.InsertNewAddressToContact());
+                await confrontaCampi(newContact.emails, contactDetails.emails, 'emailId', 'email', () => ContactAPI.UpdateEmailOfContact(), () => ContactAPI.DeleteEmailFromContact(), () => ContactAPI.InsertNewEmailToContact());
+                await confrontaCampi(newContact.telephones, contactDetails.telephones, 'telephoneId', 'telephone', () => ContactAPI.UpdateTelephoneOfContact(), () => ContactAPI.DeleteTelephoneFromContact(), () => ContactAPI.InsertNewTelephoneToContact());
                 alert("Contact updated successfully!");
             }
             setContactDetails(contact);
@@ -128,8 +133,10 @@ function ClientDetails({ customer }) {
         }
     };
 
-    if (loading) return <h2 className={"flex-1 flex justify-center text-center items-center text-2xl font-semibold text-blue-500"}>Loading...</h2>;
-    if (error) return <h2 className={"flex-1 flex justify-center text-center items-center text-2xl font-semibold text-red-500"}>{error}</h2>;
+    if (loading) return <h2
+        className={"flex-1 flex justify-center text-center items-center text-2xl font-semibold text-blue-500"}>Loading...</h2>;
+    if (error) return <h2
+        className={"flex-1 flex justify-center text-center items-center text-2xl font-semibold text-red-500"}>{error}</h2>;
 
     return (
         <div className={"flex-1 p-6 flex items-center w-full justify-around"}>

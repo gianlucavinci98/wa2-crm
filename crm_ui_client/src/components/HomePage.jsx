@@ -4,7 +4,7 @@ import MessageAPI from "../api/crm/MessageAPI.js"
 import "./HomePage.css"
 import {TopBar} from "./Skeleton.jsx";
 
-function HomePage() {
+function HomePage({currentUser}) {
     const [message, setMessage] = useState(new Message(null, "", "", "", "", Channel.Email, 0));
     const [errors, setErrors] = useState({});
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -66,7 +66,7 @@ function HomePage() {
 
     return (
         <>
-            <TopBar/>
+            <TopBar currentUser={currentUser}/>
             <div className="w-[90%] flex-1 flex gap-12 justify-around items-center ">
                 <div className={"flex flex-col gap-6 w-1/3 h-1/2"}>
                     <h5 className="text-3xl font-semibold">Contact Our Job Placement Team</h5>
