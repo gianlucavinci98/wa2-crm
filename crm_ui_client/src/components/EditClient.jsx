@@ -65,19 +65,19 @@ function ClientDetails({customer}) {
             }
             setContactDetails(details);
         } catch (e) {
-            const details = new ContactDetails(2, 'mario', 'bianchi', 'gf3827r', Category.Professional, new Set([new Address(2n, 'via casa mia')]), new Set([new Email(2, 'mario@gmail.com')]), new Set([new Telephone(2, '2224443331')]))
-            if (details?.addresses) {
-                setNewContact((prev) => ({...prev, addresses: Array.from(details.addresses)}));
-            }
-            if (details?.emails) {
-                setNewContact((prev) => ({...prev, emails: Array.from(details.emails)}));
-            }
-            if (details?.telephones) {
-                setNewContact((prev) => ({...prev, telephones: Array.from(details.telephones)}));
-            }
-            setContactDetails(details);
-            /*setError("Failed to fetch contact details");
-            console.error(e);*/
+            // const details = new ContactDetails(2, 'mario', 'bianchi', 'gf3827r', Category.Professional, new Set([new Address(2n, 'via casa mia')]), new Set([new Email(2, 'mario@gmail.com')]), new Set([new Telephone(2, '2224443331')]))
+            // if (details?.addresses) {
+            //     setNewContact((prev) => ({...prev, addresses: Array.from(details.addresses)}));
+            // }
+            // if (details?.emails) {
+            //     setNewContact((prev) => ({...prev, emails: Array.from(details.emails)}));
+            // }
+            // if (details?.telephones) {
+            //     setNewContact((prev) => ({...prev, telephones: Array.from(details.telephones)}));
+            // }
+            // setContactDetails(details);
+            setError("Failed to fetch contact details");
+            console.error(e);
         } finally {
             setLoading(false);
         }
@@ -204,7 +204,7 @@ function ClientDetails({customer}) {
                                         setNewContact({...newContact, addresses});
                                     }}
                                 />
-                                <Icon name={"minus"} className={"w-6 h-6 fill-red-500"} onClick={() => {
+                                <Icon name={"minus"} className={"w-6 h-6 fill-red-500 cursor-pointer"} onClick={() => {
                                     setNewContact((prev) => ({
                                         ...prev,
                                         addresses: prev.addresses.filter((addr) => addr.addressId !== address.addressId)
@@ -214,7 +214,7 @@ function ClientDetails({customer}) {
                             </div>
                         ))}
                         <div>
-                            <Icon name={"plus"} className={"w-6 h-6 fill-blue-800"} onClick={
+                            <Icon name={"plus"} className={"w-6 h-6 fill-blue-800 cursor-pointer"} onClick={
                                 () => {
                                     let addresses = newContact.addresses
                                     addresses.push({addressId: "NEW" + Math.floor(Math.random() * 600), address: ""});
@@ -239,7 +239,7 @@ function ClientDetails({customer}) {
                                         setNewContact({...newContact, emails: emails});
                                     }}
                                 />
-                                <Icon name={"minus"} className={"w-6 h-6 fill-red-800"} onClick={() => {
+                                <Icon name={"minus"} className={"w-6 h-6 fill-red-800 cursor-pointer"} onClick={() => {
                                     setNewContact((prev) => ({
                                         ...prev,
                                         emails: prev.emails.filter((em) => em.emailId !== email.emailId)
@@ -250,7 +250,7 @@ function ClientDetails({customer}) {
                             </div>
                         ))}
                         <div>
-                            <Icon name={"plus"} className={"w-6 h-6 fill-blue-800"} onClick={
+                            <Icon name={"plus"} className={"w-6 h-6 fill-blue-800 cursor-pointer"} onClick={
                                 () => {
                                     let emails = newContact.emails
                                     emails.push({emailId: "NEW" + Math.floor(Math.random() * 600), email: ""});
@@ -276,7 +276,7 @@ function ClientDetails({customer}) {
                                         setNewContact({...newContact, telephones: telephones});
                                     }}
                                 />
-                                <Icon name={"minus"} className={"w-6 h-6 fill-red-800"} onClick={() => {
+                                <Icon name={"minus"} className={"w-6 h-6 fill-red-800 cursor-pointer"} onClick={() => {
                                     setNewContact((prev) => ({
                                         ...prev,
                                         telephones: prev.telephones.filter((tel) => tel.telephoneId !== telephone.telephoneId)
@@ -287,7 +287,7 @@ function ClientDetails({customer}) {
                             </div>
                         ))}
                         <div>
-                            <Icon name={"plus"} className={"w-6 h-6 fill-blue-800"} onClick={
+                            <Icon name={"plus"} className={"w-6 h-6 fill-blue-800 cursor-pointer"} onClick={
                                 () => {
                                     let telephones = newContact.telephones
                                     telephones.push({

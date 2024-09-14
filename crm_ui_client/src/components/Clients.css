@@ -10,8 +10,15 @@
 .loading-size40{
     @apply w-40 h-40
 }
-input, select{
-    @apply p-2 rounded-lg text-2xl font-semibold text-center text-white h-12 w-96;
+select{
+    @apply p-2 rounded-lg text-2xl font-semibold text-center text-white h-12;
+}
+input{
+    @apply rounded-md border-[1px] border-stone-800;
+}
+textarea{
+    @apply rounded-md border-[1px] border-stone-800 h-1/3 w-96;
+    padding: 1rem !important;
 }
 td{
     text-align: center;

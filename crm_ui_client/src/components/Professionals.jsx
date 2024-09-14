@@ -72,9 +72,7 @@ function ProfessionalsTable() {
         new Professional(1, new Set(['Plumber']),EmploymentState.Unemployed, 20,'Turin', new Contact(2, 'mario', 'bianchi', 'vf4328f7f', Category.Professional)),
         new Professional(2, new Set(['Plumber']),EmploymentState.Unemployed, 20,'Turin', new Contact(2, 'mario', 'bianchi', 'vf4328f7f', Category.Professional)),
         new Professional(3, new Set(['Plumber']),EmploymentState.Unemployed, 20,'Turin', new Contact(2, 'mario', 'bianchi', 'vf4328f7f', Category.Professional)),
-        new Professional(4, new Set(['Plumber']),EmploymentState.Unemployed, 20,'Turin', new Contact(2, 'mario', 'bianchi', 'vf4328f7f', Category.Professional)),
-        new Professional(10, new Set(['Plumber']),EmploymentState.Unemployed, 20,'Turin', new Contact(2, 'mario', 'bianchi', 'vf4328f7f', Category.Professional)),
-        new Professional(11, new Set(['Plumber']),EmploymentState.Unemployed, 20,'Turin', new Contact(2, 'mario', 'bianchi', 'vf4328f7f', Category.Professional))
+        new Professional(4, new Set(['Plumber']),EmploymentState.Unemployed, 20,'Turin', new Contact(2, 'mario', 'bianchi', 'vf4328f7f', Category.Professional))
     ]);
     const [loading, setLoading] = useState(true);
     const [filter, setFilter] = useState({});
@@ -89,7 +87,7 @@ function ProfessionalsTable() {
     const fetchProfessionals = async () => {
         setLoading(true);
         try {
-            const pagination = {page: page, pageSize: 12}; // Adjust page size as necessary
+            const pagination = {page: page, pageSize: 10}; // Adjust page size as necessary
             const data = await ProfessionalAPI.GetProfessionals(filter, pagination);
             setProfessionals(data);
         } catch (error) {
