@@ -4,26 +4,11 @@ import {useNavigate, useParams} from "react-router-dom";
 import "./MessageDetails.css";
 import {FaArrowLeft} from "react-icons/fa";
 
-// Componente per la finestra di dialogo
-function Dialog({onClose, currentUser}) {
-    return (
-        <div className="overlay">
-            <div className="dialog">
-                <h2 className="message-details-header-subject" style={{paddingBottom: '10px'}}>Change message
-                    status</h2>
-                <p>Chose on of the proposed status:</p>
-                <button onClick={onClose}>Close</button>
-            </div>
-        </div>
-    )
-}
-
 function MessageDetails({currentUser}) {
     const navigate = useNavigate();
 
     const [message, setMessage] = useState(null)
     const [load, setLoad] = useState(false)
-    const [showDialog, setShowDialog] = useState(false);
     const {messageId} = useParams()
 
     useEffect(() => {

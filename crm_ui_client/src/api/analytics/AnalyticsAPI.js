@@ -1,9 +1,9 @@
 import {buildUrl} from "../utils/buildUrlQueryParams.js";
-import {JobOfferTimeStatistic} from "./dto/JobOfferTimeStatistic.js";
-import {JobOfferSkillsStatistic} from "./dto/JobOfferSkillsStatistic.js";
+import {JobOfferTimeStatistic} from "./dto/JobOfferTimeStatistic.ts";
+import {JobOfferSkillsStatistic} from "./dto/JobOfferSkillsStatistic.ts";
 
 
-const URL_ANALYTICS = 'http://localhost:8082/crm/api/analytics'
+const URL_ANALYTICS = 'http://localhost:8082/analytics/api/jobofferstatistics'
 
 
 async function GetElapsedStatusTime() {
@@ -15,7 +15,7 @@ async function GetElapsedStatusTime() {
     const obj = await response.json()
 
     if (response.ok) {
-        return obj.map((e) => JobOfferTimeStatistic.fromJsonObject(e))
+        return JobOfferTimeStatistic.fromJsonObject(obj)
     } else {
         throw obj
     }

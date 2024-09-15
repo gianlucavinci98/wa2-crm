@@ -1,12 +1,9 @@
-"use strict";
-
 import "./HomePage.css";
-import {LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip} from 'recharts';
-import AnalyticsAPI from "../api/analytics/AnalyticsAPI.js";
-import {useEffect, useState} from "react";
+import {CartesianGrid, Line, LineChart, Tooltip, XAxis, YAxis} from 'recharts'
+import {useEffect, useState} from "react"
+import AnalyticsAPI from "../api/analytics/AnalyticsAPI.js"
 
 function AnalyticsCharts() {
-
     const [data, setData] = useState(null)
     const [load, setLoad] = useState(false)
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -17,13 +14,11 @@ function AnalyticsCharts() {
     useEffect(() => {
         if (!load) {
             AnalyticsAPI.GetElapsedStatusTime().then((result) => {
-                    setData(result)
-                    setLoad(true)
-                    for (let i = 0; i < data.size; i++) { //Number of jobOffers
+                for (let i = 0; i < result.timeStatistic.length; i++) { //Number of jobOffers
                         for (let j = 0; j < 6; j++) { //Number of possible states
-                            if (data.stats.times[j] != null) { //The data related to that status exists
+                            if (result.timeStatistic[i].jobOfferHistory[j] != null) { //The data related to that status exists
                                 numberOfElements[j]++;
-                                averageTimes[j] = averageTimes[j] + data.stats.times[j]
+                                averageTimes[j] = averageTimes[j] + result.timeStatistic[i].jobOfferHistory[j]
                             } else {
                                 break;
                             }
@@ -34,10 +29,13 @@ function AnalyticsCharts() {
                         if (numberOfElements[i] !== 0)
                             averageTimes[i] = averageTimes[i] / numberOfElements[i]
                     }
+
+                setData()
+                setLoad(true)
                 }
-            ).catch()
+            ).catch((err) => console.log(err))
         }
-    }, [averageTimes, data.size, data.stats.times, load, numberOfElements]);
+    }, [averageTimes, load, numberOfElements]);
 
 
     return (
