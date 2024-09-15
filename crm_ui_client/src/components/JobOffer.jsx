@@ -3,6 +3,8 @@ import "./JobOffer.css"
 import JobOfferAPI from "../api/crm/JobOfferAPI.js";
 import Icon from "./Icon.jsx";
 import {TopBar} from "./Skeleton.jsx";
+import JobOfferForm from "./JobofferForm.jsx";
+import {JobOffer, JobOfferStatus} from "../api/crm/dto/JobOffer.ts";
 
 
 // eslint-disable-next-line react/prop-types
@@ -66,12 +68,12 @@ function JobOfferSearchBar({ onFilterChange }) {
 function JobOffersTable() {
 
     const [openFilter, setOpenFilter] = useState(false);
-    const [jobOffers, setJobOffers] = useState([]);
+    const [jobOffers, setJobOffers] = useState([new JobOffer(3, 'plumber job in Turin', "short job and no waste of time", JobOfferStatus.SelectionPhase, ["plumber"], 5, 400, 2)]);
     const [loading, setLoading] = useState(true);
     const [filter, setFilter] = useState({});
     const [page, setPage] = useState(1);
     const [editJobOffer, setEditJobOffer] = useState(false);
-    const [editingJobOffer, setEditingJobOffer] = useState();
+    const [editingJobOffer, setEditingJobOffer] = useState(undefined);
 
     // Function to fetch data
     const fetchJobOffers = async () => {
@@ -117,7 +119,10 @@ function JobOffersTable() {
 
     return (
         <>
-            <TopBar addNew={editJobOffer} setAddNew={(it)=>setEditJobOffer(it)} filterPresent={!editJobOffer} openFilter={openFilter} switchFilter={()=>setOpenFilter(!openFilter)}></TopBar>
+            <TopBar addNew={editJobOffer} setAddNew={()=>{
+                setEditingJobOffer(undefined)
+                setEditJobOffer(!editJobOffer)}
+            } filterPresent={!editJobOffer} openFilter={openFilter} switchFilter={()=>setOpenFilter(!openFilter)}></TopBar>
             {!editJobOffer ?
                 <div className={"w-full flex-1 p-6 flex flex-col justify-between items-center"}>
                     {openFilter?<JobOfferSearchBar onFilterChange={handleFilterChange} />:""}
@@ -137,11 +142,14 @@ function JobOffersTable() {
                             <tr key={jobOffer.professionalId} className={'hover:bg-stone-100 cursor-pointer'}>
                                 <td>{jobOffer.description}</td>
                                 <td>{Array.from(jobOffer.requiredSkills).join(', ')}</td>
-                                <td>{jobOffer.duration}</td>
+                                <td>{jobOffer.duration} days</td>
                                 <td>{jobOffer.value}</td>
                                 <td>{jobOffer.status}</td>
                                 <td>
-                                    <button className={'table-button text-blue-500'}>Edit</button>
+                                    <button className={'table-button text-blue-500'} onClick={() => {
+                                        setEditingJobOffer(jobOffer)
+                                        setEditJobOffer(!editJobOffer)
+                                    }}>Edit</button>
                                     <button className={'table-button text-red-500'}>Delete</button>
                                 </td>
                             </tr>
@@ -161,7 +169,7 @@ function JobOffersTable() {
                     </div>
                 </div>
                 :
-                <></>
+                <JobOfferForm jobOffer={editingJobOffer}></JobOfferForm>
             }
         </>
     )

@@ -191,6 +191,7 @@ function EditProfessional({professional, setProfessional}) {
                             <strong>Skills:</strong>
                             <input
                                 type="text"
+                                placeholder={"Skill separated by \",\""}
                                 value={professional ? skills : newContact.skills}
                                 onChange={(e) => {
                                     const value = e.target.value;
