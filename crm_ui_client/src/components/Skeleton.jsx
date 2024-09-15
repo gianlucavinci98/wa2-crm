@@ -8,8 +8,6 @@ import JobOffersTable from "./JobOffer.jsx";
 import {User} from "../api/api_gateway/dto/User.ts";
 import "./Skeleton.css"
 import HomePage from "./HomePage.jsx";
-import JobOfferForm from "./JobofferForm.jsx";
-import {JobOffer} from "../api/crm/dto/JobOffer.ts";
 
 
 // eslint-disable-next-line react/prop-types
@@ -110,7 +108,7 @@ function Skeleton() {
                 setCurrentUser(User.fromJsonObject(currentUser))
             } catch (error) {
                 setCurrentUser(null)
-                setCurrentUser({principal:'yess'}) /*da cambiare*/
+                // setCurrentUser({principal:'yess'}) /*da cambiare*/
                 console.error(error)
             }
         }
