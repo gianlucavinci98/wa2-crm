@@ -167,6 +167,11 @@ class MessageServiceImpl(
         val m = messageRepository.findById(messageId)
             .orElseThrow { MessageNotFoundException("Message with id $messageId not found") }
 
+        if (m.status == MessageStatus.Received) {
+            m.status = MessageStatus.Read
+            messageRepository.save(m)
+        }
+
         return m.toDTO()
     }
 

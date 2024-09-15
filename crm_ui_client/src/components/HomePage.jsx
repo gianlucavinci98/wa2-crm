@@ -5,7 +5,7 @@ import "./HomePage.css"
 import {TopBar} from "./Skeleton.jsx";
 
 function HomePage({currentUser}) {
-    const [message, setMessage] = useState(new Message(null, "", "", "", "", Channel.Email, 0));
+    const [message, setMessage] = useState(new Message(null, "", "", "", null, "", Channel.Email, 0));
     const [errors, setErrors] = useState({});
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [serverResponse, setServerResponse] = useState("");

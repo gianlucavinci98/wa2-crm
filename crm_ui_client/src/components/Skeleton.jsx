@@ -9,7 +9,6 @@ import {User} from "../api/api_gateway/dto/User.ts";
 import "./Skeleton.css"
 import HomePage from "./HomePage.jsx";
 import JobOfferForm from "./JobofferForm.jsx";
-import {JobOffer} from "../api/crm/dto/JobOffer.ts";
 import Messages from "./Messages.jsx";
 import MessageDetails from "./MessageDetails.jsx";
 
@@ -58,7 +57,7 @@ function TopBar({switchFilter, openFilter, addNew, setAddNew, filterPresent, cur
 }
 
 // eslint-disable-next-line react/prop-types
-function SideBar({currentUser, setCurrentUser}) {
+function SideBar({currentUser}) {
     let navigate = useNavigate();
     let location = useLocation();
 
@@ -117,7 +116,7 @@ function Skeleton() {
     return (
         <Router>
             <div className={"h-full w-full flex"}>
-                <SideBar currentUser={currentUser} setCurrentUser={setCurrentUser}></SideBar>
+                <SideBar currentUser={currentUser}></SideBar>
                 <div className="w-4/5 flex flex-col items-center">
                     <Routes>
                         <Route path={"/ui"} element={currentUser?.principal ? <Navigate to={"/ui/Clients"}/> :
@@ -130,9 +129,12 @@ function Skeleton() {
                                element={!currentUser?.principal ? <Navigate to={"/ui"}/> : <JobOffersTable/>}/>
                         <Route path={"/ui/JobOffers/add"}
                                element={<JobOfferForm currentUser={currentUser}/>}/>
-                        <Route path={"/ui/Report"} element={<div></div>}/>
-                        <Route path={"/ui/Messages"} element={<Messages/>}/>
-                        <Route path={"/ui/Messages/:messageId"} element={<MessageDetails currentUser={currentUser}/>}/>
+                        <Route path={"/ui/Messages"}
+                               element={<Messages/>}/>
+                        <Route path={"/ui/Messages/:messageId"}
+                               element={<MessageDetails currentUser={currentUser}/>}/>
+                        <Route path={"/ui/Report"}
+                               element={!currentUser?.principal ? <Navigate to={"/ui"}/> : <div></div>}/>
                     </Routes>
                 </div>
             </div>
