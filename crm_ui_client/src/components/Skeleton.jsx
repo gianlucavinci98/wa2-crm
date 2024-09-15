@@ -9,6 +9,7 @@ import {User} from "../api/api_gateway/dto/User.ts";
 import "./Skeleton.css"
 import HomePage from "./HomePage.jsx";
 import JobOfferForm from "./JobofferForm.jsx";
+import Analytics from "./Analytics.jsx";
 import {JobOffer} from "../api/crm/dto/JobOffer.ts";
 
 
@@ -77,8 +78,8 @@ function SideBar({currentUser, setCurrentUser}) {
                 </button>
             </div>
             <div className={"w-full flex flex-col gap-6 flex-1 justify-end"}>
-                <button className={location.pathname.includes("/ui/Report") ? "clicked-side-button" : "side-button"}
-                        onClick={() => navigate("/ui/Report")}>Report
+                <button className={location.pathname.includes("/ui/Analytics") ? "clicked-side-button" : "side-button"}
+                        onClick={() => navigate("/ui/Analytics")}>Analytics
                 </button>
             </div>
             {
@@ -128,7 +129,7 @@ function Skeleton() {
                                element={!currentUser?.principal ? <Navigate to={"/ui"}/> : <JobOffersTable/>}/>
                         <Route path={"/ui/JobOffers/add"}
                                element={<JobOfferForm currentUser={currentUser}/>}/>
-                        <Route path={"/ui/Report"} element={<div></div>}/>
+                        <Route path={"/ui/Analytics"} element={<Analytics/>}/>
                     </Routes>
                 </div>
             </div>
