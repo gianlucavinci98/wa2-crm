@@ -31,6 +31,9 @@ class DocumentMetadata {
     @Column(name = "category")
     lateinit var category: DocumentCategory
 
+    /**
+     * The id should be of a Customer or JobOffer
+     * */
     @Column(name = "id")
     var id: Long = 0
 
