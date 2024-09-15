@@ -1,8 +1,8 @@
 import {buildUrl} from "../utils/buildUrlQueryParams.js"
-import {DocumentMetadata} from "./dto/DocumentMetadata.js"
+import {DocumentMetadata} from "./dto/DocumentMetadata.ts"
 
 
-const URL_DOCUMENT_STORE = 'http://localhost:8083/document-store/api/contacts'
+const URL_DOCUMENT_STORE = 'http://localhost:8082/document-store/api/documents'
 
 
 async function GetDocuments(filter, pagination) {
@@ -51,15 +51,11 @@ async function GetDocumentDataById(documentMetadataId) {
 }
 
 async function InsertNewDocument(file, xsrfToken) {
-    const formData = new FormData()
-    formData.append("file", file)
-
     const response = await fetch(
         buildUrl(URL_DOCUMENT_STORE, null, null), {
             method: 'POST',
             credentials: 'include',
-            headers: {'X-XSRF-TOKEN': xsrfToken},
-            body: formData
+            headers: {'X-XSRF-TOKEN': xsrfToken}
         })
 
     const obj = await response.json()

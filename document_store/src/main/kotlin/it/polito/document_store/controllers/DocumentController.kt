@@ -52,10 +52,10 @@ class DocumentController(private val documentService: DocumentService) {
         ) pageSize: Int = 20,
         @RequestParam(
             "category", required = false
-        ) category: DocumentCategory,
+        ) category: DocumentCategory?,
         @RequestParam(
             "id", required = false
-        ) id: Long
+        ) id: Long?
     ): List<DocumentMetadataDTO> {
         return documentService.getDocuments(pageNumber, pageSize, category, id)
     }

@@ -12,7 +12,7 @@ import JobOfferForm from "./JobofferForm.jsx";
 import Messages from "./Messages.jsx";
 import MessageDetails from "./MessageDetails.jsx";
 import Analytics from "./Analytics.jsx";
-import {JobOffer} from "../api/crm/dto/JobOffer.ts";
+import FileForm from "./FileForm.jsx";
 
 
 // eslint-disable-next-line react/prop-types
@@ -136,6 +136,7 @@ function Skeleton() {
                         <Route path={"/ui/Messages/:messageId"}
                                element={<MessageDetails currentUser={currentUser}/>}/>
                         <Route path={"/ui/Analytics"} element={<Analytics/>}/>
+                        <Route path={"/ui/file"} element={<FileForm currentUser={currentUser}/>}/>
                     </Routes>
                 </div>
             </div>

@@ -18,7 +18,7 @@ function AnalyticsCharts() {
                         for (let j = 0; j < 6; j++) { //Number of possible states
                             if (result.timeStatistic[i].jobOfferHistory[j] != null) { //The data related to that status exists
                                 numberOfElements[j]++;
-                                averageTimes[j] = averageTimes[j] + result.timeStatistic[i].jobOfferHistory[j]
+                                averageTimes[j] = averageTimes[j] + result.timeStatistic[i].jobOfferHistory[j].timeElapsed
                             } else {
                                 break;
                             }
@@ -26,13 +26,14 @@ function AnalyticsCharts() {
                     }
 
                     for (let i = 0; i < 6; i++) {
-                        if (numberOfElements[i] !== 0)
-                            averageTimes[i] = averageTimes[i] / numberOfElements[i]
-                        else
+                        if (numberOfElements[i] !== 0) {
+                            averageTimes[i] = (averageTimes[i] / 3600000) / numberOfElements[i]
+                        } else {
                             averageTimes[i] = 0
+                        }
                     }
 
-                    setData( [
+                setData([
                         {name: "Created", timeSpent: averageTimes[0]},
                         {name: "Selection Phase", timeSpent: averageTimes[1]},
                         {name: "Candidate Proposal", timeSpent: averageTimes[2]},
@@ -46,15 +47,14 @@ function AnalyticsCharts() {
         }
     }, [averageTimes, load, numberOfElements]);
 
-
+    console.log(data)
     return (
         <LineChart width={600} height={300} data={data} margin={{top: 5, right: 20, bottom: 5, left: 0}}>
             <Line type="monotone" dataKey="timeSpent" stroke="#8884d8"/>
             <CartesianGrid stroke="#ccc" strokeDasharray="5 5"/>
-            {/*
             <XAxis dataKey="name"/>
             <YAxis/>
-            */}
+
             <Tooltip/>
         </LineChart>
     )
