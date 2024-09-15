@@ -12,12 +12,13 @@ import {Telephone} from "../api/crm/dto/Telephone.ts";
 
 function EditProfessional({professional, setProfessional}) {
     const [contactDetails, setContactDetails] = useState(null);
+    const [skills, setSkills] = useState(null);
     const [newContact, setNewContact] = useState({
         name: "",
         surname: "",
         ssn: "",
         dailyRate:"",
-        skills: new Set(),
+        skills: "",
         location:"",
         employmentState:"",
         category: Category.Professional,
@@ -53,6 +54,7 @@ function EditProfessional({professional, setProfessional}) {
     useEffect(() => {
         if (professional && professional.contact) {
             fetchContactDetails(professional.contact.contactId);
+            setSkills(Array.from(professional.skills).length>1? Array.from(professional.skills).concat(',') : Array.from(professional.skills)[0])
         } else {
             setLoading(false);
         }
@@ -114,8 +116,11 @@ function EditProfessional({professional, setProfessional}) {
                 }
                 alert("New professional and contact created successfully!");
             } else {
+                console.log({...professional, skills: new Set(skills.split(','))})
+                console.log(professional)
+                console.log(contactDetails)
                 contact = await ContactAPI.UpdateContact(new Contact(contactDetails.contactId, contactDetails.name, contactDetails.surname, contactDetails.ssn, contactDetails.category));
-                contact = await ProfessionalAPI.UpdateProfessional(professional);
+                contact = await ProfessionalAPI.UpdateProfessional({...professional, skills: new Set(skills.split(','))});
                 await confrontaCampi(newContact.addresses, contactDetails.addresses, 'addressId', 'address', () => ContactAPI.UpdateAddressOfContact(), () => ContactAPI.DeleteAddressFromContact(), () => ContactAPI.InsertNewAddressToContact());
                 await confrontaCampi(newContact.emails, contactDetails.emails, 'emailId', 'email', () => ContactAPI.UpdateEmailOfContact(), () => ContactAPI.DeleteEmailFromContact(), () => ContactAPI.InsertNewEmailToContact());
                 await confrontaCampi(newContact.telephones, contactDetails.telephones, 'telephoneId', 'telephone', () => ContactAPI.UpdateTelephoneOfContact(), () => ContactAPI.DeleteTelephoneFromContact(), () => ContactAPI.InsertNewTelephoneToContact());
@@ -186,13 +191,10 @@ function EditProfessional({professional, setProfessional}) {
                             <strong>Skills:</strong>
                             <input
                                 type="text"
-                                value={professional ? Array.from(professional?.skills).concat(',') : Array.from(newContact.skills).concat(',')}
+                                value={professional ? skills : newContact.skills}
                                 onChange={(e) => {
                                     const value = e.target.value;
-                                    professional ? setProfessional({
-                                        ...professional,
-                                        skills: new Set(value.split(','))
-                                    }) : setNewContact({...newContact, skills: new Set(value.split(','))});
+                                    professional ? setSkills(value) : setNewContact({...newContact, skills: value});
                                 }}
                             />
                         </div>
