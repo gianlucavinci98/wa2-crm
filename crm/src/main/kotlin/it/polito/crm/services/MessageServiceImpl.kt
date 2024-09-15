@@ -168,8 +168,7 @@ class MessageServiceImpl(
             .orElseThrow { MessageNotFoundException("Message with id $messageId not found") }
 
         if (m.status == MessageStatus.Received) {
-            m.status = MessageStatus.Read
-            messageRepository.save(m)
+            updateStatus(messageId, MessageHistoryDTO(null, MessageStatus.Read, null, ""))
         }
 
         return m.toDTO()

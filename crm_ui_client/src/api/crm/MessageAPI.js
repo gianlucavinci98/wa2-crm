@@ -90,10 +90,10 @@ async function UpdatePriorityOfMessage(messageId, priority, xsrfToken) {
 async function UpdateStatusOfMessage(messageId, messageHistory, xsrfToken) {
     const response = await fetch(
         buildUrl(`${URL_MESSAGES}/${messageId}/status`, null, null), {
-            method: 'PUT',
+            method: 'POST',
             credentials: 'include',
             headers: {'Content-Type': 'application/json', 'X-XSRF-TOKEN': xsrfToken},
-            body: JSON.stringify({messageHistory})
+            body: JSON.stringify(messageHistory)
         })
 
     const obj = await response.json()

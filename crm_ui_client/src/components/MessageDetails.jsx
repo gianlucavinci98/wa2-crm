@@ -4,25 +4,68 @@ import {useNavigate, useParams} from "react-router-dom";
 import "./MessageDetails.css";
 import {FaArrowLeft} from "react-icons/fa";
 import {TbMessage2Cog} from "react-icons/tb";
+import {MessageHistory, MessageStatus} from "../api/crm/dto/MessageHistory.ts";
 
-function Dialog({onClose}) {
+function Dialog({message, currentUser, onClose}) {
+    const [newStatus, setNewStatus] = useState(new MessageHistory(null, message.status, null, ""))
+
+    const handleSubmit = (event) => {
+        event.preventDefault()
+
+        MessageAPI.UpdateStatusOfMessage(message.messageId, newStatus, currentUser.xsrfToken)
+            .then(r => onClose())
+            .catch(err => console.log(err));
+    }
+
+    const handleChange = (event) => {
+        event.preventDefault()
+        const {name, value} = event.target
+
+        setNewStatus((old) => ({
+            ...old,
+            [name]: value
+        }))
+    }
+
     return (
         <div className="overlay">
             <div className="dialog">
                 <h2 className="message-details-header-subject" style={{paddingBottom: '10px'}}>
-                    Message status color legend
+                    Change status
                 </h2>
-                <div style={{display: "flex", flexDirection: "row", justifyContent: "space-between"}}>
-                    {
-                        Object.entries(colorMap).map(([key, value]) => (
-                            <div key={key}>
-                                <p>{key.toString()}</p>
-                                <div className="circle" style={{background: value}}/>
+                <div style={{display: "flex", flexDirection: "column", alignItems: "space-between"}}>
+                    <form onSubmit={handleSubmit}>
+                        <div style={{display: "flex", flexDirection: "column", justifyContent: "space-between"}}>
+                            <div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
+                                <label>Processing</label>
+                                <input type="radio" value={MessageStatus.Processing} name={"messageStatus"}
+                                       onChange={handleChange}/>
                             </div>
-                        ))
-                    }
+                            <div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
+                                <label>Discarded</label>
+                                <input type="radio" value={MessageStatus.Discarded} name={"messageStatus"}
+                                       onChange={handleChange}/>
+                            </div>
+                            <div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
+                                <label>Done</label>
+                                <input type="radio" value={MessageStatus.Done} name={"messageStatus"}
+                                       onChange={handleChange}/>
+                            </div>
+                            <div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
+                                <label>Failed</label>
+                                <input type="radio" value={MessageStatus.Failed} name={"messageStatus"}
+                                       onChange={handleChange}/>
+                            </div>
+                        </div>
+
+                        <label>Comments:</label>
+                        <input type="text" value={newStatus.comment} name={"comment"} max={200}
+                               onChange={handleChange}/>
+
+                        <button type="submit">Submit</button>
+                        <button type="button" onClick={onClose}>Close</button>
+                    </form>
                 </div>
-                <button onClick={onClose}>Close</button>
             </div>
         </div>
     )
@@ -70,8 +113,7 @@ function MessageDetails({currentUser}) {
                                 <h2 className={"message-details-header-sender"}>{message.sender}</h2>
                             </div>
                             <div className="message-details-header-right">
-                                <TbMessage2Cog onClick={() => {
-                                }}/>
+                                <TbMessage2Cog onClick={handleOpenDialog}/>
                             </div>
                         </div>
                         <div className="message-details-body">{message.body}</div>
@@ -79,7 +121,7 @@ function MessageDetails({currentUser}) {
                     :
                     <></>
             }
-            {showDialog && <Dialog onClose={handleCloseDialog}/>}
+            {showDialog && <Dialog message={message} currentUser={currentUser} onClose={handleCloseDialog}/>}
         </div>
     )
 }
