@@ -3,6 +3,7 @@ package it.polito.crm.entities
 import it.polito.crm.dtos.MessageDTO
 import it.polito.crm.dtos.MessageInfoDTO
 import it.polito.crm.utils.Channel
+import it.polito.crm.utils.MessageStatus
 import jakarta.persistence.*
 
 @Entity
@@ -20,6 +21,9 @@ class Message {
 
     @Column(name = "subject")
     lateinit var subject: String
+
+    @Column(name = "status")
+    var status: MessageStatus = MessageStatus.Received
 
     @Lob
     @Column(name = "body")
@@ -40,8 +44,8 @@ class Message {
     }
 
     fun toDTO(): MessageDTO =
-        MessageDTO(this.messageId, this.sender, this.date, this.subject, this.body, this.channel, this.priority)
+        MessageDTO(this.messageId, this.sender, this.date, this.subject, this.status, this.body, this.channel, this.priority)
 
     fun toInfoDTO(): MessageInfoDTO =
-        MessageInfoDTO(this.messageId, this.sender, this.date, this.subject, this.channel, this.priority)
+        MessageInfoDTO(this.messageId, this.sender, this.date, this.subject, this.status, this.channel, this.priority)
 }

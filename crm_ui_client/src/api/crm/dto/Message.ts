@@ -1,3 +1,5 @@
+import {MessageStatus} from "./MessageHistory";
+
 export enum Channel {
     Address, Email, Telephone
 }
@@ -7,6 +9,7 @@ interface MessageRawData {
     sender: string
     date: string
     subject: string | null
+    status: MessageStatus | null
     body: string | null
     channel: Channel
     priority: number | null
@@ -17,6 +20,7 @@ export class Message implements MessageRawData {
     sender: string
     date: string
     subject: string | null
+    status: MessageStatus | null
     body: string | null
     channel: Channel
     priority: number | null
@@ -26,6 +30,7 @@ export class Message implements MessageRawData {
         sender: string,
         date: string,
         subject: string | null,
+        status: MessageStatus | null,
         body: string | null,
         channel: Channel,
         priority: number | null,
@@ -34,6 +39,7 @@ export class Message implements MessageRawData {
         this.sender = sender
         this.date = date
         this.subject = subject
+        this.status = status
         this.body = body
         this.channel = channel
         this.priority = priority
@@ -46,6 +52,7 @@ export class Message implements MessageRawData {
                 obj.sender,
                 obj.date,
                 obj.subject,
+                obj.status,
                 obj.body,
                 obj.channel,
                 obj.priority

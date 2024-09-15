@@ -208,6 +208,8 @@ class MessageServiceImpl(
 
         logger.info("Starting insert new status into database")
         val savedMessageHistory = messageHistoryRepository.save(newMessageHistory)
+        message.status = messageHistory.messageStatus
+        messageRepository.save(message)
         logger.info("Correctly inserted: $savedMessageHistory")
 
         if (message.channel == Channel.Email) {

@@ -1,6 +1,7 @@
 package it.polito.crm.dtos
 
 import it.polito.crm.utils.Channel
+import it.polito.crm.utils.MessageStatus
 import jakarta.validation.constraints.Min
 import jakarta.validation.constraints.NotBlank
 
@@ -13,6 +14,7 @@ data class MessageDTO(
     val sender: String,
     val date: String?,
     val subject: String?,
+    val status: MessageStatus?,
     val body: String?,
     val channel: Channel,
     val priority: Int?

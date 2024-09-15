@@ -10,6 +10,8 @@ import "./Skeleton.css"
 import HomePage from "./HomePage.jsx";
 import JobOfferForm from "./JobofferForm.jsx";
 import {JobOffer} from "../api/crm/dto/JobOffer.ts";
+import Messages from "./Messages.jsx";
+import MessageDetails from "./MessageDetails.jsx";
 
 
 // eslint-disable-next-line react/prop-types
@@ -129,6 +131,8 @@ function Skeleton() {
                     <Routes>
                         <Route path={"/ui"} element={<div className={"flex-1"}></div>}/>
                         <Route path={"/ui/home"} element={<HomePage/>}/>
+                        <Route path={"/ui/Messages"} element={<Messages/>}/>
+                        <Route path={"/ui/Messages/:messageId"} element={<MessageDetails currentUser={currentUser}/>}/>
                         <Route path={"/ui/Clients"} element={<ClientsTable/>}/>
                         <Route path={"/ui/Candidates"} element={<ProfessionalsTable/>}/>
                         <Route path={"/ui/JobOffers"} element={<JobOffersTable/>}/>
