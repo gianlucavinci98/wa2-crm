@@ -11,6 +11,8 @@ import HomePage from "./HomePage.jsx";
 import JobOfferForm from "./JobofferForm.jsx";
 import Messages from "./Messages.jsx";
 import MessageDetails from "./MessageDetails.jsx";
+import Analytics from "./Analytics.jsx";
+import {JobOffer} from "../api/crm/dto/JobOffer.ts";
 
 
 // eslint-disable-next-line react/prop-types
@@ -78,8 +80,8 @@ function SideBar({currentUser}) {
                 </button>
             </div>
             <div className={"w-full flex flex-col gap-6 flex-1 justify-end"}>
-                <button className={location.pathname.includes("/ui/Report") ? "clicked-side-button" : "side-button"}
-                        onClick={() => navigate("/ui/Report")}>Report
+                <button className={location.pathname.includes("/ui/Analytics") ? "clicked-side-button" : "side-button"}
+                        onClick={() => navigate("/ui/Analytics")}>Analytics
                 </button>
             </div>
             {
@@ -133,8 +135,7 @@ function Skeleton() {
                                element={<Messages/>}/>
                         <Route path={"/ui/Messages/:messageId"}
                                element={<MessageDetails currentUser={currentUser}/>}/>
-                        <Route path={"/ui/Report"}
-                               element={!currentUser?.principal ? <Navigate to={"/ui"}/> : <div></div>}/>
+                        <Route path={"/ui/Analytics"} element={<Analytics/>}/>
                     </Routes>
                 </div>
             </div>
