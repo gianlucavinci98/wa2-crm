@@ -100,8 +100,7 @@ function ClientsTable() {
                     <table className={"w-full rounded-2xl border-stone-600 shadow-md  overflow-hidden text-stone-800"}>
                         <thead className={"w-full h-12 bg-stone-200"}>
                         <tr>
-                            <th>Client</th>
-                            <th>Job Offers Actives</th>
+                            <th>Customer</th>
                             <th>Notes</th>
                             <th>Actions</th>
                         </tr>
@@ -135,7 +134,6 @@ function ClientsTable() {
                                 {/*        <div key={email.id}>email.email</div>*/}
                                 {/*    ))}*/}
                                 {/*</td> /!* Emails *!/*/}
-                                <td></td>
                                 <td>{Array.from(customer.notes).join(', ')}</td>
                                 <td>
                                     <button className={'table-button text-blue-500'} onClick={() => {

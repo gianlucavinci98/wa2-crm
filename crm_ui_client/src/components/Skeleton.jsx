@@ -72,12 +72,12 @@ function SideBar({currentUser, setCurrentUser}) {
             </div>
                 <div className={"w-full flex flex-col gap-6 flex-1"}>
                     <button
-                        className={location.pathname.includes("/ui/Clients") ? "clicked-side-button" : "side-button"}
-                        onClick={() => navigate("/ui/Clients")}>Clients
+                        className={location.pathname.includes("/ui/Customers") ? "clicked-side-button" : "side-button"}
+                        onClick={() => navigate("/ui/Customers")}>Customers
                     </button>
                     <button
-                        className={location.pathname.includes("/ui/Candidates") ? "clicked-side-button" : "side-button"}
-                        onClick={() => navigate("/ui/Candidates")}>Candidates
+                        className={location.pathname.includes("/ui/Professionals") ? "clicked-side-button" : "side-button"}
+                        onClick={() => navigate("/ui/Professionals")}>Professionals
                     </button>
                     <button
                         className={location.pathname.includes("/ui/JobOffers") ? "clicked-side-button" : "side-button"}
@@ -110,7 +110,7 @@ function Skeleton() {
                 setCurrentUser(User.fromJsonObject(currentUser))
             } catch (error) {
                 setCurrentUser(null)
-                //setCurrentUser({principal:'yess'}) /*da cambiare*/
+                setCurrentUser({principal:'yess'}) /*da cambiare*/
                 console.error(error)
             }
         }
@@ -127,16 +127,14 @@ function Skeleton() {
                 }
                 <div className={`flex flex-col items-center ${currentUser && currentUser.principal ? "w-4/5" : "w-full"}` }>
                     <Routes>
-                        <Route path={"/ui"} element={currentUser?.principal ? <Navigate to={"/ui/Clients"}/> :
+                        <Route path={"/ui"} element={currentUser?.principal ? <Navigate to={"/ui/Customers"}/> :
                             <HomePage currentUser={currentUser}/>}/>
-                        <Route path={"/ui/Clients"}
+                        <Route path={"/ui/Customers"}
                                element={!currentUser?.principal ? <Navigate to={"/ui"}/> : <ClientsTable/>}/>
-                        <Route path={"/ui/Candidates"}
+                        <Route path={"/ui/Professionals"}
                                element={!currentUser?.principal ? <Navigate to={"/ui"}/> : <ProfessionalsTable/>}/>
                         <Route path={"/ui/JobOffers"}
                                element={!currentUser?.principal ? <Navigate to={"/ui"}/> : <JobOffersTable/>}/>
-                        <Route path={"/ui/JobOffers/add"}
-                               element={<JobOfferForm currentUser={currentUser}/>}/>
                         <Route path={"/ui/Report"} element={<div></div>}/>
                     </Routes>
                 </div>
