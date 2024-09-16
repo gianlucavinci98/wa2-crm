@@ -34,16 +34,16 @@ function JobOfferSearchBar({ onFilterChange }) {
     return (
         <div className="flex justify-between gap-6 h-[10%] items-center">
             <div className="p-2 flex gap-4 border rounded-md shadow-md">
-                <div className="relative">
+                <div className="relative w-48">
                     <button className=" flex gap-4 w-full items-center appearance-nonebg-white hover:border-gray-500 px-4 py-2 pr-6 leading-tight focus:outline-none focus:shadow-outline" onClick={()=>setOpenSelectedStatuses(!openSelectedStatuses)}>
-                        Seleziona Status
+                        Status Selection
                         <Icon name={'arrowDown'} className={"w-2 h-2"}></Icon>
                     </button>
                     {openSelectedStatuses?<div className="absolute z-10 w-full bg-white border border-gray-300 rounded-md shadow-lg mt-1">
-                        <div className="p-2">
+                        <div className="p-2 w-fit">
                             {['Created', 'SelectionPhase', 'CandidateProposal', 'Consolidated', 'Done', 'Aborted'].map(status => (
                                 <div key={status}>
-                                    <label className="flex items-center space-x-2">
+                                    <label className="flex items-center gap-2">
                                         <input
                                             type="checkbox"
                                             value={status}
@@ -68,7 +68,7 @@ function JobOfferSearchBar({ onFilterChange }) {
 function JobOffersTable() {
 
     const [openFilter, setOpenFilter] = useState(false);
-    const [jobOffers, setJobOffers] = useState([new JobOffer(3, 'plumber job in Turin', "short job and no waste of time", JobOfferStatus.SelectionPhase, ["plumber"], 5, 400, 2)]);
+    const [jobOffers, setJobOffers] = useState([new JobOffer(3, 'plumber job in Turin buwe vhe vhe vhjvhrjv rhv herjv rjv erjv ervjherv ejhve rjv ', "short job and no waste of time", JobOfferStatus.SelectionPhase, ["plumber"], 5, 400, 2)]);
     const [loading, setLoading] = useState(true);
     const [filter, setFilter] = useState({});
     const [page, setPage] = useState(1);
@@ -134,17 +134,19 @@ function JobOffersTable() {
                             <th>Duration</th>
                             <th>Value</th>
                             <th>Status</th>
+                            <th>Details</th>
                             <th>Actions</th>
                         </tr>
                         </thead>
                         <tbody>
                         {jobOffers.map((jobOffer) => (
-                            <tr key={jobOffer.professionalId} className={'hover:bg-stone-100 cursor-pointer'}>
+                            <tr key={jobOffer.selectedProfessionalId} className={'hover:bg-stone-100 cursor-pointer'}>
                                 <td>{jobOffer.description}</td>
                                 <td>{Array.from(jobOffer.requiredSkills).join(', ')}</td>
                                 <td>{jobOffer.duration} days</td>
                                 <td>{jobOffer.value}</td>
-                                <td>{jobOffer.status}</td>
+                                <td>{JobOfferStatus[jobOffer.status]}</td>
+                                <td>{JobOffer?.details}</td>
                                 <td>
                                     <button className={'table-button text-blue-500'} onClick={() => {
                                         setEditingJobOffer(jobOffer)

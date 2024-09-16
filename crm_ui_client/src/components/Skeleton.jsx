@@ -118,7 +118,7 @@ function Skeleton() {
                 setCurrentUser(User.fromJsonObject(currentUser))
             } catch (error) {
                 setCurrentUser(null)
-                // setCurrentUser({principal:'yess'}) /*da cambiare*/
+                 setCurrentUser({principal:'yess'}) /*da cambiare*/
                 console.error(error)
             }
         }
