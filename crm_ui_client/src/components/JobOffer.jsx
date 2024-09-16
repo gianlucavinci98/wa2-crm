@@ -146,7 +146,7 @@ function JobOffersTable() {
                                 <td>{jobOffer.duration} days</td>
                                 <td>{jobOffer.value}</td>
                                 <td>{JobOfferStatus[jobOffer.status]}</td>
-                                <td>{JobOffer?.details}</td>
+                                <td>{jobOffer.details}</td>
                                 <td>
                                     <button className={'table-button text-blue-500'} onClick={() => {
                                         setEditingJobOffer(jobOffer)
