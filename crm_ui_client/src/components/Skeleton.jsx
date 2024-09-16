@@ -39,13 +39,18 @@ function TopBar({switchFilter, openFilter, addNew, setAddNew, filterPresent, cur
                         {
                             location.pathname.split("/").pop() !== 'ui'
                                 ?
-                                <Icon name='plus'
-                                      className={`w-10 h-10"${addNew ? "fill-blue-500" : "fill-black"} cursor-pointer`}
-                                      onClick={() => setAddNew(true)}/>
+                                    !addNew  ?
+                                        <Icon name='plus'
+                                                    className={`w-10 h-10 cursor-pointer hover:fill-blue-500`}
+                                                    onClick={() => setAddNew()}/> :
+                                        <Icon name='back'
+                                              className={`w-10 h-10 cursor-pointer hover:fill-blue-500`}
+                                              onClick={() => setAddNew()}/>
+
                                 :
                                 <>
                                     {
-                                        currentUser && currentUser.principal == null &&
+                                        (currentUser === null || currentUser?.principal === null) &&
                                         <button className={"page-button hover:bg-blue-500 hover:text-white"}
                                                 onClick={() => window.location.href = currentUser.loginUrl}>Login</button>
                                     }
@@ -68,31 +73,31 @@ function SideBar({currentUser}) {
             <div className={"h-32 flex items-center justify-center pb-6"}>
                 <img className={"h-full object-contain rounded-full"} src={logo} alt="Logo"/>
             </div>
-            <div className={"w-full flex flex-col gap-6 flex-1"}>
-                <button className={location.pathname.includes("/ui/Clients") ? "clicked-side-button" : "side-button"}
-                        onClick={() => navigate("/ui/Clients")}>Clients
-                </button>
-                <button className={location.pathname.includes("/ui/Candidates") ? "clicked-side-button" : "side-button"}
-                        onClick={() => navigate("/ui/Candidates")}>Candidates
-                </button>
-                <button className={location.pathname.includes("/ui/JobOffers") ? "clicked-side-button" : "side-button"}
-                        onClick={() => navigate("/ui/JobOffers")}>Job Offers
-                </button>
-            </div>
-            <div className={"w-full flex flex-col gap-6 flex-1 justify-end"}>
-                <button className={location.pathname.includes("/ui/Analytics") ? "clicked-side-button" : "side-button"}
-                        onClick={() => navigate("/ui/Analytics")}>Analytics
-                </button>
-            </div>
-            {
-                currentUser && currentUser.principal &&
-                <form method={"post"} action={currentUser.logoutUrl}>
-                    <input type="hidden" name="_csrf" value={currentUser.xsrfToken}/>
-                    <button className={"page-button hover:bg-blue-500 hover:text-white"} type={"submit"}
-                            style={{border: "1px solid black"}}>Logout
+                <div className={"w-full flex flex-col gap-6 flex-1"}>
+                    <button
+                        className={location.pathname.includes("/ui/Customers") ? "clicked-side-button" : "side-button"}
+                        onClick={() => navigate("/ui/Customers")}>Customers
                     </button>
-                </form>
-            }
+                    <button
+                        className={location.pathname.includes("/ui/Professionals") ? "clicked-side-button" : "side-button"}
+                        onClick={() => navigate("/ui/Professionals")}>Professionals
+                    </button>
+                    <button
+                        className={location.pathname.includes("/ui/JobOffers") ? "clicked-side-button" : "side-button"}
+                        onClick={() => navigate("/ui/JobOffers")}>Job Offers
+                    </button>
+                </div>
+                <div className={"w-full flex flex-col gap-6 flex-1 justify-end"}>
+                    <button className={location.pathname.includes("/ui/Analytics") ? "clicked-side-button" : "side-button"}
+                            onClick={() => navigate("/ui/Analytics")}>Analytics
+                    </button>
+                    <form method={"post"} action={currentUser.logoutUrl}>
+                        <input type="hidden" name="_csrf" value={currentUser.xsrfToken}/>
+                        <button className={"side-button w-full"} type={"submit"}>Logout
+                        </button>
+                    </form>
+                </div>
+
         </div>
     )
 }
@@ -108,6 +113,7 @@ function Skeleton() {
                 setCurrentUser(User.fromJsonObject(currentUser))
             } catch (error) {
                 setCurrentUser(null)
+                // setCurrentUser({principal:'yess'}) /*da cambiare*/
                 console.error(error)
             }
         }
@@ -118,14 +124,17 @@ function Skeleton() {
     return (
         <Router>
             <div className={"h-full w-full flex"}>
-                <SideBar currentUser={currentUser}></SideBar>
-                <div className="w-4/5 flex flex-col items-center">
+                {
+                    currentUser && currentUser.principal &&
+                    <SideBar currentUser={currentUser} setCurrentUser={setCurrentUser}></SideBar>
+                }
+                <div className={`flex flex-col items-center ${currentUser && currentUser.principal ? "w-4/5" : "w-full"}` }>
                     <Routes>
-                        <Route path={"/ui"} element={currentUser?.principal ? <Navigate to={"/ui/Clients"}/> :
+                        <Route path={"/ui"} element={currentUser?.principal ? <Navigate to={"/ui/Customers"}/> :
                             <HomePage currentUser={currentUser}/>}/>
-                        <Route path={"/ui/Clients"}
+                        <Route path={"/ui/Customers"}
                                element={!currentUser?.principal ? <Navigate to={"/ui"}/> : <ClientsTable/>}/>
-                        <Route path={"/ui/Candidates"}
+                        <Route path={"/ui/Professionals"}
                                element={!currentUser?.principal ? <Navigate to={"/ui"}/> : <ProfessionalsTable/>}/>
                         <Route path={"/ui/JobOffers"}
                                element={!currentUser?.principal ? <Navigate to={"/ui"}/> : <JobOffersTable/>}/>

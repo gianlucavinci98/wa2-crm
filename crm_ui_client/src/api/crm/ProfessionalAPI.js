@@ -35,9 +35,9 @@ async function GetProfessionalById(professionalId) {
     }
 }
 
-async function InsertNewProfessional(professional, xsrfToken) {
+async function InsertNewProfessional(contactId, professional, xsrfToken) {
     const response = await fetch(
-        buildUrl(URL_PROFESSIONALS, null, null), {
+        buildUrl(`${URL_PROFESSIONALS}/${contactId}`, null, null), {
             method: 'POST',
             credentials: 'include',
             headers: {'Content-Type': 'application/json', 'X-XSRF-TOKEN': xsrfToken},
