@@ -55,7 +55,7 @@ class MessageServiceImpl(
         // Combine all filter in AND
         cqMessage.where(*predicates.toTypedArray())
         if (sorting != null && sorting.lowercase() == "date") {
-            cqMessage.orderBy(cb.asc(rootContact.get<String>("date")))
+            cqMessage.orderBy(cb.desc(rootContact.get<String>("date")))
         }
 
         val query = entityManager.createQuery(cqMessage)
@@ -144,6 +144,7 @@ class MessageServiceImpl(
             m.sender = messageDTO.sender
             m.channel = messageDTO.channel
             m.priority = 0
+            m.hasAttachments = messageDTO.hasAttachments
 
             mh.messageStatus = MessageStatus.Received
             mh.date = LocalDateTime.now()
