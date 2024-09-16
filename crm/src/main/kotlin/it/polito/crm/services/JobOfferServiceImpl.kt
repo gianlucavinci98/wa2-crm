@@ -1,6 +1,7 @@
 package it.polito.crm.services
 
 import it.polito.crm.dtos.JobOfferDTO
+import it.polito.crm.dtos.JobOfferHistoryDTO
 import it.polito.crm.dtos.UpdateJobOfferDTO
 import it.polito.crm.entities.ApplicationStatus
 import it.polito.crm.entities.JobOffer
@@ -258,5 +259,10 @@ class JobOfferServiceImpl(
         } else {
             IntRange(pageNumber * pageSize, pageSize * pageNumber + pageSize)
         }
+    }
+
+    override fun getJobOfferHistory(jobOfferId: Long): List<JobOfferHistoryDTO> {
+        return jobOfferRepository.findById(jobOfferId)
+            .orElseThrow { JobOfferNotFoundException("Job offer with $jobOfferId not found") }.jobHistory.map { it.toDto() }
     }
 }

@@ -3,8 +3,8 @@ export class Pagination {
     pageSize: number
 
     constructor(pageNumber: number, pageSize: number) {
-        if (pageNumber <= 0) {
-            throw new Error("pageNumber should be greater than 0")
+        if (pageNumber < 0) {
+            throw new Error("pageNumber should be equal or greater than 0")
         }
 
         if (pageSize < 1) {

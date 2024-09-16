@@ -43,19 +43,18 @@ class MessageServiceImpl(
         val cb: CriteriaBuilder = entityManager.criteriaBuilder
 
         val cqMessage: CriteriaQuery<Message> = cb.createQuery(Message::class.java)
-        val rootContact: Root<Message> = cqMessage.from(Message::class.java)
+        val rootMessage: Root<Message> = cqMessage.from(Message::class.java)
 
         val predicates = mutableListOf<Predicate>()
 
-        if (messageStatus != null) {
-            val joinWithHistory: Join<Message, MessageHistory> = rootContact.join("history", JoinType.INNER)
-            predicates.add(cb.equal(joinWithHistory.get<SmallIntJdbcType>("status"), messageStatus))
+        messageStatus?.let {
+            predicates.add(cb.equal(rootMessage.get<MessageStatus>("status"), it))
         }
 
         // Combine all filter in AND
         cqMessage.where(*predicates.toTypedArray())
         if (sorting != null && sorting.lowercase() == "date") {
-            cqMessage.orderBy(cb.desc(rootContact.get<String>("date")))
+            cqMessage.orderBy(cb.desc(rootMessage.get<String>("date")))
         }
 
         val query = entityManager.createQuery(cqMessage)
