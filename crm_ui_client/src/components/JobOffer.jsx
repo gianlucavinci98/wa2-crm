@@ -5,6 +5,7 @@ import Icon from "./Icon.jsx";
 import {TopBar} from "./Skeleton.jsx";
 import JobOfferForm from "./JobofferForm.jsx";
 import {JobOffer, JobOfferStatus} from "../api/crm/dto/JobOffer.ts";
+import {useLocation} from "react-router-dom";
 
 
 // eslint-disable-next-line react/prop-types
@@ -67,12 +68,14 @@ function JobOfferSearchBar({ onFilterChange }) {
 // eslint-disable-next-line react/prop-types
 function JobOffersTable() {
 
+    const location = useLocation();
+    const {customer} = location?.state || {};
     const [openFilter, setOpenFilter] = useState(false);
     const [jobOffers, setJobOffers] = useState([new JobOffer(3, 'plumber job in Turin buwe vhe vhe vhjvhrjv rhv herjv rjv erjv ervjherv ejhve rjv ', "short job and no waste of time", JobOfferStatus.SelectionPhase, ["plumber"], 5, 400, 2)]);
     const [loading, setLoading] = useState(true);
     const [filter, setFilter] = useState({});
     const [page, setPage] = useState(1);
-    const [editJobOffer, setEditJobOffer] = useState(false);
+    const [editJobOffer, setEditJobOffer] = useState(!!customer);
     const [editingJobOffer, setEditingJobOffer] = useState(undefined);
 
     // Function to fetch data
@@ -171,7 +174,7 @@ function JobOffersTable() {
                     </div>
                 </div>
                 :
-                <JobOfferForm jobOffer={editingJobOffer}></JobOfferForm>
+                <JobOfferForm jobOffer={editingJobOffer} customer={customer}></JobOfferForm>
             }
         </>
     )
