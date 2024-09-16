@@ -22,7 +22,12 @@ function JobOfferForm(props) {
     const [customer, setCustomer] = useState(props?.customer)
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [serverResponse, setServerResponse] = useState("")
-    const [jobOfferHistory, setJobOfferHistory] = useState([ new JobOfferHistory(4, JobOfferStatus.SelectionPhase, Date.now().toString(), null, "si parte")])
+    const [jobOfferHistory, setJobOfferHistory] = useState([
+        new JobOfferHistory(4, JobOfferStatus.Created, Date.now().toString(), null, "si parte"),
+        new JobOfferHistory(4, JobOfferStatus.SelectionPhase, Date.now().toString(), null, ""),
+        new JobOfferHistory(4, JobOfferStatus.CandidateProposal, Date.now().toString(), null, ""),
+        new JobOfferHistory(4, JobOfferStatus.Done, Date.now().toString(), null, "preso"),
+    ])
 
     const fetchJobOfferHistory = async () => {
         setLoading(true);

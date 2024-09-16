@@ -71,7 +71,7 @@ function JobOffersTable() {
     const location = useLocation();
     const {customer} = location?.state || {};
     const [openFilter, setOpenFilter] = useState(false);
-    const [jobOffers, setJobOffers] = useState([new JobOffer(3, 'plumber job in Turin buwe vhe vhe vhjvhrjv rhv herjv rjv erjv ervjherv ejhve rjv ', "short job and no waste of time", JobOfferStatus.SelectionPhase, ["plumber"], 5, 400, 2)]);
+    const [jobOffers, setJobOffers] = useState([new JobOffer(3, 'plumber job in Turin buwe vhe vhe vhjvhrjv rhv herjv rjv erjv ervjherv ejhve rjv ', "short job and no waste of time", JobOfferStatus.Done, ["plumber"], 5, 400, 2)]);
     const [loading, setLoading] = useState(true);
     const [filter, setFilter] = useState({});
     const [page, setPage] = useState(1);
