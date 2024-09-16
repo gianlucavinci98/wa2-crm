@@ -17,5 +17,6 @@ data class MessageDTO(
     val status: MessageStatus?,
     val body: String?,
     val channel: Channel,
-    val priority: Int?
+    val priority: Int?,
+    val hasAttachments: Boolean?
 )

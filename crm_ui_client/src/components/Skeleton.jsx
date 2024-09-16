@@ -88,8 +88,9 @@ function SideBar({currentUser}) {
                     </button>
                 </div>
                 <div className={"w-full flex flex-col gap-6 flex-1 justify-end"}>
-                    <button className={location.pathname.includes("/ui/Analytics") ? "clicked-side-button" : "side-button"}
-                            onClick={() => navigate("/ui/Analytics")}>Analytics
+                    <button
+                        className={location.pathname.includes("/ui/Analytics") ? "clicked-side-button" : "side-button"}
+                        onClick={() => navigate("/ui/Analytics")}>Analytics
                     </button>
                     <form method={"post"} action={currentUser.logoutUrl}>
                         <input type="hidden" name="_csrf" value={currentUser.xsrfToken}/>
