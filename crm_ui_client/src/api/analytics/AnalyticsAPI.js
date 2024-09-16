@@ -30,7 +30,7 @@ async function GetSkillsCount() {
     const obj = await response.json()
 
     if (response.ok) {
-        return obj.map((e) => JobOfferSkillsStatistic.fromJsonObject(e))
+        return JobOfferSkillsStatistic.fromJsonObject(obj)
     } else {
         throw obj
     }

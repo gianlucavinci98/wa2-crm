@@ -37,7 +37,7 @@ function TopBar({switchFilter, openFilter, addNew, setAddNew, filterPresent, cur
                                   onClick={() => switchFilter()}/>
                         }
                         {
-                            location.pathname.split("/").pop() !== 'ui'
+                            (location.pathname.split("/").pop() !== 'ui' && !location.pathname.includes("Messages"))
                                 ?
                                     !addNew  ?
                                         <Icon name='plus'
@@ -73,24 +73,28 @@ function SideBar({currentUser}) {
             <div className={"h-32 flex items-center justify-center pb-6"}>
                 <img className={"h-full object-contain rounded-full"} src={logo} alt="Logo"/>
             </div>
-                <div className={"w-full flex flex-col gap-6 flex-1"}>
-                    <button
-                        className={location.pathname.includes("/ui/Customers") ? "clicked-side-button" : "side-button"}
-                        onClick={() => navigate("/ui/Customers")}>Customers
-                    </button>
-                    <button
-                        className={location.pathname.includes("/ui/Professionals") ? "clicked-side-button" : "side-button"}
-                        onClick={() => navigate("/ui/Professionals")}>Professionals
-                    </button>
-                    <button
-                        className={location.pathname.includes("/ui/JobOffers") ? "clicked-side-button" : "side-button"}
-                        onClick={() => navigate("/ui/JobOffers")}>Job Offers
-                    </button>
-                </div>
-                <div className={"w-full flex flex-col gap-6 flex-1 justify-end"}>
-                    <button
-                        className={location.pathname.includes("/ui/Analytics") ? "clicked-side-button" : "side-button"}
-                        onClick={() => navigate("/ui/Analytics")}>Analytics
+            <div className={"w-full flex flex-col gap-6 flex-1"}>
+                <button
+                    className={location.pathname.includes("/ui/Customers") ? "clicked-side-button" : "side-button"}
+                    onClick={() => navigate("/ui/Customers")}>Customers
+                </button>
+                <button
+                    className={location.pathname.includes("/ui/Professionals") ? "clicked-side-button" : "side-button"}
+                    onClick={() => navigate("/ui/Professionals")}>Professionals
+                </button>
+                <button
+                    className={location.pathname.includes("/ui/JobOffers") ? "clicked-side-button" : "side-button"}
+                    onClick={() => navigate("/ui/JobOffers")}>Job Offers
+                </button>
+                <button
+                    className={location.pathname.includes("/ui/Messages") ? "clicked-side-button" : "side-button"}
+                    onClick={() => navigate("/ui/Messages")}>Messages
+                </button>
+            </div>
+            <div className={"w-full flex flex-col gap-6 flex-1 justify-end"}>
+                <button
+                    className={location.pathname.includes("/ui/Analytics") ? "clicked-side-button" : "side-button"}
+                    onClick={() => navigate("/ui/Analytics")}>Analytics
                     </button>
                     <form method={"post"} action={currentUser.logoutUrl}>
                         <input type="hidden" name="_csrf" value={currentUser.xsrfToken}/>

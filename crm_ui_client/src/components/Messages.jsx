@@ -60,6 +60,7 @@ function Messages() {
     const [messages, setMessages] = useState([])
     const [load, setLoad] = useState(false)
     const [showDialog, setShowDialog] = useState(false)
+    const [openFilter, setOpenFilter] = useState(false);
 
     useEffect(() => {
         if (!load) {
@@ -82,8 +83,9 @@ function Messages() {
 
     return (
         <>
-            <TopBar/>
+            <TopBar openFilter={openFilter} switchFilter={() => setOpenFilter(!openFilter)} filterPresent={true}/>
             <div className="message-box overflow-auto flex-1">
+                {openFilter ? <div>ciao</div> : ""}
                 <div className="info-box">
                     <IoInformationCircleOutline onClick={handleOpenDialog} size={20}/>
                 </div>

@@ -66,7 +66,7 @@ function SkillsCountChart() {
     useEffect(() => {
         if (!load) {
             AnalyticsAPI.GetSkillsCount().then((result) => {
-                result.skillCount.forEach((key, value) => {
+                Object.entries(result.skillCount).forEach((key, value) => {
                     setData(oldState => oldState.push({
                             name: key,
                             jobOffersNum: value
@@ -99,12 +99,10 @@ function SkillsCountChart() {
 
 function Analytics() {
     return (
-        <>
-            <TimeElapsedChart>
-            </TimeElapsedChart>
-            <SkillsCountChart>
-            </SkillsCountChart>
-        </>)
+        <div className="flex flex-col flex-1 justify-around">
+            <TimeElapsedChart/>
+            <SkillsCountChart/>
+        </div>)
 }
 
 
