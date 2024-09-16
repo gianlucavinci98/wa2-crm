@@ -53,9 +53,7 @@ class MessageServiceImpl(
 
         // Combine all filter in AND
         cqMessage.where(*predicates.toTypedArray())
-        if (sorting != null && sorting.lowercase() == "date") {
-            cqMessage.orderBy(cb.desc(rootMessage.get<String>("date")))
-        }
+        cqMessage.orderBy(cb.desc(rootMessage.get<String>("date")))
 
         val query = entityManager.createQuery(cqMessage)
         query.firstResult = pageNumber * pageSize

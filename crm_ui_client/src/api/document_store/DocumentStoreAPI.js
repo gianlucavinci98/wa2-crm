@@ -51,11 +51,15 @@ async function GetDocumentDataById(documentMetadataId) {
 }
 
 async function InsertNewDocument(file, xsrfToken) {
+    const formData = new FormData()
+    formData.append('file', file)
+
     const response = await fetch(
         buildUrl(URL_DOCUMENT_STORE, null, null), {
             method: 'POST',
             credentials: 'include',
-            headers: {'X-XSRF-TOKEN': xsrfToken}
+            headers: {'X-XSRF-TOKEN': xsrfToken},
+            body: formData
         })
 
     const obj = await response.json()

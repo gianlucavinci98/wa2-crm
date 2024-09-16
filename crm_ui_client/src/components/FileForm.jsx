@@ -19,10 +19,7 @@ function FileUploadForm({currentUser}) {
         event.preventDefault();
 
         if (file) {
-            const formData = new FormData();
-            formData.append('file', file);
-
-            DocumentStoreAPI.InsertNewDocument(formData, currentUser.xsrfToken).then((res) => console.log(res)).catch((err) => console.log(err))
+            DocumentStoreAPI.InsertNewDocument(file, currentUser.xsrfToken).then((res) => console.log(res)).catch((err) => console.log(err))
         } else {
             console.log('Nessun file selezionato');
         }

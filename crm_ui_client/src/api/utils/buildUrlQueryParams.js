@@ -11,21 +11,14 @@ function arrayQueryParams(baseUrl, key, value) {
 }
 
 function buildUrlQueryParams(baseUrl, filter) {
-    let i = 0
-    let size = Object.keys(filter).length
-
     for (let key in filter) {
         let value = filter[key]
 
         if (value instanceof Array) {
             baseUrl += arrayQueryParams(baseUrl, key, value)
-        } else if (i < size - 2) {
-            baseUrl += key + '=' + value + '&'
         } else {
             baseUrl += key + '=' + value + '&'
         }
-
-        i++
     }
 
     return baseUrl

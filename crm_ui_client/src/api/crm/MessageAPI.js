@@ -8,7 +8,6 @@ const URL_MESSAGES = 'http://localhost:8082/crm/api/messages'
 
 
 async function GetMessages(filter, pagination) {
-    console.log(buildUrl(URL_MESSAGES, filter, pagination))
     const response = await fetch(
         buildUrl(URL_MESSAGES, filter, pagination), {
             method: 'GET',

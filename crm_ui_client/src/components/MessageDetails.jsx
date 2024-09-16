@@ -4,7 +4,7 @@ import {useNavigate, useParams} from "react-router-dom";
 import "./MessageDetails.css";
 import {FaArrowLeft} from "react-icons/fa";
 import {TbMessage2Cog} from "react-icons/tb";
-import {MessageHistory} from "../api/crm/dto/MessageHistory.ts";
+import {MessageHistory, MessageStatus} from "../api/crm/dto/MessageHistory.ts";
 import {IoInformationCircleOutline} from "react-icons/io5";
 import {MdOutlineHistory} from "react-icons/md";
 import dayjs from "dayjs";
@@ -64,7 +64,7 @@ function HistoryDialog({messageId, onClose}) {
 
 function Dialog({message, setLoad, currentUser, onClose}) {
     const [comment, setComment] = useState("")
-    const [check, setCheck] = useState(message.status)
+    const [check, setCheck] = useState(MessageStatus[message.status])
     const [error, setError] = useState("");
     const [showSchema, setShowSchema] = useState(false);
 
@@ -90,9 +90,7 @@ function Dialog({message, setLoad, currentUser, onClose}) {
         event.preventDefault()
         const {name, value} = event.target
 
-        if (name === "messageStatus") {
-            setCheck(value)
-        } else {
+        if (name === "comment") {
             setComment(value)
         }
     }
@@ -125,27 +123,27 @@ function Dialog({message, setLoad, currentUser, onClose}) {
                                 <div className="status-list">
                                     <div className="status-list-element">
                                         <label>Processing</label>
-                                        <input type="radio" value={"Processing"} name={"messageStatus"}
-                                               checked={check === "Processing"}
-                                               onChange={handleChange}/>
+                                        <input type="radio" name={"messageStatus"}
+                                               checked={check === 2}
+                                               onChange={() => setCheck(2)}/>
                                     </div>
                                     <div className="status-list-element">
                                         <label>Discarded</label>
-                                        <input type="radio" value={"Discarded"} name={"messageStatus"}
-                                               checked={check === "Discarded"}
-                                               onChange={handleChange}/>
+                                        <input type="radio" name={"messageStatus"}
+                                               checked={check === 4}
+                                               onChange={() => setCheck(4)}/>
                                     </div>
                                     <div className="status-list-element">
                                         <label>Done</label>
-                                        <input type="radio" value={"Done"} name={"messageStatus"}
-                                               checked={check === "Done"}
-                                               onChange={handleChange}/>
+                                        <input type="radio" name={"messageStatus"}
+                                               checked={check === 3}
+                                               onChange={() => setCheck(3)}/>
                                     </div>
                                     <div className="status-list-element">
                                         <label>Failed</label>
-                                        <input type="radio" value={"Failed"} name={"messageStatus"}
-                                               checked={check === "Failed"}
-                                               onChange={handleChange}/>
+                                        <input type="radio" name={"messageStatus"}
+                                               checked={check === 5}
+                                               onChange={() => setCheck(5)}/>
                                     </div>
                                 </div>
 
