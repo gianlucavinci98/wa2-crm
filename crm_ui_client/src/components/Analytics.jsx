@@ -1,9 +1,9 @@
 import "./HomePage.css";
-import {CartesianGrid, Line, LineChart, Tooltip, XAxis, YAxis} from 'recharts'
+import {BarChart, CartesianGrid, Line, LineChart, Tooltip, XAxis, YAxis} from 'recharts'
 import {useEffect, useState} from "react"
 import AnalyticsAPI from "../api/analytics/AnalyticsAPI.js"
 
-function AnalyticsCharts() {
+function TimeElapsedChart() {
     const [data, setData] = useState(null)
     const [load, setLoad] = useState(false)
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -18,7 +18,7 @@ function AnalyticsCharts() {
                         for (let j = 0; j < 6; j++) { //Number of possible states
                             if (result.timeStatistic[i].jobOfferHistory[j] != null) { //The data related to that status exists
                                 numberOfElements[j]++;
-                                averageTimes[j] = averageTimes[j] + result.timeStatistic[i].jobOfferHistory[j].timeElapsed
+                                averageTimes[j] = averageTimes[j] + (result.timeStatistic[i].jobOfferHistory[j].timeElapsed / result.timeStatistic[i].jobOfferHistory[j].count)
                             } else {
                                 break;
                             }
@@ -27,13 +27,13 @@ function AnalyticsCharts() {
 
                     for (let i = 0; i < 6; i++) {
                         if (numberOfElements[i] !== 0) {
-                            averageTimes[i] = (averageTimes[i] / 3600000) / numberOfElements[i]
+                            averageTimes[i] = (averageTimes[i] / (3600000 * 8 * numberOfElements[i])) /* from millies to working days (8hrs) */
                         } else {
                             averageTimes[i] = 0
                         }
                     }
 
-                setData([
+                    setData([
                         {name: "Created", timeSpent: averageTimes[0]},
                         {name: "Selection Phase", timeSpent: averageTimes[1]},
                         {name: "Candidate Proposal", timeSpent: averageTimes[2]},
@@ -47,18 +47,64 @@ function AnalyticsCharts() {
         }
     }, [averageTimes, load, numberOfElements]);
 
-    console.log(data)
     return (
         <LineChart width={600} height={300} data={data} margin={{top: 5, right: 20, bottom: 5, left: 0}}>
             <Line type="monotone" dataKey="timeSpent" stroke="#8884d8"/>
             <CartesianGrid stroke="#ccc" strokeDasharray="5 5"/>
             <XAxis dataKey="name"/>
             <YAxis/>
-
             <Tooltip/>
         </LineChart>
     )
 }
 
+function SkillsCountChart() {
 
-export default AnalyticsCharts;
+    const [data, setData] = useState(null)
+    const [load, setLoad] = useState(false)
+
+    useEffect(() => {
+        if (!load) {
+            AnalyticsAPI.GetSkillsCount().then((result) => {
+                result.skillCount.forEach((key, value) => {
+                    setData(oldState => oldState.push({
+                            name: key,
+                            jobOffersNum: value
+                        })
+                    )
+                })
+                /*
+                for (let i = 0; i < result.length; i++) {
+                    setData(oldState => oldState.push({
+                        name: result.skillCount.key(),
+                        jobOffersNum: result.skillCount.value()
+                    }))
+                }
+                */
+                setLoad(true)
+            }).catch(err => console.log(err))
+        }
+    }, [load]);
+
+    return (
+        <BarChart width={600} height={300} data={data} margin={{top: 5, right: 20, bottom: 5, left: 0}}>
+            <CartesianGrid stroke="#ccc" strokeDasharray="5 5"/>
+            <XAxis dataKey="name"/>
+            <YAxis/>
+            <Tooltip/>
+        </BarChart>
+    )
+}
+
+function Analytics() {
+    return (
+        <>
+            <TimeElapsedChart>
+            </TimeElapsedChart>
+            <SkillsCountChart>
+            </SkillsCountChart>
+        </>)
+}
+
+
+export default Analytics;
