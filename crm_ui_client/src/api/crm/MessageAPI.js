@@ -1,12 +1,14 @@
 import {buildUrl} from "../utils/buildUrlQueryParams.js"
 import {Message} from "./dto/Message.ts"
 import {MessageHistory} from "./dto/MessageHistory.ts"
+import dayjs from "dayjs";
 
 
 const URL_MESSAGES = 'http://localhost:8082/crm/api/messages'
 
 
 async function GetMessages(filter, pagination) {
+    console.log(buildUrl(URL_MESSAGES, filter, pagination))
     const response = await fetch(
         buildUrl(URL_MESSAGES, filter, pagination), {
             method: 'GET',
@@ -15,7 +17,7 @@ async function GetMessages(filter, pagination) {
     const obj = await response.json()
 
     if (response.ok) {
-        return obj.map((e) => Message.fromJsonObject(e))
+        return obj.map((e) => Message.fromJsonObject(e)).sort((a, b) => dayjs(a.date).diff(dayjs(b)))
     } else {
         throw obj
     }

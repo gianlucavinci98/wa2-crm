@@ -18,20 +18,22 @@
     display: flex;
     flex-direction: column;
     align-items: start;
+    justify-content: center;
 }
 
 .message-details-header-center {
-    width: 90%;
+    width: 75%;
     display: flex;
     flex-direction: column;
     align-items: start;
 }
 
 .message-details-header-right {
-    width: 5%;
+    width: 20%;
     display: flex;
-    flex-direction: column;
-    justify-content: start;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
 }
 
 .message-details-header-subject {
@@ -43,7 +45,7 @@
     font-size: 16px;
 }
 
-.dialog-content {
+.dialog-content-2 {
     display: flex;
     flex-direction: column;
 }

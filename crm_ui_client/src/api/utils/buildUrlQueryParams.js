@@ -18,11 +18,11 @@ function buildUrlQueryParams(baseUrl, filter) {
         let value = filter[key]
 
         if (value instanceof Array) {
-            baseUrl = arrayQueryParams(baseUrl, key, value)
+            baseUrl += arrayQueryParams(baseUrl, key, value)
         } else if (i < size - 2) {
             baseUrl += key + '=' + value + '&'
         } else {
-            baseUrl += key + '=' + value
+            baseUrl += key + '=' + value + '&'
         }
 
         i++
@@ -35,10 +35,10 @@ export function buildUrl(baseUrl, filter, pagination) {
     let urlQueryParams = "?"
 
     if (filter ?? false) {
-        buildUrlQueryParams(urlQueryParams, filter)
+        urlQueryParams = buildUrlQueryParams(urlQueryParams, filter)
     }
     if (pagination ?? false) {
-        buildUrlQueryParams(urlQueryParams, pagination)
+        urlQueryParams = buildUrlQueryParams(urlQueryParams, pagination)
     }
 
     return baseUrl + (urlQueryParams !== "?" ? urlQueryParams : "")
