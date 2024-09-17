@@ -9,8 +9,8 @@ import {useLocation} from "react-router-dom";
 
 
 // eslint-disable-next-line react/prop-types
-function JobOfferSearchBar({ onFilterChange }) {
-    const [selectedStatuses, setSelectedStatuses] = useState(['Created', 'SelectionPhase', 'CandidateProposal', 'Consolidated', 'Done', 'Aborted']);
+function JobOfferSearchBar({ onFilterChange , filter}) {
+    const [selectedStatuses, setSelectedStatuses] = useState(filter);
     const [openSelectedStatuses, setOpenSelectedStatuses] = useState(false);
 
     const handleStatusChange = (status) => {
@@ -73,7 +73,7 @@ function JobOffersTable({currentUser}) {
     const [openFilter, setOpenFilter] = useState(false);
     const [jobOffers, setJobOffers] = useState([new JobOffer(3, 'plumber job in Turin buwe vhe vhe vhjvhrjv rhv herjv rjv erjv ervjherv ejhve rjv ', "short job and no waste of time", JobOfferStatus.SelectionPhase, ["plumber"], 5, 400, 2)]);
     const [loading, setLoading] = useState(true);
-    const [filter, setFilter] = useState({});
+    const [filter, setFilter] = useState(['Created', 'SelectionPhase', 'CandidateProposal', 'Consolidated', 'Done', 'Aborted']);
     const [page, setPage] = useState(1);
     const [editJobOffer, setEditJobOffer] = useState(!!customer);
     const [editingJobOffer, setEditingJobOffer] = useState(undefined);
@@ -136,7 +136,7 @@ function JobOffersTable({currentUser}) {
             } filterPresent={!editJobOffer} openFilter={openFilter} switchFilter={()=>setOpenFilter(!openFilter)}></TopBar>
             {!editJobOffer ?
                 <div className={"w-full flex-1 p-6 flex flex-col justify-between items-center"}>
-                    {openFilter?<JobOfferSearchBar onFilterChange={handleFilterChange} />:""}
+                    {openFilter?<JobOfferSearchBar onFilterChange={handleFilterChange} filter={filter} />:""}
                     <table className={"w-full rounded-2xl border-stone-600 shadow-md  overflow-hidden text-stone-800"}>
                         <thead  className={"w-full h-12 bg-stone-200"}>
                         <tr>
