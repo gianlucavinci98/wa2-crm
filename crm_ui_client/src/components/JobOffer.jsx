@@ -10,7 +10,7 @@ import {useLocation} from "react-router-dom";
 
 // eslint-disable-next-line react/prop-types
 function JobOfferSearchBar({ onFilterChange }) {
-    const [selectedStatuses, setSelectedStatuses] = useState([]);
+    const [selectedStatuses, setSelectedStatuses] = useState(['Created', 'SelectionPhase', 'CandidateProposal', 'Consolidated', 'Done', 'Aborted']);
     const [openSelectedStatuses, setOpenSelectedStatuses] = useState(false);
 
     const handleStatusChange = (status) => {
