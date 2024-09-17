@@ -5,6 +5,12 @@ import Icon from "./Icon.jsx";
 import {UpdateJobOffer} from "../api/crm/dto/UpdateJobOffer.ts";
 import {JobOfferHistory} from "../api/crm/dto/JobOfferHistory.ts";
 import dayjs from "dayjs";
+import ContactAPI from "../api/crm/ContactAPI.js";
+import {ContactFilter} from "../api/crm/filter/ContactFilter.ts";
+import {Category, Contact} from "../api/crm/dto/Contact.ts";
+import ProfessionalAPI from "../api/crm/ProfessionalAPI.js";
+import {Application, ApplicationStatus} from "../api/crm/dto/Application.ts";
+import {EmploymentState, Professional} from "../api/crm/dto/Professional.ts";
 
 function JobOfferForm(props) {
 
@@ -17,15 +23,19 @@ function JobOfferForm(props) {
     )
     const [currentSkill, setCurrentSkill] = useState("")
     const [errors, setErrors] = useState({})
-    const [applicant, setApplicant] = useState("")
+    const [applicant, setApplicant] = useState({})
+    const [applicants, setApplicants] = useState([new Professional(4, [''],EmploymentState.Unemployed, 3, '', new Contact(3, 'carlo', 'mass', 'vyefwuew', Category.Professional, 4,null),null)])
     const [loading, setLoading] = useState(true);
     const [note, setNote] = useState("");
     const [customer, setCustomer] = useState(props?.customer)
+    const [professionals, setProfessionals] = useState([new Contact(2, 'mario', 'bianchi', 'vf4328f7f', Category.Professional,5, null )])
+    const [ssn, setSsn] = useState('')
+    const [ssnSearchOpen, setSsnSearchOpen] = useState(false)
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [serverResponse, setServerResponse] = useState("")
     const [jobOfferHistory, setJobOfferHistory] = useState([
         new JobOfferHistory(4, JobOfferStatus.Created, Date.now().toString(), null, "si parte"),
-        new JobOfferHistory(4, JobOfferStatus.SelectionPhase, Date.now().toString(), null, ""),
+        new JobOfferHistory(4, JobOfferStatus.SelectionPhase, Date.now().toString(), [new Application(4,4,ApplicationStatus.Pending, Date.now().toString())], ""),
         new JobOfferHistory(4, JobOfferStatus.CandidateProposal, Date.now().toString(), null, ""),
         new JobOfferHistory(4, JobOfferStatus.Consolidated, Date.now().toString(), null, "preso"),
         new JobOfferHistory(4, JobOfferStatus.Done, Date.now().toString(), null, "fatto"),
@@ -36,10 +46,23 @@ function JobOfferForm(props) {
         try {
             const data = await JobOfferAPI.GetJobOfferHistory(jobOffer.jobOfferId);
             setJobOfferHistory(data);
+            let professionals = []
+            jobOfferHistory.find((history) => history.jobOfferStatus === jobOffer.status).candidates.map(async (it) => {
+                professionals.push(await ProfessionalAPI.GetProfessionalById(it.professionalId))
+            })
+            setApplicants(professionals)
         } catch (error) {
             console.error('Failed to fetch job Offer History:', error);
         } finally {
             setLoading(false);
+        }
+    };
+    const fetchProfessionals = async () => {
+        try {
+            const data = await ContactAPI.GetContacts(new ContactFilter(null, null, ssn, Category.Professional, null, null, null));
+            setProfessionals(data);
+        } catch (error) {
+            console.error('Failed to fetch Professional:', error);
         }
     };
 
@@ -114,8 +137,9 @@ function JobOfferForm(props) {
         try {
             let response
             response = await JobOfferAPI.InsertNewApplication(jobOffer.jobOfferId, applicant.professionalId, props.currentUser.xsrfToken)
-
-            setServerResponse("Applicant updated successfully!")
+            setSsn('')
+            setApplicant({})
+            setServerResponse("Applicant added successfully!")
             console.log(response)
         } catch (error) {
             setServerResponse("Error sending message. Please try again.")
@@ -124,12 +148,12 @@ function JobOfferForm(props) {
             setIsSubmitting(false)
         }
     }
-    const onRemoveHandler = async (event) => {
+    const onRemoveHandler = async () => {
         if (applicant==='') return
         try {
             let response
-            response = await JobOfferAPI.DeleteApplication(jobOffer.jobOfferId, event.professionalId, props.currentUser.xsrfToken)
-
+            response = await JobOfferAPI.DeleteApplication(jobOffer.jobOfferId, applicant.professionalId, props.currentUser.xsrfToken)
+            setApplicant({})
             setServerResponse("Applicant updated successfully!")
             console.log(response)
         } catch (error) {
@@ -360,25 +384,53 @@ function JobOfferForm(props) {
                             <button className={"page-button"} onClick={onDetailSaveHandler}>{isSubmitting ? "Submitting..." : "Save"}</button>
                         </div>
                         {jobOffer.status === JobOfferStatus.SelectionPhase &&
-                            <div className={"col-field items-center w-full"}>
+                            <div className={"col-field items-start w-full"}>
                                 <label className={""}>Applicant:</label>
-                                <div>
+                                <div className={'relative flex flex-col gap-2'}>
                                     <input
                                         type={"text"}
                                         className={"flex-1 font-normal"}
-                                        value={applicant}
-                                        onChange={(e) => setApplicant(e.target.value)}
+                                        value={ssn}
+                                        onChange={(e) => {
+                                            fetchProfessionals()
+                                            setSsnSearchOpen(true)
+                                            setSsn(e.target.value)}
+                                    }
                                     >
                                     </input>
-                                    {jobOfferHistory.find((it) =>
-                                        it.jobOfferStatus===JobOfferStatus.SelectionPhase
-                                    ).candidates?.map((item, index)=>
+                                    {applicants.map((item, index)=>
                                         // TO-DO
-                                        <label key={index} className={"flex-1 font-normal"}>
-                                            {''}
-                                        </label>
+                                        <div key={index} className={"flex gap-2 items-center"}>
+                                            <label className={"font-semibold"}>
+                                                {item.contact.ssn}
+                                            </label>
+                                            <label className={"font-normal"}>
+                                                {ApplicationStatus[jobOfferHistory.find((it)=>it.jobOfferStatus === jobOffer.status).candidates.find((can)=>can.professionalId===item.professionalId).status]}
+                                            </label>
+                                            <Icon name={'cross'} className={"w-4 h-4 fill-red-500"} onClick={() => {
+                                                setApplicant(item)
+                                                onRemoveHandler()
+                                            }
+                                            }></Icon>
+                                        </div>
                                     )
                                     }
+                                    {ssnSearchOpen ? <div
+                                        className="absolute z-10 w-44 bg-white border border-gray-300 rounded-md shadow-lg mt-6 h-24 overflow-auto">
+                                        <div className="p-2 w-fit">
+                                            {professionals.map((professional, index) => (
+                                                <div key={index}>
+                                                    <label className="flex items-center gap-2">
+                                                    <span onClick={()=> {
+                                                        setSsnSearchOpen(false)
+                                                        setSsn(professional.ssn)
+                                                        setApplicant(professional)
+                                                    }}>{professional.ssn}</span>
+                                                    </label>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>:""}
                                 </div>
                                 <button className={"page-button"}
                                         onClick={onApplyHandler}>{isSubmitting ? "Submitting..." : "Apply"}</button>
@@ -394,7 +446,7 @@ function JobOfferForm(props) {
                                     <input
                                     type={"text"}
                                     value={note}
-                                    placeholder={"note to next status..."}
+                                    placeholder={"note to change status..."}
                                     onChange={(e)=>{setNote(e.target.value)}}
                                     />
                                     <button className={"page-button"} onClick={onStatusNextHandler}>{isSubmitting ? "Submitting..." : "Advance"}</button>
@@ -407,7 +459,7 @@ function JobOfferForm(props) {
                                     <input
                                         type={"text"}
                                         value={note}
-                                        placeholder={"note to selection phase..."}
+                                        placeholder={"note to change phase..."}
                                         onChange={(e)=>{setNote(e.target.value)}}
                                     />
                                     <button className={"page-button"} onClick={onStatusPrevHandler}>{isSubmitting ? "Submitting..." : "SelectionPhase"}</button>

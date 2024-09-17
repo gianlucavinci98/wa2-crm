@@ -10,7 +10,6 @@ import {Address} from "../api/crm/dto/Address.ts";
 import {Email} from "../api/crm/dto/Email.ts";
 import {Telephone} from "../api/crm/dto/Telephone.ts";
 import {TopBar} from "./Skeleton.jsx";
-import EditClient from "./EditClient.jsx";
 import EditProfessional from "./EditProfessional.jsx";
 
 
@@ -65,16 +64,16 @@ function ProfessionalsTable() {
     // const [professionals, setProfessionals] = useState([]);
     const [openFilter, setOpenFilter] = useState(false);
     const [professionals, setProfessionals] = useState([
-        new Professional(5, new Set(['Plumber']),EmploymentState.Unemployed, 20,'Turin', new Contact(2, 'mario', 'bianchi', 'vf4328f7f', Category.Professional)),
-        new Professional(6, new Set(['Plumber']),EmploymentState.Unemployed, 20,'Turin', new Contact(2, 'mario', 'bianchi', 'vf4328f7f', Category.Professional)),
-        new Professional(7, new Set(['Plumber']),EmploymentState.Unemployed, 20,'Turin', new Contact(2, 'mario', 'bianchi', 'vf4328f7f', Category.Professional)),
-        new Professional(8, new Set(['Plumber']),EmploymentState.Unemployed, 20,'Turin', new Contact(2, 'mario', 'bianchi', 'vf4328f7f', Category.Professional)),
-        new Professional(9, new Set(['Plumber']),EmploymentState.Unemployed, 20,'Turin', new Contact(2, 'mario', 'bianchi', 'vf4328f7f', Category.Professional)),
-        new Professional(0, new Set(['Plumber']),EmploymentState.Unemployed, 20,'Turin', new Contact(2, 'mario', 'bianchi', 'vf4328f7f', Category.Professional)),
-        new Professional(1, new Set(['Plumber']),EmploymentState.Unemployed, 20,'Turin', new Contact(2, 'mario', 'bianchi', 'vf4328f7f', Category.Professional)),
-        new Professional(2, new Set(['Plumber']),EmploymentState.Unemployed, 20,'Turin', new Contact(2, 'mario', 'bianchi', 'vf4328f7f', Category.Professional)),
-        new Professional(3, new Set(['Plumber']),EmploymentState.Unemployed, 20,'Turin', new Contact(2, 'mario', 'bianchi', 'vf4328f7f', Category.Professional)),
-        new Professional(4, new Set(['Plumber']),EmploymentState.Unemployed, 20,'Turin', new Contact(2, 'mario', 'bianchi', 'vf4328f7f', Category.Professional))
+        new Professional(5, new Set(['Plumber']),EmploymentState.Unemployed, 20,'Turin', new Contact(2, 'mario', 'bianchi', 'vf4328f7f', Category.Professional, 5,null), null),
+        new Professional(6, new Set(['Plumber']),EmploymentState.Unemployed, 20,'Turin', new Contact(2, 'mario', 'bianchi', 'vf4328f7f', Category.Professional, 5,null), null),
+        new Professional(7, new Set(['Plumber']),EmploymentState.Unemployed, 20,'Turin', new Contact(2, 'mario', 'bianchi', 'vf4328f7f', Category.Professional, 5,null), null),
+        new Professional(8, new Set(['Plumber']),EmploymentState.Unemployed, 20,'Turin', new Contact(2, 'mario', 'bianchi', 'vf4328f7f', Category.Professional, 5,null), null),
+        new Professional(9, new Set(['Plumber']),EmploymentState.Unemployed, 20,'Turin', new Contact(2, 'mario', 'bianchi', 'vf4328f7f', Category.Professional, 5,null), null),
+        new Professional(0, new Set(['Plumber']),EmploymentState.Unemployed, 20,'Turin', new Contact(2, 'mario', 'bianchi', 'vf4328f7f', Category.Professional, 5,null), null),
+        new Professional(1, new Set(['Plumber']),EmploymentState.Unemployed, 20,'Turin', new Contact(2, 'mario', 'bianchi', 'vf4328f7f', Category.Professional, 5,null), null),
+        new Professional(2, new Set(['Plumber']),EmploymentState.Unemployed, 20,'Turin', new Contact(2, 'mario', 'bianchi', 'vf4328f7f', Category.Professional, 5,null), null),
+        new Professional(3, new Set(['Plumber']),EmploymentState.Unemployed, 20,'Turin', new Contact(2, 'mario', 'bianchi', 'vf4328f7f', Category.Professional, 5,null), null),
+        new Professional(4, new Set(['Plumber']),EmploymentState.Unemployed, 20,'Turin', new Contact(2, 'mario', 'bianchi', 'vf4328f7f', Category.Professional, 5,null), null)
     ]);
     const [loading, setLoading] = useState(true);
     const [filter, setFilter] = useState({});
@@ -181,7 +180,7 @@ function ProfessionalsTable() {
                         </thead>
                         <tbody>
                         {professionals.map((professional, index) => (
-                            <tr key={professional.professionalId} className={'hover:bg-stone-100'}>
+                            <tr key={index} className={'hover:bg-stone-100'}>
                                 <td>{professional.dailyRate} $</td>
                                 <td>{Array.from(professional.skills).join(', ')}</td>
                                 <td>
@@ -196,8 +195,9 @@ function ProfessionalsTable() {
                                     className={'cursor-pointer'}
                                 >
                                     {professional.contact && (
-                                        <div className="candidate-info">
+                                        <div className="flex flex-col">
                                             <div>{professional.contact.name} {professional.contact.surname}</div>
+                                            <div>{professional.contact.ssn}</div>
                                         </div>
                                     )}
                                 </td>
