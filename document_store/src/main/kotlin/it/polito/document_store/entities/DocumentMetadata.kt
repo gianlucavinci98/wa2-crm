@@ -35,7 +35,7 @@ class DocumentMetadata {
      * The id should be of a Customer or JobOffer
      * */
     @Column(name = "id")
-    var id: Long = 0
+    var id: Long? = null
 
     override fun toString(): String {
         return "DocumentMetadata(metadataId=$metadataId, name='$name', size=$size, contentType='$contentType', timestamp=$timestamp, documentData=$documentData, category=$category, id=$id)"

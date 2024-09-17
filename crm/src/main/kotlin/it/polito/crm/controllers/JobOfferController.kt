@@ -1,6 +1,7 @@
 package it.polito.crm.controllers
 
 import it.polito.crm.dtos.JobOfferDTO
+import it.polito.crm.dtos.JobOfferHistoryDTO
 import it.polito.crm.dtos.UpdateJobOfferDTO
 import it.polito.crm.services.JobOfferService
 import it.polito.crm.utils.Category
@@ -106,5 +107,11 @@ class JobOfferController(val jobOfferService: JobOfferService) {
         @NotEmpty @RequestParam("status", required = true) status: List<JobOfferStatus>
     ): List<JobOfferDTO> {
         return jobOfferService.getAllJobOffers(pageNumber, pageSize, category, id, status)
+    }
+
+    @GetMapping("/{jobOfferId}/history")
+    @PreAuthorize("hasAnyRole('ROLE_operator', 'ROLE_guest', 'ROLE_manager')")
+    fun getJobOfferHistory(@PathVariable("jobOfferId", required = true) jobOfferId: Long): List<JobOfferHistoryDTO> {
+        return jobOfferService.getJobOfferHistory(jobOfferId)
     }
 }

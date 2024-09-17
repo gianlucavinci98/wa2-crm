@@ -13,7 +13,7 @@ class DocumentData {
     @Column(name = "data")
     lateinit var data: ByteArray
 
-    @OneToOne(mappedBy = "documentData", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "documentData", cascade = [CascadeType.ALL])
     lateinit var documentMetadata: DocumentMetadata
     override fun toString(): String {
         return "DocumentData(documentId=$documentId)"

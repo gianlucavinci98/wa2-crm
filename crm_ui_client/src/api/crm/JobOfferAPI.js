@@ -1,5 +1,6 @@
 import {buildUrl} from "../utils/buildUrlQueryParams.js"
 import {JobOffer} from "./dto/JobOffer.ts"
+import {JobOfferHistory} from "./dto/JobOfferHistory.ts";
 
 
 const URL_JOB_OFFERS = 'http://localhost:8082/crm/api/joboffers'
@@ -30,6 +31,20 @@ async function GetJobOfferById(jobOfferId) {
 
     if (response.ok) {
         return JobOffer.fromJsonObject(obj)
+    } else {
+        throw obj
+    }
+}
+async function GetJobOfferHistory(jobOfferId) {
+    const response = await fetch(
+        buildUrl(`${URL_JOB_OFFERS}/${jobOfferId}/history`, null, null), {
+            method: 'GET',
+            credentials: 'include'
+        })
+    const obj = await response.json()
+
+    if (response.ok) {
+        return obj.map((e) =>JobOfferHistory.fromJsonObject(e))
     } else {
         throw obj
     }
@@ -154,6 +169,7 @@ const JobOfferAPI = {
     GetJobOffers,
     GetJobOfferById,
     GetJobOfferValue,
+    GetJobOfferHistory,
     InsertNewJobOffer,
     InsertNewJobOfferDetails,
     UpdateJobOffer,

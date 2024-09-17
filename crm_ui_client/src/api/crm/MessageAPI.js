@@ -1,6 +1,7 @@
 import {buildUrl} from "../utils/buildUrlQueryParams.js"
 import {Message} from "./dto/Message.ts"
 import {MessageHistory} from "./dto/MessageHistory.ts"
+import dayjs from "dayjs";
 
 
 const URL_MESSAGES = 'http://localhost:8082/crm/api/messages'
@@ -15,7 +16,7 @@ async function GetMessages(filter, pagination) {
     const obj = await response.json()
 
     if (response.ok) {
-        return obj.map((e) => Message.fromJsonObject(e))
+        return obj.map((e) => Message.fromJsonObject(e)).sort((a, b) => dayjs(a.date).diff(dayjs(b)))
     } else {
         throw obj
     }
@@ -90,10 +91,10 @@ async function UpdatePriorityOfMessage(messageId, priority, xsrfToken) {
 async function UpdateStatusOfMessage(messageId, messageHistory, xsrfToken) {
     const response = await fetch(
         buildUrl(`${URL_MESSAGES}/${messageId}/status`, null, null), {
-            method: 'PUT',
+            method: 'POST',
             credentials: 'include',
             headers: {'Content-Type': 'application/json', 'X-XSRF-TOKEN': xsrfToken},
-            body: JSON.stringify({messageHistory})
+            body: JSON.stringify(messageHistory)
         })
 
     const obj = await response.json()

@@ -35,6 +35,9 @@ class Message {
     @Column(name = "priority")
     var priority: Int = 0
 
+    @Column(name = "has_attachments")
+    var hasAttachments: Boolean? = null
+
     @OneToMany(mappedBy = "message")
     val history = mutableSetOf<MessageHistory>()
 
@@ -44,8 +47,8 @@ class Message {
     }
 
     fun toDTO(): MessageDTO =
-        MessageDTO(this.messageId, this.sender, this.date, this.subject, this.status, this.body, this.channel, this.priority)
+        MessageDTO(this.messageId, this.sender, this.date, this.subject, this.status, this.body, this.channel, this.priority, this.hasAttachments)
 
     fun toInfoDTO(): MessageInfoDTO =
-        MessageInfoDTO(this.messageId, this.sender, this.date, this.subject, this.status, this.channel, this.priority)
+        MessageInfoDTO(this.messageId, this.sender, this.date, this.subject, this.status, this.channel, this.priority, this.hasAttachments)
 }

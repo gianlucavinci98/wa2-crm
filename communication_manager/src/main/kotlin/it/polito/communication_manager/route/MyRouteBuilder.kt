@@ -3,6 +3,7 @@ package it.polito.communication_manager.route
 import com.google.api.services.gmail.model.Message
 import it.polito.communication_manager.dto.Channel
 import it.polito.communication_manager.dto.MessageDTO
+import jakarta.mail.Multipart
 import jakarta.mail.Session
 import jakarta.mail.internet.InternetAddress
 import jakarta.mail.internet.MimeBodyPart
@@ -13,6 +14,9 @@ import org.apache.camel.builder.RouteBuilder
 import org.apache.camel.component.google.mail.GoogleMailEndpoint
 import org.apache.camel.model.dataformat.JsonLibrary
 import org.springframework.stereotype.Component
+import java.io.ByteArrayInputStream
+import java.io.File
+import java.io.FileOutputStream
 import java.time.Instant
 import java.time.ZoneId
 import java.util.*
@@ -37,7 +41,6 @@ class MyRouteBuilder : RouteBuilder() {
                 val subject =
                     message.payload.headers.find { e -> e.name.equals("subject", true) }?.get("value")?.toString() ?: ""
 
-                // this operation takes out this value: Leonardo Moracci <moracci99@gmail.com> by we want only the email
                 val from =
                     message.payload.headers.find { e -> e.name.equals("from", true) }?.get("value")?.toString() ?: ""
                 val email = from.substringAfter("<").substringBefore(">")
@@ -47,11 +50,68 @@ class MyRouteBuilder : RouteBuilder() {
                         .toString()
 
                 val rawMessage = ep.client.users().messages().get("me", id).setFormat("raw").execute()
-                val body = rawMessage.raw
+                val bodyBase64 = rawMessage.raw
+                val base64Standard = bodyBase64.replace('-', '+').replace('_', '/').replace("\\s".toRegex(), "")
 
-                val messageDTO = MessageDTO(null, email, date, subject, body, Channel.Email, 0)
+                try {
+                    val bodyBytes = Base64.getDecoder().decode(base64Standard)
+                    val inputStream = ByteArrayInputStream(bodyBytes)
+                    val session = Session.getDefaultInstance(Properties())
+                    val mimeMessage = MimeMessage(session, inputStream)
 
-                it.getIn().body = messageDTO
+                    var foundAttachment = false
+                    val messageBody: String = when (val content = mimeMessage.content) {
+                        is String -> content // For simple text/plain emails
+                        is Multipart -> {
+                            val multipart = content as Multipart
+                            var textContent: String? = null
+
+                            val textParts = (0 until multipart.count).map { multipart.getBodyPart(it) }
+
+                            textParts.forEach { e ->
+                                if (e.contentType.startsWith("application/")) {
+                                    foundAttachment = true
+                                }
+
+                                println(e.contentType)
+                            }
+
+                            // Handle multipart/alternative and extract text
+                            for (i in 0 until multipart.count) {
+                                val part = multipart.getBodyPart(i)
+                                val contentType = part.contentType.toLowerCase()
+
+                                if (contentType.startsWith("multipart/alternative")) {
+                                    val subMultipart = part.content as Multipart
+                                    for (j in 0 until subMultipart.count) {
+                                        val subPart = subMultipart.getBodyPart(j)
+                                        val subContentType = subPart.contentType.toLowerCase()
+                                        if (subContentType.startsWith("text/plain") || subContentType.startsWith("text/html")) {
+                                            textContent = subPart.content.toString()
+                                            break
+                                        }
+                                    }
+                                    if (textContent != null) break
+                                } else if (contentType.startsWith("text/plain") || contentType.startsWith("text/html")) {
+                                    textContent = part.content.toString()
+                                } else if (contentType.startsWith("application/")) {
+                                    foundAttachment = true
+                                }
+                            }
+                            textContent ?: "No text content found"
+                        }
+
+                        else -> "Unsupported content type"
+                    }
+
+                    val messageDTO =
+                        MessageDTO(null, email, date, subject, messageBody, Channel.Email, 0, foundAttachment)
+
+                    it.getIn().body = messageDTO
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    it.getIn().body = "Error processing email body: ${e.message}"
+                }
             }
             .marshal()
             .json(JsonLibrary.Jackson)

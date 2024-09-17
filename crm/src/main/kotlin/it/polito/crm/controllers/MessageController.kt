@@ -55,7 +55,7 @@ class MessageController(private val messageService: MessageService) {
         return ResponseEntity.status(HttpStatus.OK).body(updatedMessage)
     }
 
-    @PostMapping("/{messageId}")
+    @PostMapping("/{messageId}/status")
     @PreAuthorize("hasAnyRole('ROLE_operator', 'ROLE_manager')")
     fun updateStatus(
         @PathVariable messageId: Long,

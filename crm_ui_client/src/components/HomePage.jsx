@@ -91,7 +91,7 @@ function HomePage({currentUser}) {
                             name="sender"
                             value={message.sender}
                             onChange={onChangeHandler}
-                            className={`border p-2 ${errors.sender ? "border-red-500" : ""}`}
+                            className={`border p-2 ${errors.sender ? "border-red-500" : ""} input-home`}
                         />
                         {errors.sender && <p className="text-red-500">{errors.sender}</p>}
                     </div>
@@ -104,7 +104,7 @@ function HomePage({currentUser}) {
                             name="subject"
                             value={message.subject}
                             onChange={onChangeHandler}
-                            className={`border p-2 ${errors.subject ? "border-red-500" : ""}`}
+                            className={`border p-2 ${errors.subject ? "border-red-500" : ""} input-home`}
                         />
                         {errors.subject && <p className="text-red-500">{errors.subject}</p>}
                     </div>
@@ -123,7 +123,7 @@ function HomePage({currentUser}) {
                             rows={10}
                             cols={50}
                             placeholder="Insert your message here..."
-                            className={`border p-2 resize-none ${errors.body ? "border-red-500" : ""}`}
+                            className={`border p-2 resize-none ${errors.body ? "border-red-500" : ""} textarea-home`}
                         />
                         {errors.body && <p className="text-red-500">{errors.body}</p>}
                     </div>

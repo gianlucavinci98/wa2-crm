@@ -5,22 +5,19 @@ import Icon from "./Icon.jsx";
 import {Category, Contact} from "../api/crm/dto/Contact.ts";
 import {Customer} from "../api/crm/dto/Customer.ts";
 import ContactAPI from "../api/crm/ContactAPI.js";
-import {ContactDetails} from "../api/crm/dto/ContactDetails.ts";
-import {Address} from "../api/crm/dto/Address.ts";
-import {Email} from "../api/crm/dto/Email.ts";
-import {Telephone} from "../api/crm/dto/Telephone.ts";
 import EditClient from "./EditClient.jsx";
 import {TopBar} from "./Skeleton.jsx";
+import {useNavigate} from "react-router-dom";
 
 
-function CustomersTable() {
+function ClientsTable({currentUser}) {
     // const [customers, setCustomers] = useState([]);
     const [customers, setCustomers] = useState([new Customer(5, ['best', 'wonderfull'], new Contact(3, 'carelo', 'rossi', 'bdhev2837', Category.Customer))]);
     const [loading, setLoading] = useState(true);
     const [page, setPage] = useState(1);
     const [editClient, setEditClient] = useState(false);
     const [editingClient, setEditingClient] = useState();
-
+    const navigate = useNavigate()
     const [tooltip, setTooltip] = useState({visible: false, showDetails: false, details: null, x: 0, y: 0});
 
     // Function to fetch data
@@ -36,6 +33,14 @@ function CustomersTable() {
             setLoading(false);
         }
     };
+    const onDeleteHandler = async (customer) => {
+        try {
+            await CustomerAPI.DeleteCustomer(customer.customerId, currentUser.xsrfToken);
+        } catch (error) {
+            console.error('Failed to delete Professional:', error);
+        }
+    };
+
 
     useEffect(() => {
         fetchCustomers();
@@ -59,11 +64,11 @@ function CustomersTable() {
             }));
         } catch (error) {
             // modificare il catch moccato
-            setTooltip(prevTooltip => ({
-                ...prevTooltip,
-                showDetails: true,
-                details: new ContactDetails(2, 'carelo', 'rossi', 'gf3827r', Category.Customer, new Set([new Address(2n, 'via casa mia')]), new Set([new Email(2, 'mario@gmail.com')]), new Set([new Telephone(2, '2224443331')])),
-            }));
+            // setTooltip(prevTooltip => ({
+            //     ...prevTooltip,
+            //     showDetails: true,
+            //     details: new ContactDetails(2, 'carelo', 'rossi', 'gf3827r', Category.Customer, new Set([new Address(2n, 'via casa mia')]), new Set([new Email(2, 'mario@gmail.com')]), new Set([new Telephone(2, '2224443331')])),
+            // }));
             console.error("Failed to fetch contact details:", error);
         }
     };
@@ -100,8 +105,7 @@ function CustomersTable() {
                     <table className={"w-full rounded-2xl border-stone-600 shadow-md  overflow-hidden text-stone-800"}>
                         <thead className={"w-full h-12 bg-stone-200"}>
                         <tr>
-                            <th>Client</th>
-                            <th>Job Offers Actives</th>
+                            <th>Customer</th>
                             <th>Notes</th>
                             <th>Actions</th>
                         </tr>
@@ -135,15 +139,22 @@ function CustomersTable() {
                                 {/*        <div key={email.id}>email.email</div>*/}
                                 {/*    ))}*/}
                                 {/*</td> /!* Emails *!/*/}
-                                <td></td>
                                 <td>{Array.from(customer.notes).join(', ')}</td>
-                                <td>
-                                    <button className={'table-button text-blue-500'} onClick={() => {
-                                        setEditingClient(customer)
-                                        setEditClient(!editClient)
-                                    }}>Edit
-                                    </button>
-                                    <button className={'table-button text-red-500'}>Delete</button>
+                                <td className={""}>
+                                    <div className={"flex gap-2 items-center"}>
+                                        <Icon name={"file"} className={'w-4 h-4 fill-orange-500'} onClick={() => {
+                                            navigate("/ui/JobOffers", { state: { customer: customer }})
+                                        }}>Create Job Offer
+                                        </Icon>
+                                        <Icon name={"pencil"} className={'w-4 h-4 fill-blue-500'} onClick={() => {
+                                            setEditingClient(customer)
+                                            setEditClient(!editClient)
+                                        }}>Edit
+                                        </Icon>
+                                        <Icon name={"garbage"} className={'w-4 h-4 fill-red-500'} onClick={()=>{
+                                            onDeleteHandler(customer)
+                                        }}>Delete</Icon>
+                                    </div>
                                 </td>
                             </tr>
                         ))}
@@ -213,4 +224,4 @@ function CustomersTable() {
     )
 }
 
-export default CustomersTable;
+export default ClientsTable;

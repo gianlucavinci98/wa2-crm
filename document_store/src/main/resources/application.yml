@@ -23,3 +23,7 @@ spring:
       resourceserver:
         jwt:
           issuer-uri: http://localhost:9090/realms/crm
+logging:
+  level:
+    org.springframework.web: DEBUG
+    reactor.netty.http.client: DEBUG

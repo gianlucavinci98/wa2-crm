@@ -3,6 +3,9 @@ import "./JobOffer.css"
 import JobOfferAPI from "../api/crm/JobOfferAPI.js";
 import Icon from "./Icon.jsx";
 import {TopBar} from "./Skeleton.jsx";
+import JobOfferForm from "./JobofferForm.jsx";
+import {JobOffer, JobOfferStatus} from "../api/crm/dto/JobOffer.ts";
+import {useLocation} from "react-router-dom";
 
 
 // eslint-disable-next-line react/prop-types
@@ -32,16 +35,16 @@ function JobOfferSearchBar({ onFilterChange }) {
     return (
         <div className="flex justify-between gap-6 h-[10%] items-center">
             <div className="p-2 flex gap-4 border rounded-md shadow-md">
-                <div className="relative">
+                <div className="relative w-48">
                     <button className=" flex gap-4 w-full items-center appearance-nonebg-white hover:border-gray-500 px-4 py-2 pr-6 leading-tight focus:outline-none focus:shadow-outline" onClick={()=>setOpenSelectedStatuses(!openSelectedStatuses)}>
-                        Seleziona Status
+                        Status Selection
                         <Icon name={'arrowDown'} className={"w-2 h-2"}></Icon>
                     </button>
                     {openSelectedStatuses?<div className="absolute z-10 w-full bg-white border border-gray-300 rounded-md shadow-lg mt-1">
-                        <div className="p-2">
+                        <div className="p-2 w-fit">
                             {['Created', 'SelectionPhase', 'CandidateProposal', 'Consolidated', 'Done', 'Aborted'].map(status => (
                                 <div key={status}>
-                                    <label className="flex items-center space-x-2">
+                                    <label className="flex items-center gap-2">
                                         <input
                                             type="checkbox"
                                             value={status}
@@ -63,15 +66,17 @@ function JobOfferSearchBar({ onFilterChange }) {
 
 
 // eslint-disable-next-line react/prop-types
-function JobOffersTable() {
+function JobOffersTable({currentUser}) {
 
+    const location = useLocation();
+    const {customer} = location?.state || {};
     const [openFilter, setOpenFilter] = useState(false);
-    const [jobOffers, setJobOffers] = useState([]);
+    const [jobOffers, setJobOffers] = useState([new JobOffer(3, 'plumber job in Turin buwe vhe vhe vhjvhrjv rhv herjv rjv erjv ervjherv ejhve rjv ', "short job and no waste of time", JobOfferStatus.SelectionPhase, ["plumber"], 5, 400, 2)]);
     const [loading, setLoading] = useState(true);
     const [filter, setFilter] = useState({});
     const [page, setPage] = useState(1);
-    const [editJobOffer, setEditJobOffer] = useState(false);
-    const [editingJobOffer, setEditingJobOffer] = useState();
+    const [editJobOffer, setEditJobOffer] = useState(!!customer);
+    const [editingJobOffer, setEditingJobOffer] = useState(undefined);
 
     // Function to fetch data
     const fetchJobOffers = async () => {
@@ -84,6 +89,14 @@ function JobOffersTable() {
             console.error('Failed to fetch jobOffers:', error);
         } finally {
             setLoading(false);
+        }
+    };
+
+    const onDeleteHandler = async (jobOffer) => {
+        try {
+            await JobOfferAPI.DeleteJobOffer(jobOffer.jobOfferId, currentUser.xsrfToken);
+        } catch (error) {
+            console.error('Failed to delete Job Offer:', error);
         }
     };
 
@@ -117,7 +130,10 @@ function JobOffersTable() {
 
     return (
         <>
-            <TopBar addNew={editJobOffer} setAddNew={(it)=>setEditJobOffer(it)} filterPresent={!editJobOffer} openFilter={openFilter} switchFilter={()=>setOpenFilter(!openFilter)}></TopBar>
+            <TopBar addNew={editJobOffer} setAddNew={()=>{
+                setEditingJobOffer(undefined)
+                setEditJobOffer(!editJobOffer)}
+            } filterPresent={!editJobOffer} openFilter={openFilter} switchFilter={()=>setOpenFilter(!openFilter)}></TopBar>
             {!editJobOffer ?
                 <div className={"w-full flex-1 p-6 flex flex-col justify-between items-center"}>
                     {openFilter?<JobOfferSearchBar onFilterChange={handleFilterChange} />:""}
@@ -129,20 +145,30 @@ function JobOffersTable() {
                             <th>Duration</th>
                             <th>Value</th>
                             <th>Status</th>
+                            <th>Details</th>
                             <th>Actions</th>
                         </tr>
                         </thead>
                         <tbody>
                         {jobOffers.map((jobOffer) => (
-                            <tr key={jobOffer.professionalId} className={'hover:bg-stone-100 cursor-pointer'}>
+                            <tr key={jobOffer.selectedProfessionalId} className={'hover:bg-stone-100 cursor-pointer'}>
                                 <td>{jobOffer.description}</td>
                                 <td>{Array.from(jobOffer.requiredSkills).join(', ')}</td>
-                                <td>{jobOffer.duration}</td>
+                                <td>{jobOffer.duration} days</td>
                                 <td>{jobOffer.value}</td>
-                                <td>{jobOffer.status}</td>
+                                <td>{JobOfferStatus[jobOffer.status]}</td>
+                                <td>{jobOffer.details}</td>
                                 <td>
-                                    <button className={'table-button text-blue-500'}>Edit</button>
-                                    <button className={'table-button text-red-500'}>Delete</button>
+                                    <div className={"flex gap-2 items-center"}>
+                                        <Icon name={"pencil"} className={'w-4 h-4 fill-blue-500'} onClick={() => {
+                                            setEditingJobOffer(jobOffer)
+                                            setEditJobOffer(!editJobOffer)
+                                        }}>Edit
+                                        </Icon>
+                                        <Icon name={"garbage"} className={'w-4 h-4 fill-red-500'} onClick={() => {
+                                            onDeleteHandler(jobOffer)
+                                        }}>Delete</Icon>
+                                    </div>
                                 </td>
                             </tr>
                         ))}
@@ -150,7 +176,7 @@ function JobOffersTable() {
                     </table>
                     <div className="w-full h-[10%] flex items-center justify-between">
                         <button className={"page-button"} onClick={() => setPage(page - 1)} disabled={page === 1}>
-                            <Icon name='arrowLeft' className="w-4 h-4" />
+                            <Icon name='arrowLeft' className="w-4 h-4"/>
                             Previous
                         </button>
                         <span className={"text-xl text-stone-600"}>Page {page}</span>
@@ -161,7 +187,7 @@ function JobOffersTable() {
                     </div>
                 </div>
                 :
-                <></>
+                <JobOfferForm jobOffer={editingJobOffer} customer={customer}></JobOfferForm>
             }
         </>
     )

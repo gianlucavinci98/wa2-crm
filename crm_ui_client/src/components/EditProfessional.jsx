@@ -1,19 +1,27 @@
-import {useState, useEffect} from "react";
-import PropTypes from "prop-types";
-import {Customer} from "../api/crm/dto/Customer.ts";
-import CustomerAPI from "../api/crm/CustomerAPI";
-import ContactAPI from "../api/crm/ContactAPI.js";
+import {useEffect, useState} from "react";
 import {Category, Contact} from "../api/crm/dto/Contact.ts";
+import ContactAPI from "../api/crm/ContactAPI.js";
 import Icon from "./Icon.jsx";
+import PropTypes from "prop-types";
+import {EmploymentState, Professional} from "../api/crm/dto/Professional.ts";
+import ProfessionalAPI from "../api/crm/ProfessionalAPI.js";
+import {ContactDetails} from "../api/crm/dto/ContactDetails.ts";
+import {Address} from "../api/crm/dto/Address.ts";
+import {Email} from "../api/crm/dto/Email.ts";
+import {Telephone} from "../api/crm/dto/Telephone.ts";
 
-function EditClient({customer}) {
+function EditProfessional({professional, setProfessional}) {
     const [contactDetails, setContactDetails] = useState(null);
-    const [newNote, setNewNote] = useState("");
+    const [skills, setSkills] = useState(null);
     const [newContact, setNewContact] = useState({
         name: "",
         surname: "",
         ssn: "",
-        category: Category.Customer,
+        dailyRate:"",
+        skills: "",
+        location:"",
+        employmentState:"",
+        category: Category.Professional,
         addresses: [],
         emails: [],
         telephones: []
@@ -44,12 +52,13 @@ function EditClient({customer}) {
     }
 
     useEffect(() => {
-        if (customer && customer.contact) {
-            fetchContactDetails(customer.contact.contactId);
+        if (professional && professional.contact) {
+            fetchContactDetails(professional.contact.contactId);
+            setSkills(Array.from(professional.skills).length>1? Array.from(professional.skills).concat(',') : Array.from(professional.skills)[0])
         } else {
             setLoading(false);
         }
-    }, [customer]);
+    }, [professional]);
 
     const fetchContactDetails = async (contactId) => {
         try {
@@ -88,14 +97,14 @@ function EditClient({customer}) {
             console.log(contactDetails)
             console.log(newContact)
             let contact;
-            if (!customer) {
+            if (!professional) {
                 contact = await ContactAPI.InsertNewContact({
                     name: newContact.name,
                     surname: newContact.surname,
                     ssn: newContact.ssn,
-                    category: Category.Customer
+                    category: Category.Professional
                 });
-                await CustomerAPI.InsertNewCustomer(contact.contactId);
+                await ProfessionalAPI.InsertNewProfessional(contact.contactId,new Professional(null,newContact.skills.split(','),null,newContact.dailyRate, newContact.location, null, null));
                 for (const address of newContact.addresses) {
                     await ContactAPI.InsertNewAddressToContact(contact.contactId, address)
                 }
@@ -105,9 +114,13 @@ function EditClient({customer}) {
                 for (const telephone of newContact.telephones) {
                     await ContactAPI.InsertNewTelephoneToContact(contact.contactId, telephone)
                 }
-                alert("New customer and contact created successfully!");
+                alert("New professional and contact created successfully!");
             } else {
+                console.log({...professional, skills: new Set(skills.split(','))})
+                console.log(professional)
+                console.log(contactDetails)
                 contact = await ContactAPI.UpdateContact(new Contact(contactDetails.contactId, contactDetails.name, contactDetails.surname, contactDetails.ssn, contactDetails.category));
+                contact = await ProfessionalAPI.UpdateProfessional({...professional, skills: new Set(skills.split(','))});
                 await confrontaCampi(newContact.addresses, contactDetails.addresses, 'addressId', 'address', () => ContactAPI.UpdateAddressOfContact(), () => ContactAPI.DeleteAddressFromContact(), () => ContactAPI.InsertNewAddressToContact());
                 await confrontaCampi(newContact.emails, contactDetails.emails, 'emailId', 'email', () => ContactAPI.UpdateEmailOfContact(), () => ContactAPI.DeleteEmailFromContact(), () => ContactAPI.InsertNewEmailToContact());
                 await confrontaCampi(newContact.telephones, contactDetails.telephones, 'telephoneId', 'telephone', () => ContactAPI.UpdateTelephoneOfContact(), () => ContactAPI.DeleteTelephoneFromContact(), () => ContactAPI.InsertNewTelephoneToContact());
@@ -120,19 +133,6 @@ function EditClient({customer}) {
         }
     };
 
-    const handleAddNote = async () => {
-        try {
-            if (newNote && customer.customerId) {
-                await CustomerAPI.InsertNewNoteToCustomer(customer.customerId, newNote);
-                alert("Note added successfully!");
-                setNewNote("");
-            }
-        } catch (e) {
-            setError("Failed to add note");
-            console.error(e);
-        }
-    };
-
     if (loading) return <h2
         className={"flex-1 flex justify-center text-center items-center text-2xl font-semibold text-blue-500"}>Loading...</h2>;
     if (error) return <h2
@@ -141,17 +141,17 @@ function EditClient({customer}) {
     return (
         <div className={"flex-1 p-6 flex items-center w-full justify-around"}>
             <div className={"flex h-full flex-col items-center justify-around"}>
-                <h2 className={"text-2xl font-semibold"}>{customer ? "Edit Customer" : "Insert new Customer"}</h2>
+                <h2 className={"text-2xl font-semibold"}>{professional ? "Edit Professional" : "Insert new Professional"}</h2>
                 <div className={"flex w-full justify-around gap-8"}>
                     <div className={"flex flex-col gap-6 justify-around"}>
                         <div className={"col-field"}>
                             <strong>Name:</strong>
                             <input
                                 type="text"
-                                value={customer ? contactDetails?.name : newContact.name}
+                                value={professional ? contactDetails?.name : newContact.name}
                                 onChange={(e) => {
                                     const value = e.target.value;
-                                    customer ? setContactDetails({
+                                    professional ? setContactDetails({
                                         ...contactDetails,
                                         name: value
                                     }) : setNewContact({...newContact, name: value});
@@ -163,10 +163,10 @@ function EditClient({customer}) {
                             <strong>Surname:</strong>
                             <input
                                 type="text"
-                                value={customer ? contactDetails?.surname : newContact.surname}
+                                value={professional ? contactDetails?.surname : newContact.surname}
                                 onChange={(e) => {
                                     const value = e.target.value;
-                                    customer ? setContactDetails({
+                                    professional ? setContactDetails({
                                         ...contactDetails,
                                         surname: value
                                     }) : setNewContact({...newContact, surname: value});
@@ -177,16 +177,75 @@ function EditClient({customer}) {
                             <strong>SSN:</strong>
                             <input
                                 type="text"
-                                value={customer ? contactDetails?.ssn : newContact.ssn}
+                                value={professional ? contactDetails?.ssn : newContact.ssn}
                                 onChange={(e) => {
                                     const value = e.target.value;
-                                    customer ? setContactDetails({
+                                    professional ? setContactDetails({
                                         ...contactDetails,
                                         ssn: value
                                     }) : setNewContact({...newContact, ssn: value});
                                 }}
                             />
                         </div>
+                        <div className={"col-field"}>
+                            <strong>Skills:</strong>
+                            <input
+                                type="text"
+                                placeholder={"Skill separated by \",\""}
+                                value={professional ? skills : newContact.skills}
+                                onChange={(e) => {
+                                    const value = e.target.value;
+                                    professional ? setSkills(value) : setNewContact({...newContact, skills: value});
+                                }}
+                            />
+                        </div>
+                        <div className={"col-field"}>
+                            <strong>Daily Rate:</strong>
+                            <input
+                                type="text"
+                                value={professional ? professional?.dailyRate : newContact.dailyRate}
+                                onChange={(e) => {
+                                    const value = e.target.value;
+                                    professional ? setProfessional({
+                                        ...professional,
+                                        dailyRate: value
+                                    }) : setNewContact({...newContact, dailyRate: value});
+                                }}
+                            />
+                        </div>
+                        <div className={"col-field"}>
+                            <strong>Location:</strong>
+                            <input
+                                type="text"
+                                value={professional ? professional?.location : newContact.location}
+                                onChange={(e) => {
+                                    const value = e.target.value;
+                                    professional ? setProfessional({
+                                        ...professional,
+                                        location: value
+                                    }) : setNewContact({...newContact, location: value});
+                                }}
+                            />
+                        </div>
+                        {professional &&
+                            <div className={"col-field"}>
+                                <strong>Employment State:</strong>
+                                <select
+                                    onChange={(e) => {
+                                        const value = e.target.value;
+                                        professional ? setProfessional({
+                                            ...professional,
+                                            employmentState: value
+                                        }) : setNewContact({...newContact, employmentState: value});
+                                    }}
+                                >
+                                    <option value={EmploymentState.NotAvailable}>Not Avaiable</option>
+                                    <option value={EmploymentState.Employed}>Employed</option>
+                                    <option value={EmploymentState.Unemployed}>Unemployed</option>
+                                </select>
+                            </div>
+                        }
+
                     </div>
                     <div className={"flex flex-col gap-6 justify-around"}>
                         <div className={"col-field"}>
@@ -248,13 +307,14 @@ function EditClient({customer}) {
                                                 setNewContact({...newContact, emails: emails});
                                             }}
                                         />
-                                        <Icon name={"minus"} className={"w-6 h-6 fill-red-800 cursor-pointer"} onClick={() => {
-                                            setNewContact((prev) => ({
-                                                ...prev,
-                                                emails: prev.emails.filter((em) => em.emailId !== email.emailId)
-                                            }))
-                                        }
-                                        }>Delete
+                                        <Icon name={"minus"} className={"w-6 h-6 fill-red-800 cursor-pointer"}
+                                              onClick={() => {
+                                                  setNewContact((prev) => ({
+                                                      ...prev,
+                                                      emails: prev.emails.filter((em) => em.emailId !== email.emailId)
+                                                  }))
+                                              }
+                                              }>Delete
                                         </Icon>
                                     </div>
                                 ))}
@@ -288,13 +348,14 @@ function EditClient({customer}) {
                                                 setNewContact({...newContact, telephones: telephones});
                                             }}
                                         />
-                                        <Icon name={"minus"} className={"w-6 h-6 fill-red-800 cursor-pointer"} onClick={() => {
-                                            setNewContact((prev) => ({
-                                                ...prev,
-                                                telephones: prev.telephones.filter((tel) => tel.telephoneId !== telephone.telephoneId)
-                                            }))
-                                        }
-                                        }>Delete
+                                        <Icon name={"minus"} className={"w-6 h-6 fill-red-800 cursor-pointer"}
+                                              onClick={() => {
+                                                  setNewContact((prev) => ({
+                                                      ...prev,
+                                                      telephones: prev.telephones.filter((tel) => tel.telephoneId !== telephone.telephoneId)
+                                                  }))
+                                              }
+                                              }>Delete
                                         </Icon>
                                     </div>
                                 ))}
@@ -319,33 +380,15 @@ function EditClient({customer}) {
 
                 <div>
                     <button className={'page-button'}
-                            onClick={handleSaveContact}>{customer ? "Save Changes" : "Create"}</button>
+                            onClick={handleSaveContact}>{professional ? "Save Changes" : "Create"}</button>
                 </div>
             </div>
-
-
-            {customer && (
-                <>
-                    <div className={"h-[90%] w-[1px] bg-stone-800"}></div>
-                    <div className={"flex h-full flex-col items-center justify-around"}>
-                        <h3 className={"text-2xl font-semibold"}>Add a new note:</h3>
-                        <textarea
-                            value={newNote}
-                            onChange={(e) => setNewNote(e.target.value)}
-                            placeholder="Enter a new note"
-                        />
-                        <button className={"page-button"} onClick={handleAddNote}>Add Note</button>
-                    </div>
-                </>
-
-            )}
-
         </div>
     );
 }
 
-EditClient.propTypes = {
-    customer: PropTypes.instanceOf(Customer)
+EditProfessional.propTypes = {
+    professional: PropTypes.instanceOf(Professional)
 };
 
-export default EditClient;
+export default EditProfessional;

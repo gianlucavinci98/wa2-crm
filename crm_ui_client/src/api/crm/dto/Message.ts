@@ -13,6 +13,7 @@ interface MessageRawData {
     body: string | null
     channel: Channel
     priority: number | null
+    hasAttachments: boolean | null
 }
 
 export class Message implements MessageRawData {
@@ -24,6 +25,7 @@ export class Message implements MessageRawData {
     body: string | null
     channel: Channel
     priority: number | null
+    hasAttachments: boolean | null
 
     constructor(
         messageId: number | null,
@@ -34,6 +36,7 @@ export class Message implements MessageRawData {
         body: string | null,
         channel: Channel,
         priority: number | null,
+        hasAttachments: boolean | null
     ) {
         this.messageId = messageId
         this.sender = sender
@@ -43,6 +46,7 @@ export class Message implements MessageRawData {
         this.body = body
         this.channel = channel
         this.priority = priority
+        this.hasAttachments = hasAttachments
     }
 
     static fromJsonObject(obj: MessageRawData): Message | null {
@@ -55,7 +59,8 @@ export class Message implements MessageRawData {
                 obj.status,
                 obj.body,
                 obj.channel,
-                obj.priority
+                obj.priority,
+                obj.hasAttachments
             )
         } catch (e) {
             console.error(e)

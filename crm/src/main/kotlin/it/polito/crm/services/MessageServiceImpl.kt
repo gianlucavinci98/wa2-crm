@@ -43,20 +43,17 @@ class MessageServiceImpl(
         val cb: CriteriaBuilder = entityManager.criteriaBuilder
 
         val cqMessage: CriteriaQuery<Message> = cb.createQuery(Message::class.java)
-        val rootContact: Root<Message> = cqMessage.from(Message::class.java)
+        val rootMessage: Root<Message> = cqMessage.from(Message::class.java)
 
         val predicates = mutableListOf<Predicate>()
 
-        if (messageStatus != null) {
-            val joinWithHistory: Join<Message, MessageHistory> = rootContact.join("history", JoinType.INNER)
-            predicates.add(cb.equal(joinWithHistory.get<SmallIntJdbcType>("status"), messageStatus))
+        messageStatus?.let {
+            predicates.add(cb.equal(rootMessage.get<MessageStatus>("status"), it))
         }
 
         // Combine all filter in AND
         cqMessage.where(*predicates.toTypedArray())
-        if (sorting != null && sorting.lowercase() == "date") {
-            cqMessage.orderBy(cb.asc(rootContact.get<String>("date")))
-        }
+        cqMessage.orderBy(cb.desc(rootMessage.get<String>("date")))
 
         val query = entityManager.createQuery(cqMessage)
         query.firstResult = pageNumber * pageSize
@@ -144,6 +141,7 @@ class MessageServiceImpl(
             m.sender = messageDTO.sender
             m.channel = messageDTO.channel
             m.priority = 0
+            m.hasAttachments = messageDTO.hasAttachments
 
             mh.messageStatus = MessageStatus.Received
             mh.date = LocalDateTime.now()
@@ -168,8 +166,7 @@ class MessageServiceImpl(
             .orElseThrow { MessageNotFoundException("Message with id $messageId not found") }
 
         if (m.status == MessageStatus.Received) {
-            m.status = MessageStatus.Read
-            messageRepository.save(m)
+            updateStatus(messageId, MessageHistoryDTO(null, MessageStatus.Read, null, ""))
         }
 
         return m.toDTO()
