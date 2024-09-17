@@ -60,7 +60,7 @@ function SearchBar({ onFilterChange }) {
 }
 
 // eslint-disable-next-line react/prop-types
-function ProfessionalsTable() {
+function ProfessionalsTable({currentUser}) {
     // const [professionals, setProfessionals] = useState([]);
     const [openFilter, setOpenFilter] = useState(false);
     const [professionals, setProfessionals] = useState([
@@ -95,6 +95,14 @@ function ProfessionalsTable() {
             console.error('Failed to fetch professionals:', error);
         } finally {
             setLoading(false);
+        }
+    };
+
+    const onDeleteHandler = async (professional) => {
+        try {
+            await ProfessionalAPI.DeleteProfessional(professional.customerId, currentUser.xsrfToken);
+        } catch (error) {
+            console.error('Failed to delete Professional:', error);
         }
     };
 
@@ -206,11 +214,17 @@ function ProfessionalsTable() {
                                 <td><Icon name={'download'} className={'w-4 h-4 cursor-pointer hover:fill-blue-500'}></Icon>
                                 </td>
                                 <td>
-                                    <button className={'table-button text-blue-500'} onClick={() => {
-                                        setEditingProfessional(professional)
-                                        setEditProfessional(!editProfessional)
-                                    }}>Edit</button>
-                                    <button className={'table-button text-red-500'}>Delete</button>
+                                    <div className={"flex gap-2 items-center"}>
+
+                                        <Icon name={"pencil"} className={'w-4 h-4 fill-blue-500'} onClick={() => {
+                                            setEditingProfessional(professional)
+                                            setEditProfessional(!editProfessional)
+                                        }}>Edit
+                                        </Icon>
+                                        <Icon name={"garbage"} className={'w-4 h-4 fill-red-500'} onClick={() => {
+                                            onDeleteHandler(professional)
+                                        }}>Delete</Icon>
+                                    </div>
                                 </td>
                             </tr>
                         ))}

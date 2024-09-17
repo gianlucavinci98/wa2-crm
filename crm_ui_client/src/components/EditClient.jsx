@@ -5,10 +5,6 @@ import CustomerAPI from "../api/crm/CustomerAPI";
 import ContactAPI from "../api/crm/ContactAPI.js";
 import {Category, Contact} from "../api/crm/dto/Contact.ts";
 import Icon from "./Icon.jsx";
-import {ContactDetails} from "../api/crm/dto/ContactDetails.ts";
-import {Address} from "../api/crm/dto/Address.ts";
-import {Email} from "../api/crm/dto/Email.ts";
-import {Telephone} from "../api/crm/dto/Telephone.ts";
 
 function EditClient({customer}) {
     const [contactDetails, setContactDetails] = useState(null);
@@ -69,19 +65,19 @@ function EditClient({customer}) {
             }
             setContactDetails(details);
         } catch (e) {
-            const details = new ContactDetails(2, 'mario', 'bianchi', 'gf3827r', Category.Professional, new Set([new Address(2n, 'via casa mia')]), new Set([new Email(2, 'mario@gmail.com')]), new Set([new Telephone(2, '2224443331')]))
-            if (details?.addresses) {
-                setNewContact((prev) => ({...prev, addresses: Array.from(details.addresses)}));
-            }
-            if (details?.emails) {
-                setNewContact((prev) => ({...prev, emails: Array.from(details.emails)}));
-            }
-            if (details?.telephones) {
-                setNewContact((prev) => ({...prev, telephones: Array.from(details.telephones)}));
-            }
-            setContactDetails(details);
-            // setError("Failed to fetch contact details");
-            // console.error(e);
+            // const details = new ContactDetails(2, 'mario', 'bianchi', 'gf3827r', Category.Professional, new Set([new Address(2n, 'via casa mia')]), new Set([new Email(2, 'mario@gmail.com')]), new Set([new Telephone(2, '2224443331')]))
+            // if (details?.addresses) {
+            //     setNewContact((prev) => ({...prev, addresses: Array.from(details.addresses)}));
+            // }
+            // if (details?.emails) {
+            //     setNewContact((prev) => ({...prev, emails: Array.from(details.emails)}));
+            // }
+            // if (details?.telephones) {
+            //     setNewContact((prev) => ({...prev, telephones: Array.from(details.telephones)}));
+            // }
+            // setContactDetails(details);
+            setError("Failed to fetch contact details");
+            console.error(e);
         } finally {
             setLoading(false);
         }

@@ -123,7 +123,7 @@ function Skeleton() {
                 setCurrentUser(User.fromJsonObject(currentUser))
             } catch (error) {
                 setCurrentUser(null)
-                 setCurrentUser({principal:'yess'}) /*da cambiare*/
+                //setCurrentUser({principal:'yess'}) /*da cambiare*/
                 console.error(error)
             }
         }
@@ -143,11 +143,11 @@ function Skeleton() {
                         <Route path={"/ui"} element={currentUser?.principal ? <Navigate to={"/ui/Customers"}/> :
                             <HomePage currentUser={currentUser}/>}/>
                         <Route path={"/ui/Customers"}
-                               element={!currentUser?.principal ? <Navigate to={"/ui"}/> : <ClientsTable/>}/>
+                               element={!currentUser?.principal ? <Navigate to={"/ui"}/> : <ClientsTable currentUser={currentUser}/>}/>
                         <Route path={"/ui/Professionals"}
-                               element={!currentUser?.principal ? <Navigate to={"/ui"}/> : <ProfessionalsTable/>}/>
+                               element={!currentUser?.principal ? <Navigate to={"/ui"}/> : <ProfessionalsTable currentUser={currentUser}/>}/>
                         <Route path={"/ui/JobOffers"}
-                               element={!currentUser?.principal ? <Navigate to={"/ui"}/> : <JobOffersTable/>}/>
+                               element={!currentUser?.principal ? <Navigate to={"/ui"}/> : <JobOffersTable currentUser={currentUser}/>}/>
                         <Route path={"/ui/JobOffers/add"}
                                element={<JobOfferForm currentUser={currentUser}/>}/>
                         <Route path={"/ui/Messages"}

@@ -66,7 +66,7 @@ function JobOfferSearchBar({ onFilterChange }) {
 
 
 // eslint-disable-next-line react/prop-types
-function JobOffersTable() {
+function JobOffersTable({currentUser}) {
 
     const location = useLocation();
     const {customer} = location?.state || {};
@@ -89,6 +89,14 @@ function JobOffersTable() {
             console.error('Failed to fetch jobOffers:', error);
         } finally {
             setLoading(false);
+        }
+    };
+
+    const onDeleteHandler = async (jobOffer) => {
+        try {
+            await JobOfferAPI.DeleteJobOffer(jobOffer.jobOfferId, currentUser.xsrfToken);
+        } catch (error) {
+            console.error('Failed to delete Job Offer:', error);
         }
     };
 
@@ -151,11 +159,16 @@ function JobOffersTable() {
                                 <td>{JobOfferStatus[jobOffer.status]}</td>
                                 <td>{jobOffer.details}</td>
                                 <td>
-                                    <button className={'table-button text-blue-500'} onClick={() => {
-                                        setEditingJobOffer(jobOffer)
-                                        setEditJobOffer(!editJobOffer)
-                                    }}>Edit</button>
-                                    <button className={'table-button text-red-500'}>Delete</button>
+                                    <div className={"flex gap-2 items-center"}>
+                                        <Icon name={"pencil"} className={'w-4 h-4 fill-blue-500'} onClick={() => {
+                                            setEditingJobOffer(jobOffer)
+                                            setEditJobOffer(!editJobOffer)
+                                        }}>Edit
+                                        </Icon>
+                                        <Icon name={"garbage"} className={'w-4 h-4 fill-red-500'} onClick={() => {
+                                            onDeleteHandler(jobOffer)
+                                        }}>Delete</Icon>
+                                    </div>
                                 </td>
                             </tr>
                         ))}
@@ -163,7 +176,7 @@ function JobOffersTable() {
                     </table>
                     <div className="w-full h-[10%] flex items-center justify-between">
                         <button className={"page-button"} onClick={() => setPage(page - 1)} disabled={page === 1}>
-                            <Icon name='arrowLeft' className="w-4 h-4" />
+                            <Icon name='arrowLeft' className="w-4 h-4"/>
                             Previous
                         </button>
                         <span className={"text-xl text-stone-600"}>Page {page}</span>

@@ -5,16 +5,12 @@ import Icon from "./Icon.jsx";
 import {Category, Contact} from "../api/crm/dto/Contact.ts";
 import {Customer} from "../api/crm/dto/Customer.ts";
 import ContactAPI from "../api/crm/ContactAPI.js";
-import {ContactDetails} from "../api/crm/dto/ContactDetails.ts";
-import {Address} from "../api/crm/dto/Address.ts";
-import {Email} from "../api/crm/dto/Email.ts";
-import {Telephone} from "../api/crm/dto/Telephone.ts";
 import EditClient from "./EditClient.jsx";
 import {TopBar} from "./Skeleton.jsx";
 import {useNavigate} from "react-router-dom";
 
 
-function ClientsTable() {
+function ClientsTable({currentUser}) {
     // const [customers, setCustomers] = useState([]);
     const [customers, setCustomers] = useState([new Customer(5, ['best', 'wonderfull'], new Contact(3, 'carelo', 'rossi', 'bdhev2837', Category.Customer))]);
     const [loading, setLoading] = useState(true);
@@ -37,6 +33,14 @@ function ClientsTable() {
             setLoading(false);
         }
     };
+    const onDeleteHandler = async (customer) => {
+        try {
+            await CustomerAPI.DeleteCustomer(customer.customerId, currentUser.xsrfToken);
+        } catch (error) {
+            console.error('Failed to delete Professional:', error);
+        }
+    };
+
 
     useEffect(() => {
         fetchCustomers();
@@ -60,11 +64,11 @@ function ClientsTable() {
             }));
         } catch (error) {
             // modificare il catch moccato
-            setTooltip(prevTooltip => ({
-                ...prevTooltip,
-                showDetails: true,
-                details: new ContactDetails(2, 'carelo', 'rossi', 'gf3827r', Category.Customer, new Set([new Address(2n, 'via casa mia')]), new Set([new Email(2, 'mario@gmail.com')]), new Set([new Telephone(2, '2224443331')])),
-            }));
+            // setTooltip(prevTooltip => ({
+            //     ...prevTooltip,
+            //     showDetails: true,
+            //     details: new ContactDetails(2, 'carelo', 'rossi', 'gf3827r', Category.Customer, new Set([new Address(2n, 'via casa mia')]), new Set([new Email(2, 'mario@gmail.com')]), new Set([new Telephone(2, '2224443331')])),
+            // }));
             console.error("Failed to fetch contact details:", error);
         }
     };
@@ -147,7 +151,9 @@ function ClientsTable() {
                                             setEditClient(!editClient)
                                         }}>Edit
                                         </Icon>
-                                        <Icon name={"garbage"} className={'w-4 h-4 fill-red-500'}>Delete</Icon>
+                                        <Icon name={"garbage"} className={'w-4 h-4 fill-red-500'} onClick={()=>{
+                                            onDeleteHandler(customer)
+                                        }}>Delete</Icon>
                                     </div>
                                 </td>
                             </tr>
