@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/api/contacts")
 class ContactController(private val contactService: ContactService) {
     @GetMapping("", "/")
-    @PreAuthorize("hasAnyRole('ROLE_operator', 'ROLE_guest', 'ROLE_manager')")
+    @PreAuthorize("hasAnyRole('ROLE_operator', 'ROLE_manager', 'ROLE_recruiter')")
     fun getAllContacts(
         @RequestParam("pageNumber", required = false) @Min(
             value = 0,
@@ -60,7 +60,7 @@ class ContactController(private val contactService: ContactService) {
     }
 
     @GetMapping("/{contactId}")
-    @PreAuthorize("hasAnyRole('ROLE_operator', 'ROLE_guest', 'ROLE_manager')")
+    @PreAuthorize("hasAnyRole('ROLE_operator', 'ROLE_manager', 'ROLE_recruiter')")
     fun getContactById(@PathVariable contactId: Long): ResponseEntity<ContactDetailsDTO> {
         val contact = contactService.getContactById(contactId)
         return ResponseEntity.ok(contact)
@@ -84,7 +84,7 @@ class ContactController(private val contactService: ContactService) {
     }
 
     @DeleteMapping("/{contactId}")
-    @PreAuthorize("hasAnyRole('ROLE_manager')")
+    @PreAuthorize("hasAnyRole(, 'ROLE_operator', 'ROLE_manager')")
     fun deleteContact(
         @PathVariable contactId: Long
     ): ResponseEntity<Unit> {

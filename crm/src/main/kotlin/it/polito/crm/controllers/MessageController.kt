@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/api/messages")
 class MessageController(private val messageService: MessageService) {
     @GetMapping("", "/")
-    @PreAuthorize("hasAnyRole('ROLE_operator', 'ROLE_guest', 'ROLE_manager')")
+    @PreAuthorize("hasAnyRole('ROLE_operator', 'ROLE_manager', 'ROLE_recruiter')")
     fun getMessages(
         @RequestParam("pageNumber", required = false) @Min(
             value = 0,
@@ -39,7 +39,7 @@ class MessageController(private val messageService: MessageService) {
     }
 
     @GetMapping("/{messageId}")
-    @PreAuthorize("hasAnyRole('ROLE_operator', 'ROLE_guest', 'ROLE_manager')")
+    @PreAuthorize("hasAnyRole('ROLE_operator', 'ROLE_manager', 'ROLE_recruiter')")
     fun getMessageById(@PathVariable messageId: Long): ResponseEntity<MessageDTO> {
         val m = messageService.getMessageById(messageId)
         return ResponseEntity.status(HttpStatus.OK).body(m)
