@@ -44,7 +44,7 @@ function ClientsTable({currentUser}) {
 
     useEffect(() => {
         fetchCustomers();
-    }, [page]);
+    }, [page, editClient]);
 
 
     const handleMouseOver = async (event, contactId) => {
@@ -142,10 +142,10 @@ function ClientsTable({currentUser}) {
                                 {/*</td> /!* Emails *!/*/}
                                 <td>{Array.from(customer.notes).join(', ')}</td>
                                 <td className={""}>
-                                    {!(currentUser?.roles.filter(it=>it.includes('recruiter')).length>0 && location.pathname.includes("Customers")) &&
+                                    {!(currentUser?.roles.filter(it => it.includes('recruiter')).length > 0 && location.pathname.includes("Customers")) &&
                                         <div className={"flex gap-2 items-center"}>
                                             <Icon name={"file"} className={'w-4 h-4 fill-orange-500'} onClick={() => {
-                                                navigate("/ui/JobOffers", { state: { customer: customer }})
+                                                navigate("/ui/JobOffers", {state: {customer: customer}})
                                             }}>Create Job Offer
                                             </Icon>
                                             <Icon name={"pencil"} className={'w-4 h-4 fill-blue-500'} onClick={() => {
@@ -153,7 +153,7 @@ function ClientsTable({currentUser}) {
                                                 setEditClient(!editClient)
                                             }}>Edit
                                             </Icon>
-                                            <Icon name={"garbage"} className={'w-4 h-4 fill-red-500'} onClick={()=>{
+                                            <Icon name={"garbage"} className={'w-4 h-4 fill-red-500'} onClick={() => {
                                                 onDeleteHandler(customer)
                                             }}>Delete</Icon>
                                         </div>
@@ -174,7 +174,7 @@ function ClientsTable({currentUser}) {
                                 border: "1px solid #ccc",
                                 padding: "10px",
                                 zIndex: 1000,
-                                maxWidth: "200px",
+                                maxWidth: "400px",
                                 boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
                                 borderRadius: "8px"
                             }}
@@ -183,10 +183,14 @@ function ClientsTable({currentUser}) {
                                 tooltip.showDetails && tooltip.details ? (
                                         <>
                                             <strong>{tooltip.details.name} {tooltip.details.surname}</strong><br/>
-                                            <p>Email: {Array.from(tooltip.details.emails)[0].email}</p>
-                                            <p>Telefono: {Array.from(tooltip.details.telephones)[0].telephone}</p>
+                                            {Array.from(tooltip.details.emails).map((it, index) => (
+                                                <p key={index}>Email: {it.emailAddress}</p>
+                                            ))} {Array.from(tooltip.details.addresses).map((it, index) => (
+                                            <p key={index}>Address: {it.address}</p>))}
+                                            {Array.from(tooltip.details.telephones).map((it, index) => (
+                                                <p key={index}>Telephone: {it.telephoneNumber}</p>
+                                            ))}
                                         </>
-
                                     ) :
                                     <div className="loading-container">
                                         <svg
@@ -221,7 +225,7 @@ function ClientsTable({currentUser}) {
                     </div>
                 </div>
                 :
-                <EditClient customer={editingClient}></EditClient>
+                <EditClient customer={editingClient} currentUser={currentUser}></EditClient>
             }
         </>
     )

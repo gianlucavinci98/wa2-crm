@@ -1,20 +1,20 @@
 interface EmailRawData {
     emailId: number | null
-    email: string
+    emailAddress: string
 }
 
 export class Email implements EmailRawData {
     emailId: number | null
-    email: string
+    emailAddress: string
 
-    constructor(emailId: number | null, email: string) {
+    constructor(emailId: number | null, emailAddress: string) {
         this.emailId = emailId
-        this.email = email
+        this.emailAddress = emailAddress
     }
 
     static fromJsonObject(obj: EmailRawData): Email | null {
         try {
-            return new Email(obj.emailId, obj.email)
+            return new Email(obj.emailId, obj.emailAddress)
         } catch (e) {
             console.error(e)
             return null

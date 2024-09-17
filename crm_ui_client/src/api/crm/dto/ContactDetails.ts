@@ -51,9 +51,10 @@ export class ContactDetails implements ContactDetailsRawData {
                 obj.surname,
                 obj.ssn,
                 obj.category,
-                obj.addresses,
-                obj.emails,
-                obj.telephones)
+                obj.addresses.map(e => new Address(e.addressId, e.address)),
+                obj.emails.map(e => new Email(e.emailId, e.emailAddress)),
+                obj.telephones.map(e => new Telephone(e.telephoneId, e.telephoneNumber))
+            )
         } catch (e) {
             console.error(e)
             return undefined

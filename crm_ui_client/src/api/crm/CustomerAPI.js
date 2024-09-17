@@ -70,7 +70,7 @@ async function DeleteCustomer(customerId, xsrfToken) {
 
 async function InsertNewNoteToCustomer(customerId, note, xsrfToken) {
     const response = await fetch(
-        buildUrl(`${URL_CUSTOMERS}/${customerId}`, null, null), {
+        buildUrl(`${URL_CUSTOMERS}/${customerId}/notes`, null, null), {
             method: 'POST',
             credentials: 'include',
             headers: {'Content-Type': 'application/json', 'X-XSRF-TOKEN': xsrfToken},

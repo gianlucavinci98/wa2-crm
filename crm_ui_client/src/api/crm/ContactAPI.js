@@ -63,7 +63,7 @@ async function UpdateContact(contact, xsrfToken) {
             method: 'PUT',
             credentials: 'include',
             headers: {'Content-Type': 'application/json', 'X-XSRF-TOKEN': xsrfToken},
-            body: JSON.stringify({contact})
+            body: JSON.stringify(contact)
         })
 
     const obj = await response.json()
@@ -96,7 +96,7 @@ async function InsertNewAddressToContact(contactId, address, xsrfToken) {
             method: 'POST',
             credentials: 'include',
             headers: {'Content-Type': 'application/json', 'X-XSRF-TOKEN': xsrfToken},
-            body: JSON.stringify({address})
+            body: JSON.stringify(new Address(null, address))
         })
 
     const obj = await response.json()
@@ -114,7 +114,7 @@ async function InsertNewEmailToContact(contactId, email, xsrfToken) {
             method: 'POST',
             credentials: 'include',
             headers: {'Content-Type': 'application/json', 'X-XSRF-TOKEN': xsrfToken},
-            body: JSON.stringify({email})
+            body: JSON.stringify(new Email(null, email))
         })
 
     const obj = await response.json()
@@ -132,7 +132,7 @@ async function InsertNewTelephoneToContact(contactId, telephone, xsrfToken) {
             method: 'POST',
             credentials: 'include',
             headers: {'Content-Type': 'application/json', 'X-XSRF-TOKEN': xsrfToken},
-            body: JSON.stringify({telephone})
+            body: JSON.stringify(new Telephone(null, telephone))
         })
 
     const obj = await response.json()
@@ -145,12 +145,13 @@ async function InsertNewTelephoneToContact(contactId, telephone, xsrfToken) {
 }
 
 async function UpdateAddressOfContact(contactId, addressId, address, xsrfToken) {
+    console.log("CIAO: " + address)
     const response = await fetch(
         buildUrl(`${URL_CONTACTS}/${contactId}/address/${addressId}`, null, null), {
             method: 'PUT',
             credentials: 'include',
             headers: {'Content-Type': 'application/json', 'X-XSRF-TOKEN': xsrfToken},
-            body: JSON.stringify({address})
+            body: JSON.stringify(new Address(addressId, address))
         })
 
     const obj = await response.json()
@@ -168,7 +169,7 @@ async function UpdateEmailOfContact(contactId, emailId, email, xsrfToken) {
             method: 'PUT',
             credentials: 'include',
             headers: {'Content-Type': 'application/json', 'X-XSRF-TOKEN': xsrfToken},
-            body: JSON.stringify({email})
+            body: JSON.stringify(new Email(emailId, email))
         })
 
     const obj = await response.json()
@@ -186,7 +187,7 @@ async function UpdateTelephoneOfContact(contactId, telephoneId, telephone, xsrfT
             method: 'PUT',
             credentials: 'include',
             headers: {'Content-Type': 'application/json', 'X-XSRF-TOKEN': xsrfToken},
-            body: JSON.stringify({telephone})
+            body: JSON.stringify(new Telephone(telephoneId, telephone))
         })
 
     const obj = await response.json()
@@ -206,10 +207,8 @@ async function DeleteAddressFromContact(contactId, addressId, xsrfToken) {
             headers: {'Content-Type': 'application/json', 'X-XSRF-TOKEN': xsrfToken},
         })
 
-    const obj = await response.json()
-
     if (!response.ok) {
-        throw obj
+        throw "Error"
     }
 }
 
@@ -221,10 +220,8 @@ async function DeleteEmailFromContact(contactId, emailId, xsrfToken) {
             headers: {'Content-Type': 'application/json', 'X-XSRF-TOKEN': xsrfToken},
         })
 
-    const obj = await response.json()
-
     if (!response.ok) {
-        throw obj
+        throw "Error"
     }
 }
 
@@ -236,10 +233,8 @@ async function DeleteTelephoneFromContact(contactId, telephoneId, xsrfToken) {
             headers: {'Content-Type': 'application/json', 'X-XSRF-TOKEN': xsrfToken},
         })
 
-    const obj = await response.json()
-
     if (!response.ok) {
-        throw obj
+        throw "Error"
     }
 }
 

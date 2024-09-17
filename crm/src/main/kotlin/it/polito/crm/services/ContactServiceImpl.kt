@@ -262,7 +262,7 @@ class ContactServiceImpl(
             .orElseThrow { ContactNotFoundException("Contact with ID $contactId and address ID $addressId not found") }
 
         if (contact.addresses.any { it.address == address.address }) {
-            throw EmailConflictException("The provided address is already assigned to this contact")
+            throw AddressConflictException("The provided address is already assigned to this contact")
         }
 
         val numUsesOldAddress = contactRepository.findDistinctByAddresses(mutableSetOf(oldAddress)).size

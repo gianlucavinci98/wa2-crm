@@ -1,20 +1,20 @@
 interface TelephoneRawData {
     telephoneId: number | null
-    telephone: string
+    telephoneNumber: string
 }
 
 export class Telephone implements TelephoneRawData {
     telephoneId: number | null
-    telephone: string
+    telephoneNumber: string
 
-    constructor(telephoneId: number | null, telephone: string) {
+    constructor(telephoneId: number | null, telephoneNumber: string) {
         this.telephoneId = telephoneId
-        this.telephone = telephone
+        this.telephoneNumber = telephoneNumber
     }
 
     static fromJsonObject(obj: TelephoneRawData): Telephone | null {
         try {
-            return new Telephone(obj.telephoneId, obj.telephone)
+            return new Telephone(obj.telephoneId, obj.telephoneNumber)
         } catch (e) {
             console.error(e)
             return null
