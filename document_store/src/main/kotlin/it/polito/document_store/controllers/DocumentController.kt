@@ -1,5 +1,6 @@
 package it.polito.document_store.controllers
 
+import it.polito.document_store.dtos.DocumentDTO
 import it.polito.document_store.dtos.DocumentMetadataDTO
 import it.polito.document_store.services.DocumentService
 import it.polito.document_store.utils.DocumentCategory
@@ -11,7 +12,7 @@ import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
-import org.springframework.web.multipart.MultipartFile
+import java.util.*
 
 @RestController
 @RequestMapping("/api/documents")
@@ -19,17 +20,17 @@ class DocumentController(private val documentService: DocumentService) {
     @PostMapping("", "/")
     @ResponseStatus(code = HttpStatus.CREATED)
     @PreAuthorize("hasAnyRole('ROLE_manager', 'ROLE_operator')")
-    fun insertNewDocument(@RequestPart("file") file: MultipartFile): DocumentMetadataDTO {
-        return documentService.insertNewDocument(file)
+    fun insertNewDocument(@RequestBody newDocument: DocumentDTO): DocumentMetadataDTO {
+        return documentService.insertNewDocument(newDocument)
     }
 
     @PutMapping("/{metadataId}")
     @PreAuthorize("hasAnyRole('ROLE_manager', 'ROLE_operator')")
     fun updateDocument(
         @PathVariable("metadataId") metadataId: Long,
-        @RequestPart("file") file: MultipartFile
+        @RequestBody newDocument: DocumentDTO
     ): DocumentMetadataDTO {
-        return documentService.updateDocument(metadataId, file)
+        return documentService.updateDocument(metadataId, newDocument)
     }
 
     @DeleteMapping("/{metadataId}")
@@ -76,7 +77,7 @@ class DocumentController(private val documentService: DocumentService) {
             return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"${documentMetadataDTO.name}\"")
                 .contentType(MediaType.parseMediaType(documentMetadataDTO.contentType))
-                .body(documentDataDTO.data)
+                .body(Base64.getDecoder().decode(documentDataDTO.data))
         } catch (e: DocumentNotFoundException) {
             throw DocumentNotFoundException("Document data not found")
         }

@@ -1,5 +1,7 @@
 import {buildUrl} from "../utils/buildUrlQueryParams.js"
 import {DocumentMetadata} from "./dto/DocumentMetadata.ts"
+import {DocumentDTO} from "./dto/DocumentDTO.ts";
+import {convertFileToBase64} from "../utils/converterFileToBase64.js";
 
 
 const URL_DOCUMENT_STORE = 'http://localhost:8082/document-store/api/documents'
@@ -50,16 +52,16 @@ async function GetDocumentDataById(documentMetadataId) {
     }
 }
 
-async function InsertNewDocument(file, xsrfToken) {
-    const formData = new FormData()
-    formData.append('file', file)
+async function InsertNewDocument(file, category, id, xsrfToken) {
+    const base64File = await convertFileToBase64(file)
+    const documentDTO = new DocumentDTO(file.name, file.size, base64File.split(';')[0].split(':')[1], category, id, base64File.split(',')[1])
 
     const response = await fetch(
         buildUrl(URL_DOCUMENT_STORE, null, null), {
             method: 'POST',
             credentials: 'include',
-            headers: {'X-XSRF-TOKEN': xsrfToken},
-            body: formData
+            headers: {'Content-Type': 'application/json', 'X-XSRF-TOKEN': xsrfToken},
+            body: JSON.stringify(documentDTO)
         })
 
     const obj = await response.json()
@@ -71,16 +73,16 @@ async function InsertNewDocument(file, xsrfToken) {
     }
 }
 
-async function UpdateDocument(documentMetadataId, file, xsrfToken) {
-    const formData = new FormData()
-    formData.append("file", file)
+async function UpdateDocument(documentMetadataId, file, category, id, xsrfToken) {
+    const base64File = await convertFileToBase64(file)
+    const documentDTO = new DocumentDTO(file.name, file.size, base64File.split(';')[0].split(':')[1], category, id, base64File.split(',')[1])
 
     const response = await fetch(
         buildUrl(`${URL_DOCUMENT_STORE}/${documentMetadataId}`, null, null), {
-            method: 'POST',
+            method: 'PUT',
             credentials: 'include',
-            headers: {'X-XSRF-TOKEN': xsrfToken},
-            body: formData
+            headers: {'Content-Type': 'application/json', 'X-XSRF-TOKEN': xsrfToken},
+            body: JSON.stringify(documentDTO)
         })
 
     const obj = await response.json()

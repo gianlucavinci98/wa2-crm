@@ -1,6 +1,7 @@
 package it.polito.document_store.services
 
 
+import it.polito.document_store.dtos.DocumentDTO
 import it.polito.document_store.dtos.DocumentDataDTO
 import it.polito.document_store.dtos.DocumentMetadataDTO
 import it.polito.document_store.dtos.toDto
@@ -28,12 +29,8 @@ class DocumentServiceImpl(
     private val logger = LoggerFactory.getLogger(DocumentServiceImpl::class.java)
 
     @Transactional
-    override fun insertNewDocument(file: MultipartFile): DocumentMetadataDTO {
-        if (file.isEmpty || file.originalFilename?.isEmpty() == true) {
-            throw InvalidFileException("The file or its name were not provided or are empty")
-        }
-
-        if (documentMetadataRepository.findByName(file.originalFilename!!).isNotEmpty()) {
+    override fun insertNewDocument(newDocument: DocumentDTO): DocumentMetadataDTO {
+        if (documentMetadataRepository.findByName(newDocument.name).isNotEmpty()) {
             throw DuplicateDocumentException("Document with the same name already exists")
         }
 
@@ -41,11 +38,13 @@ class DocumentServiceImpl(
         val documentData = DocumentData()
 
         try {
-            documentMetadata.name = file.originalFilename!!
-            documentMetadata.size = file.size
-            documentMetadata.contentType = file.contentType!!
+            documentMetadata.name = newDocument.name
+            documentMetadata.size = newDocument.size
+            documentMetadata.contentType = newDocument.contentType
             documentMetadata.timestamp = LocalDateTime.now()
-            documentData.data = file.bytes
+            documentMetadata.category = newDocument.category
+            documentMetadata.id = newDocument.id
+            documentData.data = newDocument.data.toByteArray()
             documentData.documentMetadata = documentMetadata
             documentMetadata.documentData = documentData
         } catch (e: RuntimeException) {
@@ -60,17 +59,12 @@ class DocumentServiceImpl(
     }
 
     @Transactional
-    override fun updateDocument(id: Long, file: MultipartFile): DocumentMetadataDTO {
-
-        if (file.isEmpty || file.originalFilename?.isEmpty() == true) {
-            throw InvalidFileException("The file or its name were not provided or are empty")
-        }
-
+    override fun updateDocument(id: Long, newDocument: DocumentDTO): DocumentMetadataDTO {
         val documentMetadata = documentMetadataRepository.findById(id).getOrElse {
             throw DocumentNotFoundException("Document not found")
         }
 
-        if (documentMetadataRepository.findByName(file.originalFilename!!).any { it.metadataId != id }) {
+        if (documentMetadataRepository.findByName(newDocument.name).any { it.metadataId != id }) {
             throw DuplicateDocumentException("Document with the same name already exists")
         }
 
@@ -78,11 +72,13 @@ class DocumentServiceImpl(
 
         try {
             documentMetadata.metadataId = id
-            documentMetadata.name = file.originalFilename!!
-            documentMetadata.size = file.size
-            documentMetadata.contentType = file.contentType!!
+            documentMetadata.name = newDocument.name
+            documentMetadata.size = newDocument.size
+            documentMetadata.contentType = newDocument.contentType
             documentMetadata.timestamp = LocalDateTime.now()
-            documentMetadata.documentData.data = file.bytes
+            documentMetadata.category = newDocument.category
+            documentMetadata.id = newDocument.id
+            documentMetadata.documentData.data = newDocument.data.toByteArray()
         } catch (e: RuntimeException) {
             throw DocumentProcessingException("Error encountered while processing document", e)
         }

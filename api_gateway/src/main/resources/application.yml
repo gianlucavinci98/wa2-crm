@@ -64,3 +64,7 @@ spring:
               - offline_access
             authorization-grant-type: authorization_code
             redirect-uri: http://localhost:8082/login/oauth2/code/apigateway
+logging:
+  level:
+    org.springframework.web: DEBUG
+    reactor.netty.http.client: DEBUG
