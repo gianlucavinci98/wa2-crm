@@ -18,5 +18,7 @@ data class ContactDetailsDTO(
     val category: Category,
     val addresses: Set<AddressDTO>,
     val emails: Set<EmailDTO>,
-    val telephones: Set<TelephoneDTO>
+    val telephones: Set<TelephoneDTO>,
+    val professionalId: Long?,
+    val customerId: Long?
 )

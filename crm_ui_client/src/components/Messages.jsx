@@ -147,7 +147,8 @@ function Messages() {
                             </div>
                         </div>
                         :
-                        <></>}
+                        <></>
+                }
                 <div className="info-box">
                     <IoInformationCircleOutline onClick={handleOpenDialog} size={20} style={{cursor: "help"}}/>
                 </div>

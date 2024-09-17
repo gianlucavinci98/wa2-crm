@@ -1,35 +1,26 @@
 import {useEffect, useState} from "react";
 import PropTypes from "prop-types";
 import {Customer} from "../api/crm/dto/Customer.ts";
-import CustomerAPI from "../api/crm/CustomerAPI";
+/*import CustomerAPI from "../api/crm/CustomerAPI";*/
 import ContactAPI from "../api/crm/ContactAPI.js";
 import {Category, Contact} from "../api/crm/dto/Contact.ts";
 import Icon from "./Icon.jsx";
+import {useNavigate, useParams} from "react-router-dom";
+import {ContactDetails} from "../api/crm/dto/ContactDetails.ts";
 
-function EditClient({customer, currentUser}) {
+function EditClient({currentUser}) {
+    const navigate = useNavigate()
+    const {contactId} = useParams();
+
     const [contactDetails, setContactDetails] = useState(null);
-    const [newNote, setNewNote] = useState("");
-    const [newContact, setNewContact] = useState({
-        name: "",
-        surname: "",
-        ssn: "",
-        category: Category.Customer,
-        addresses: [],
-        emails: [],
-        telephones: []
-    });
+    /*const [newNote, setNewNote] = useState("");*/
+    const [newContact, setNewContact] = useState(new ContactDetails(null, "", "", "", Category.Unknown, [], [], [], null, null));
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
     async function confrontaCampi(arr1, arr2, key, value, funzioneA, funzioneB, funzioneC) {
         const set1Ids = arr1.map(item => item[key]); // ID degli oggetti del primo oggetto (Array)
         const set2Ids = arr2.map(item => item[key]); // ID degli oggetti del secondo oggetto (Set)
-
-        console.log("---------")
-        console.log(arr1)
-        console.log(arr2)
-        console.log(set1Ids)
-        console.log(set2Ids)
 
         // Confronta gli ID
         for (const id of set1Ids) {
@@ -49,19 +40,18 @@ function EditClient({customer, currentUser}) {
     }
 
     useEffect(() => {
-        if (loading && customer) {
-            fetchContactDetails(customer.contact.contactId);
+        if (loading && contactId) {
+            fetchContactDetails(contactId);
             setLoading(false)
         } else {
             setLoading(false)
         }
-    }, [loading, customer]);
+    }, [contactId, loading]);
 
     const fetchContactDetails = async (contactId) => {
         try {
             const details = await ContactAPI.GetContactById(contactId);
 
-            console.log(details)
             if (details?.addresses) {
                 setNewContact((prev) => ({...prev, addresses: Array.from(details.addresses)}));
             }
@@ -73,17 +63,6 @@ function EditClient({customer, currentUser}) {
             }
             setContactDetails(details);
         } catch (e) {
-            // const details = new ContactDetails(2, 'mario', 'bianchi', 'gf3827r', Category.Professional, new Set([new Address(2n, 'via casa mia')]), new Set([new Email(2, 'mario@gmail.com')]), new Set([new Telephone(2, '2224443331')]))
-            // if (details?.addresses) {
-            //     setNewContact((prev) => ({...prev, addresses: Array.from(details.addresses)}));
-            // }
-            // if (details?.emails) {
-            //     setNewContact((prev) => ({...prev, emails: Array.from(details.emails)}));
-            // }
-            // if (details?.telephones) {
-            //     setNewContact((prev) => ({...prev, telephones: Array.from(details.telephones)}));
-            // }
-            // setContactDetails(details);
             setError("Failed to fetch contact details");
             console.error(e);
         } finally {
@@ -93,42 +72,45 @@ function EditClient({customer, currentUser}) {
 
     const handleSaveContact = async () => {
         try {
-            console.log(contactDetails)
-            console.log(newContact)
-            let contact;
-            if (!customer) {
-                contact = await ContactAPI.InsertNewContact({
-                    name: newContact.name,
-                    surname: newContact.surname,
-                    ssn: newContact.ssn,
-                    category: Category.Customer
-                });
-                await CustomerAPI.InsertNewCustomer(contact.contactId);
-                for (const address of newContact.addresses) {
-                    await ContactAPI.InsertNewAddressToContact(contact.contactId, address)
-                }
-                for (const email of newContact.emails) {
-                    await ContactAPI.InsertNewEmailToContact(contact.contactId, email)
-                }
-                for (const telephone of newContact.telephones) {
-                    await ContactAPI.InsertNewTelephoneToContact(contact.contactId, telephone)
-                }
+            if (!contactDetails) {
+                ContactAPI.InsertNewContact(new Contact(null, newContact.name, newContact.surname, newContact.ssn, Category.Unknown), currentUser.xsrfToken)
+                    .then(async (res) => {
+                            console.log(res)
+
+                            for (const address of newContact.addresses) {
+                                await ContactAPI.InsertNewAddressToContact(res.contactId, address.address, currentUser.xsrfToken)
+                            }
+                            for (const email of newContact.emails) {
+                                await ContactAPI.InsertNewEmailToContact(res.contactId, email.emailAddress, currentUser.xsrfToken)
+                            }
+                            for (const telephone of newContact.telephones) {
+                                await ContactAPI.InsertNewTelephoneToContact(res.contactId, telephone.telephoneNumber, currentUser.xsrfToken)
+                            }
+                        }
+                    ).catch((err) => console.log(err));
+
                 alert("New customer and contact created successfully!");
+                navigate(`/ui/Contacts`)
             } else {
-                contact = await ContactAPI.UpdateContact(new Contact(contactDetails.contactId, contactDetails.name, contactDetails.surname, contactDetails.ssn, contactDetails.category), currentUser.xsrfToken);
-                await confrontaCampi(newContact.addresses, contactDetails.addresses, 'addressId', 'address', ContactAPI.UpdateAddressOfContact, ContactAPI.DeleteAddressFromContact, ContactAPI.InsertNewAddressToContact);
-                await confrontaCampi(newContact.emails, contactDetails.emails, 'emailId', 'emailAddress', ContactAPI.UpdateEmailOfContact, ContactAPI.DeleteEmailFromContact, ContactAPI.InsertNewEmailToContact);
-                await confrontaCampi(newContact.telephones, contactDetails.telephones, 'telephoneId', 'telephoneNumber', ContactAPI.UpdateTelephoneOfContact, ContactAPI.DeleteTelephoneFromContact, ContactAPI.InsertNewTelephoneToContact);
+                ContactAPI.UpdateContact(new Contact(contactDetails.contactId, contactDetails.name, contactDetails.surname, contactDetails.ssn, contactDetails.category), currentUser.xsrfToken)
+                    .then(async (res) => {
+                        console.log(res);
+
+                        await confrontaCampi(newContact.addresses, contactDetails.addresses, 'addressId', 'address', ContactAPI.UpdateAddressOfContact, ContactAPI.DeleteAddressFromContact, ContactAPI.InsertNewAddressToContact);
+                        await confrontaCampi(newContact.emails, contactDetails.emails, 'emailId', 'emailAddress', ContactAPI.UpdateEmailOfContact, ContactAPI.DeleteEmailFromContact, ContactAPI.InsertNewEmailToContact);
+                        await confrontaCampi(newContact.telephones, contactDetails.telephones, 'telephoneId', 'telephoneNumber', ContactAPI.UpdateTelephoneOfContact, ContactAPI.DeleteTelephoneFromContact, ContactAPI.InsertNewTelephoneToContact);
+                    }).catch((err) => console.log(err));
+
                 alert("Contact updated successfully!");
+                navigate(`/ui/Contacts/${contactId}`)
             }
-            setContactDetails(contact);
         } catch (e) {
             setError("Failed to save contact");
             console.error(e);
         }
     };
 
-    const handleAddNote = async () => {
+    /*const handleAddNote = async () => {
         try {
             if (newNote && customer.customerId) {
                 await CustomerAPI.InsertNewNoteToCustomer(customer.customerId, newNote, currentUser.xsrfToken);
@@ -139,7 +121,7 @@ function EditClient({customer, currentUser}) {
             setError("Failed to add note");
             console.error(e);
         }
-    };
+    };*/
 
     if (loading) return <h2
         className={"flex-1 flex justify-center text-center items-center text-2xl font-semibold text-blue-500"}>Loading...</h2>;
@@ -149,17 +131,17 @@ function EditClient({customer, currentUser}) {
     return (
         <div className={"flex-1 p-6 flex items-center w-full justify-around"}>
             <div className={"flex h-full flex-col items-center justify-around"}>
-                <h2 className={"text-2xl font-semibold"}>{customer ? "Edit Customer" : "Insert new Customer"}</h2>
+                <h2 className={"text-2xl font-semibold"}>{contactDetails ? "Edit Contact" : "Insert new Contact"}</h2>
                 <div className={"flex w-full justify-around gap-8"}>
                     <div className={"flex flex-col gap-6 justify-around"}>
                         <div className={"col-field"}>
                             <strong>Name:</strong>
                             <input
                                 type="text"
-                                value={customer ? contactDetails?.name : newContact.name}
+                                value={contactDetails ? contactDetails.name : newContact.name}
                                 onChange={(e) => {
                                     const value = e.target.value;
-                                    customer ? setContactDetails({
+                                    contactDetails ? setContactDetails({
                                         ...contactDetails,
                                         name: value
                                     }) : setNewContact({...newContact, name: value});
@@ -171,10 +153,10 @@ function EditClient({customer, currentUser}) {
                             <strong>Surname:</strong>
                             <input
                                 type="text"
-                                value={customer ? contactDetails?.surname : newContact.surname}
+                                value={contactDetails ? contactDetails?.surname : newContact.surname}
                                 onChange={(e) => {
                                     const value = e.target.value;
-                                    customer ? setContactDetails({
+                                    contactDetails ? setContactDetails({
                                         ...contactDetails,
                                         surname: value
                                     }) : setNewContact({...newContact, surname: value});
@@ -185,10 +167,10 @@ function EditClient({customer, currentUser}) {
                             <strong>SSN:</strong>
                             <input
                                 type="text"
-                                value={customer ? contactDetails?.ssn : newContact.ssn}
+                                value={contactDetails ? contactDetails?.ssn : newContact.ssn}
                                 onChange={(e) => {
                                     const value = e.target.value;
-                                    customer ? setContactDetails({
+                                    contactDetails ? setContactDetails({
                                         ...contactDetails,
                                         ssn: value
                                     }) : setNewContact({...newContact, ssn: value});
@@ -328,31 +310,31 @@ function EditClient({customer, currentUser}) {
                         </div>
                     </div>
                 </div>
-
-
-                <div>
+                <div className="flex flex-row justify-around">
                     <button className={'page-button'}
-                            onClick={handleSaveContact}>{customer ? "Save Changes" : "Create"}</button>
+                            onClick={handleSaveContact}>{contactDetails ? "Save Changes" : "Create"}</button>
+                    <button className={'page-button'}
+                            onClick={contactDetails ? () => navigate(`/ui/Contacts/${contactId}`) : () => navigate(`/ui/Contacts`)}>Cancel
+                    </button>
                 </div>
             </div>
+            {/*{
+                contactDetails && (
+                    <>
+                        <div className={"h-[90%] w-[1px] bg-stone-800"}></div>
+                        <div className={"flex h-full flex-col items-center justify-around"}>
+                            <h3 className={"text-2xl font-semibold"}>Add a new note:</h3>
+                            <textarea
+                                value={newNote}
+                                onChange={(e) => setNewNote(e.target.value)}
+                                placeholder="Enter a new note"
+                            />
+                            <button className={"page-button"} onClick={handleAddNote}>Add Note</button>
+                        </div>
+                    </>
 
-
-            {customer && (
-                <>
-                    <div className={"h-[90%] w-[1px] bg-stone-800"}></div>
-                    <div className={"flex h-full flex-col items-center justify-around"}>
-                        <h3 className={"text-2xl font-semibold"}>Add a new note:</h3>
-                        <textarea
-                            value={newNote}
-                            onChange={(e) => setNewNote(e.target.value)}
-                            placeholder="Enter a new note"
-                        />
-                        <button className={"page-button"} onClick={handleAddNote}>Add Note</button>
-                    </div>
-                </>
-
-            )}
-
+                )
+            }*/}
         </div>
     );
 }

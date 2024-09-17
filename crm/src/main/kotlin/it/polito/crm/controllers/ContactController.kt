@@ -84,7 +84,7 @@ class ContactController(private val contactService: ContactService) {
     }
 
     @DeleteMapping("/{contactId}")
-    @PreAuthorize("hasAnyRole(, 'ROLE_operator', 'ROLE_manager')")
+    @PreAuthorize("hasAnyRole('ROLE_operator', 'ROLE_manager')")
     fun deleteContact(
         @PathVariable contactId: Long
     ): ResponseEntity<Unit> {

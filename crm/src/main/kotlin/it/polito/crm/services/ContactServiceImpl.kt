@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import kotlin.jvm.optionals.getOrElse
 
 @Service
 class ContactServiceImpl(
@@ -22,7 +23,9 @@ class ContactServiceImpl(
     private val addressRepository: AddressRepository,
     private val emailRepository: EmailRepository,
     private val telephoneRepository: TelephoneRepository,
-    private val entityManager: EntityManager
+    private val entityManager: EntityManager,
+    private val customerRepository: CustomerRepository,
+    private val professionalRepository: ProfessionalRepository
 ) : ContactService {
     private val logger = LoggerFactory.getLogger(ContactServiceImpl::class.java)
 
@@ -103,7 +106,11 @@ class ContactServiceImpl(
     override fun getContactById(contactId: Long): ContactDetailsDTO {
         val contact = contactRepository.findById(contactId)
             .orElseThrow { ContactNotFoundException("Contact with id $contactId not found") }
-        return contact.toDetailsDto()
+
+        val customerId = customerRepository.findByContact(contact).getOrElse { null }?.customerId
+        val professionalId = professionalRepository.findByContact(contact).getOrElse{ null }?.professionalId
+
+        return contact.toDetailsDto(professionalId, customerId)
     }
 
     override fun insertNewContact(contactDTO: ContactDTO): ContactDTO? {

@@ -45,7 +45,7 @@ async function InsertNewContact(contact, xsrfToken) {
             method: 'POST',
             credentials: 'include',
             headers: {'Content-Type': 'application/json', 'X-XSRF-TOKEN': xsrfToken},
-            body: JSON.stringify({contact})
+            body: JSON.stringify(contact)
         })
 
     const obj = await response.json()
@@ -75,18 +75,16 @@ async function UpdateContact(contact, xsrfToken) {
     }
 }
 
-async function DeleteContact(contact, xsrfToken) {
+async function DeleteContact(contactId, xsrfToken) {
     const response = await fetch(
-        buildUrl(`${URL_CONTACTS}/${contact.contactId}`, null, null), {
+        buildUrl(`${URL_CONTACTS}/${contactId}`, null, null), {
             method: 'DELETE',
             credentials: 'include',
             headers: {'Content-Type': 'application/json', 'X-XSRF-TOKEN': xsrfToken},
         })
 
-    const obj = await response.json()
-
     if (!response.ok) {
-        throw obj
+        throw "Error"
     }
 }
 
@@ -145,7 +143,6 @@ async function InsertNewTelephoneToContact(contactId, telephone, xsrfToken) {
 }
 
 async function UpdateAddressOfContact(contactId, addressId, address, xsrfToken) {
-    console.log("CIAO: " + address)
     const response = await fetch(
         buildUrl(`${URL_CONTACTS}/${contactId}/address/${addressId}`, null, null), {
             method: 'PUT',

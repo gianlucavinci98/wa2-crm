@@ -13,6 +13,9 @@ import Messages from "./Messages.jsx";
 import MessageDetails from "./MessageDetails.jsx";
 import Analytics from "./Analytics.jsx";
 import FileForm from "./FileForm.jsx";
+import Contacts from "./Contacts.jsx";
+import ContactDetails from "./ContactDetails.jsx";
+import EditClient from "./EditClient.jsx";
 
 
 // eslint-disable-next-line react/prop-types
@@ -81,6 +84,10 @@ function SideBar({currentUser}) {
             </div>
             <div className={"w-full flex flex-col gap-6 flex-1"}>
                 <button
+                    className={location.pathname.includes("/ui/Contacts") ? "clicked-side-button" : "side-button"}
+                    onClick={() => navigate("/ui/Contacts")}>Contacts
+                </button>
+                <button
                     className={location.pathname.includes("/ui/Customers") ? "clicked-side-button" : "side-button"}
                     onClick={() => navigate("/ui/Customers")}>Customers
                 </button>
@@ -99,7 +106,7 @@ function SideBar({currentUser}) {
             </div>
 
             <div className={"w-full flex flex-col gap-6 flex-1 justify-end"}>
-                {currentUser.roles.filter(it=>it.includes('manager')).length>0 &&
+                {currentUser.roles.filter(it => it.includes('manager')).length > 0 &&
                     <button
                         className={location.pathname.includes("/ui/Analytics") ? "clicked-side-button" : "side-button"}
                         onClick={() => navigate("/ui/Analytics")}>Analytics
@@ -145,8 +152,21 @@ function Skeleton() {
                 }
                 <div className={`flex flex-col items-center ${currentUser && currentUser.principal ? "w-4/5" : "w-full"}` }>
                     <Routes>
-                        <Route path={"/ui"} element={currentUser?.principal ? <Navigate to={"/ui/Customers"}/> :
-                            <HomePage currentUser={currentUser}/>}/>
+                        <Route path={"/ui"}
+                               element={currentUser?.principal ? <Navigate to={"/ui/Customers"}/> :
+                                   <HomePage currentUser={currentUser}/>}/>
+                        <Route path={"/ui/Contacts"}
+                               element={!currentUser?.principal ? <Navigate to={"/ui"}/> :
+                                   <Contacts currentUser={currentUser}/>}/>
+                        <Route path={"/ui/Contacts/:contactId"}
+                               element={!currentUser?.principal ? <Navigate to={"/ui"}/> :
+                                   <ContactDetails currentUser={currentUser}/>}/>
+                        <Route path={"/ui/Contacts/add"}
+                               element={!currentUser?.principal ? <Navigate to={"/ui"}/> :
+                                   <EditClient currentUser={currentUser}/>}/>
+                        <Route path={"/ui/Contacts/:contactId/edit"}
+                               element={!currentUser?.principal ? <Navigate to={"/ui"}/> :
+                                   <EditClient currentUser={currentUser}/>}/>
                         <Route path={"/ui/Customers"}
                                element={!currentUser?.principal ? <Navigate to={"/ui"}/> : <ClientsTable currentUser={currentUser}/>}/>
                         <Route path={"/ui/Professionals"}
@@ -156,7 +176,8 @@ function Skeleton() {
                         <Route path={"/ui/JobOffers/add"}
                                element={!currentUser?.principal ? <Navigate to={"/ui"}/> : <JobOfferForm currentUser={currentUser}/>}/>
                         <Route path={"/ui/Messages"}
-                               element={!currentUser?.principal ? <Navigate to={"/ui"}/> : <Messages/>}/>
+                               element={!currentUser?.principal ? <Navigate to={"/ui"}/> :
+                                   <Messages currentUser={currentUser}/>}/>
                         <Route path={"/ui/Messages/:messageId"}
                                element={!currentUser?.principal ? <Navigate to={"/ui"}/> : <MessageDetails currentUser={currentUser}/>}/>
                         <Route path={"/ui/Analytics"}

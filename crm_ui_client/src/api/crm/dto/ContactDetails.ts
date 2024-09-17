@@ -11,7 +11,9 @@ interface ContactDetailsRawData {
     category: Category
     addresses: Address[]
     emails: Email[]
-    telephones: Telephone[]
+    telephones: Telephone[],
+    professionalId: number | null,
+    customerId: number | null
 }
 
 export class ContactDetails implements ContactDetailsRawData {
@@ -23,6 +25,8 @@ export class ContactDetails implements ContactDetailsRawData {
     addresses: Address[]
     emails: Email[]
     telephones: Telephone[]
+    professionalId: number | null
+    customerId: number | null
 
     constructor(contactId: number,
                 name: string,
@@ -31,7 +35,9 @@ export class ContactDetails implements ContactDetailsRawData {
                 category: Category,
                 addresses: Address[],
                 emails: Email[],
-                telephones: Telephone[]
+                telephones: Telephone[],
+                professionalId: number | null,
+                customerId: number | null
     ) {
         this.contactId = contactId
         this.name = name
@@ -41,6 +47,8 @@ export class ContactDetails implements ContactDetailsRawData {
         this.addresses = addresses
         this.emails = emails
         this.telephones = telephones
+        this.professionalId = professionalId
+        this.customerId = customerId
     }
 
     static fromJsonObject(obj: ContactDetailsRawData): ContactDetails | undefined {
@@ -53,7 +61,9 @@ export class ContactDetails implements ContactDetailsRawData {
                 obj.category,
                 obj.addresses.map(e => new Address(e.addressId, e.address)),
                 obj.emails.map(e => new Email(e.emailId, e.emailAddress)),
-                obj.telephones.map(e => new Telephone(e.telephoneId, e.telephoneNumber))
+                obj.telephones.map(e => new Telephone(e.telephoneId, e.telephoneNumber)),
+                obj.professionalId,
+                obj.customerId
             )
         } catch (e) {
             console.error(e)

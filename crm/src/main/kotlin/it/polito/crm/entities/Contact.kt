@@ -49,8 +49,10 @@ class Contact {
         t.telephoneContacts.add(this)
     }
 
-    fun toDto(): ContactDTO = ContactDTO(this.contactId, this.name, this.surname, this.ssn, this.category)
-    fun toDetailsDto(): ContactDetailsDTO = ContactDetailsDTO(
+    fun toDto(): ContactDTO =
+        ContactDTO(this.contactId, this.name, this.surname, this.ssn, this.category)
+
+    fun toDetailsDto(professionalId: Long? = null, customerId: Long? = null): ContactDetailsDTO = ContactDetailsDTO(
         this.contactId,
         this.name,
         this.surname,
@@ -58,6 +60,8 @@ class Contact {
         this.category,
         this.addresses.map { it.toDto() }.toSet(),
         this.emails.map { it.toDto() }.toSet(),
-        this.telephones.map { it.toDto() }.toSet()
+        this.telephones.map { it.toDto() }.toSet(),
+        professionalId,
+        customerId
     )
 }
