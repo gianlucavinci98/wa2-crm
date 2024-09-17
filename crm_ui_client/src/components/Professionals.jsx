@@ -89,7 +89,7 @@ function ProfessionalsTable({currentUser}) {
         setLoading(true);
         try {
             const pagination = {page: page, pageSize: 10}; // Adjust page size as necessary
-            const data = await ProfessionalAPI.GetProfessionals(filter, pagination);
+            const data = await ProfessionalAPI.GetProfessionals(filter, pagination, currentUser.xsrfToken);
             setProfessionals(data);
         } catch (error) {
             console.error('Failed to fetch professionals:', error);
@@ -241,7 +241,7 @@ function ProfessionalsTable({currentUser}) {
                                 border: "1px solid #ccc",
                                 padding: "10px",
                                 zIndex: 1000,
-                                maxWidth: "200px",
+                                maxWidth: "400px",
                                 boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
                                 borderRadius: "8px"
                             }}
@@ -250,8 +250,13 @@ function ProfessionalsTable({currentUser}) {
                                 tooltip.showDetails && tooltip.details ? (
                                         <>
                                             <strong>{tooltip.details.name} {tooltip.details.surname}</strong><br/>
-                                            <p>Email: {Array.from(tooltip.details.emails)[0].email}</p>
-                                            <p>Telefono: {Array.from(tooltip.details.telephones)[0].telephone}</p>
+                                            {Array.from(tooltip.details.emails).map((it, index) => (
+                                                <p key={index}>Email: {it.emailAddress}</p>
+                                            ))} {Array.from(tooltip.details.addresses).map((it, index) => (
+                                            <p key={index}>Address: {it.address}</p>))}
+                                            {Array.from(tooltip.details.telephones).map((it, index) => (
+                                                <p key={index}>Telephone: {it.telephoneNumber}</p>
+                                            ))}
                                         </>
 
                                     ) :

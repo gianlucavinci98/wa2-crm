@@ -29,24 +29,23 @@ function EditProfessional({professional, setProfessional}) {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    async function confrontaCampi(arr1, set2, key, value, funzioneA, funzioneB, funzioneC) {
-        const set1Ids = new Set(arr1.map(item => item[key])); // ID degli oggetti del primo oggetto (Array)
-        const arr2 = Array.from(set2); // array dal secondo oggetto
-        const set2Ids = new Set([...set2].map(item => item[key])); // ID degli oggetti del secondo oggetto (Set)
+    async function confrontaCampi(arr1, arr2, key, value, funzioneA, funzioneB, funzioneC) {
+        const set1Ids = arr1.map(item => item[key]); // ID degli oggetti del primo oggetto (Array)
+        const set2Ids = arr2.map(item => item[key]); // ID degli oggetti del secondo oggetto (Set)
 
         // Confronta gli ID
         for (const id of set1Ids) {
-            if (set2Ids.has(id)) {
+            if (set2Ids.includes(id)) {
                 if (arr2.find((it) => it[key] === id)[value] !== arr1.find((it) => it[key] === id)[value])
-                    await funzioneA(contactDetails.id, id, arr2.find((it) => it[key] === id)[value]); // Presente in entrambi
+                    await funzioneA(contactDetails.contactId, id, arr1.find((it) => it[key] === id)[value], currentUser.xsrfToken); // Presente in entrambi
             } else {
-                await funzioneC(contactDetails.id, id); // Presente solo nel primo oggetto
+                await funzioneC(contactDetails.contactId, arr1.find((it) => it[key] === id)[value], currentUser.xsrfToken); // Presente solo nel primo oggetto
             }
         }
 
         for (const id of set2Ids) {
-            if (!set1Ids.has(id)) {
-                await funzioneB(contactDetails.id, arr2.find((it) => it[key] === id)[value]); // Presente solo nel secondo oggetto
+            if (!set1Ids.includes(id)) {
+                await funzioneB(contactDetails.contactId, id, currentUser.xsrfToken); // Presente solo nel secondo oggetto
             }
         }
     }
@@ -121,9 +120,9 @@ function EditProfessional({professional, setProfessional}) {
                 console.log(contactDetails)
                 contact = await ContactAPI.UpdateContact(new Contact(contactDetails.contactId, contactDetails.name, contactDetails.surname, contactDetails.ssn, contactDetails.category));
                 contact = await ProfessionalAPI.UpdateProfessional({...professional, skills: new Set(skills.split(','))});
-                await confrontaCampi(newContact.addresses, contactDetails.addresses, 'addressId', 'address', () => ContactAPI.UpdateAddressOfContact(), () => ContactAPI.DeleteAddressFromContact(), () => ContactAPI.InsertNewAddressToContact());
-                await confrontaCampi(newContact.emails, contactDetails.emails, 'emailId', 'email', () => ContactAPI.UpdateEmailOfContact(), () => ContactAPI.DeleteEmailFromContact(), () => ContactAPI.InsertNewEmailToContact());
-                await confrontaCampi(newContact.telephones, contactDetails.telephones, 'telephoneId', 'telephone', () => ContactAPI.UpdateTelephoneOfContact(), () => ContactAPI.DeleteTelephoneFromContact(), () => ContactAPI.InsertNewTelephoneToContact());
+                await confrontaCampi(newContact.addresses, contactDetails.addresses, 'addressId', 'address', ContactAPI.UpdateAddressOfContact, ContactAPI.DeleteAddressFromContact,  ContactAPI.InsertNewAddressToContact);
+                await confrontaCampi(newContact.emails, contactDetails.emails, 'emailId', 'emailAddress', ContactAPI.UpdateEmailOfContact,  ContactAPI.DeleteEmailFromContact,  ContactAPI.InsertNewEmailToContact);
+                await confrontaCampi(newContact.telephones, contactDetails.telephones, 'telephoneId', 'telephoneNumber',  ContactAPI.UpdateTelephoneOfContact,   ContactAPI.DeleteTelephoneFromContact,  ContactAPI.InsertNewTelephoneToContact);
                 alert("Contact updated successfully!");
             }
             setContactDetails(contact);
@@ -297,12 +296,12 @@ function EditProfessional({professional, setProfessional}) {
                                     <div key={email.emailId} className={"flex gap-2 items-center"}>
                                         <input
                                             type="email"
-                                            value={email.email}
+                                            value={email.emailAddress}
                                             onChange={(e) => {
                                                 const value = e.target.value;
                                                 let emails = newContact.emails.map((em) => (em.emailId === email.emailId ? {
                                                     ...em,
-                                                    email: value
+                                                    emailAddress: value
                                                 } : em))
                                                 setNewContact({...newContact, emails: emails});
                                             }}
@@ -322,7 +321,7 @@ function EditProfessional({professional, setProfessional}) {
                                     <Icon name={"plus"} className={"w-6 h-6 fill-blue-800 cursor-pointer"} onClick={
                                         () => {
                                             let emails = newContact.emails
-                                            emails.push({emailId: "NEW" + Math.floor(Math.random() * 600), email: ""});
+                                            emails.push({emailId: "NEW" + Math.floor(Math.random() * 600), emailAddress: ""});
                                             setNewContact({...newContact, emails});
                                         }
                                     }>Add Email
@@ -338,12 +337,12 @@ function EditProfessional({professional, setProfessional}) {
                                     <div key={telephone.telephoneId} className={"flex gap-2 items-center"}>
                                         <input
                                             type="tel"
-                                            value={telephone.telephone}
+                                            value={telephone.telephoneNumber}
                                             onChange={(e) => {
                                                 const value = e.target.value;
                                                 let telephones = newContact.telephones.map((tel) => (tel.telephoneId === telephone.telephoneId ? {
                                                     ...tel,
-                                                    telephone: value
+                                                    telephoneNumber: value
                                                 } : tel))
                                                 setNewContact({...newContact, telephones: telephones});
                                             }}
@@ -365,7 +364,7 @@ function EditProfessional({professional, setProfessional}) {
                                             let telephones = newContact.telephones
                                             telephones.push({
                                                 telephoneId: "NEW" + Math.floor(Math.random() * 600),
-                                                telephone: ""
+                                                telephoneNumber: ""
                                             });
                                             setNewContact({...newContact, telephones});
                                         }

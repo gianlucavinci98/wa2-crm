@@ -5,11 +5,12 @@ import {Professional} from "./dto/Professional.ts";
 const URL_PROFESSIONALS = 'http://localhost:8082/crm/api/professionals'
 
 
-async function GetProfessionals(filter, pagination) {
+async function GetProfessionals(filter, pagination, xsrfToken) {
     const response = await fetch(
         buildUrl(URL_PROFESSIONALS, null, pagination), {
             method: 'GET',
-            credentials: 'include'
+            credentials: 'include',
+            headers: {'Content-Type': 'application/json', 'X-XSRF-TOKEN': xsrfToken},
         })
     const obj = await response.json()
 
@@ -20,11 +21,12 @@ async function GetProfessionals(filter, pagination) {
     }
 }
 
-async function GetProfessionalById(professionalId) {
+async function GetProfessionalById(professionalId, xsrfToken) {
     const response = await fetch(
         buildUrl(`${URL_PROFESSIONALS}/${professionalId}`, null, null), {
             method: 'GET',
-            credentials: 'include'
+            credentials: 'include',
+            headers: {'Content-Type': 'application/json', 'X-XSRF-TOKEN': xsrfToken},
         })
     const obj = await response.json()
 

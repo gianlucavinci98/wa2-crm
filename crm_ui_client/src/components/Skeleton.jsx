@@ -154,11 +154,11 @@ function Skeleton() {
                         <Route path={"/ui/JobOffers"}
                                element={!currentUser?.principal ? <Navigate to={"/ui"}/> : <JobOffersTable currentUser={currentUser}/>}/>
                         <Route path={"/ui/JobOffers/add"}
-                               element={<JobOfferForm currentUser={currentUser}/>}/>
+                               element={!currentUser?.principal ? <Navigate to={"/ui"}/> : <JobOfferForm currentUser={currentUser}/>}/>
                         <Route path={"/ui/Messages"}
-                               element={<Messages/>}/>
+                               element={!currentUser?.principal ? <Navigate to={"/ui"}/> : <Messages/>}/>
                         <Route path={"/ui/Messages/:messageId"}
-                               element={<MessageDetails currentUser={currentUser}/>}/>
+                               element={!currentUser?.principal ? <Navigate to={"/ui"}/> : <MessageDetails currentUser={currentUser}/>}/>
                         <Route path={"/ui/Analytics"}
                                element={!currentUser?.principal ? <Navigate to={"/ui"}/> : <Analytics/>}/>
                         <Route path={"/ui/file"} element={<FileForm currentUser={currentUser}/>}/>
