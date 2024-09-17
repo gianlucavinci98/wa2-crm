@@ -13,7 +13,7 @@ import EditClient from "./EditClient.jsx";
 import {TopBar} from "./Skeleton.jsx";
 
 
-function ClientsTable() {
+function CustomersTable() {
     // const [customers, setCustomers] = useState([]);
     const [customers, setCustomers] = useState([new Customer(5, ['best', 'wonderfull'], new Contact(3, 'carelo', 'rossi', 'bdhev2837', Category.Customer))]);
     const [loading, setLoading] = useState(true);
@@ -213,4 +213,4 @@ function ClientsTable() {
     )
 }
 
-export default ClientsTable;
+export default CustomersTable;

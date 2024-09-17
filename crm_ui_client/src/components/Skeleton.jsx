@@ -3,7 +3,7 @@ import {BrowserRouter as Router, Navigate, Route, Routes, useLocation, useNaviga
 import logo from '../assets/logo.png';
 import ProfessionalsTable from "./Professionals.jsx";
 import Icon from "./Icon.jsx";
-import ClientsTable from "./Clients.jsx";
+import CustomersTable from "./Clients.jsx";
 import JobOffersTable from "./JobOffer.jsx";
 import {User} from "../api/api_gateway/dto/User.ts";
 import "./Skeleton.css"
@@ -69,11 +69,11 @@ function SideBar({currentUser}) {
                 <img className={"h-full object-contain rounded-full"} src={logo} alt="Logo"/>
             </div>
             <div className={"w-full flex flex-col gap-6 flex-1"}>
-                <button className={location.pathname.includes("/ui/Clients") ? "clicked-side-button" : "side-button"}
-                        onClick={() => navigate("/ui/Clients")}>Clients
+                <button className={location.pathname.includes("/ui/Customers") ? "clicked-side-button" : "side-button"}
+                        onClick={() => navigate("/ui/Customers")}>Customers
                 </button>
-                <button className={location.pathname.includes("/ui/Candidates") ? "clicked-side-button" : "side-button"}
-                        onClick={() => navigate("/ui/Candidates")}>Candidates
+                <button className={location.pathname.includes("/ui/Professionals") ? "clicked-side-button" : "side-button"}
+                        onClick={() => navigate("/ui/Professionals")}>Professionals
                 </button>
                 <button className={location.pathname.includes("/ui/JobOffers") ? "clicked-side-button" : "side-button"}
                         onClick={() => navigate("/ui/JobOffers")}>Job Offers
@@ -121,11 +121,11 @@ function Skeleton() {
                 <SideBar currentUser={currentUser}></SideBar>
                 <div className="w-4/5 flex flex-col items-center">
                     <Routes>
-                        <Route path={"/ui"} element={currentUser?.principal ? <Navigate to={"/ui/Clients"}/> :
+                        <Route path={"/ui"} element={currentUser?.principal ? <Navigate to={"/ui/Customers"}/> :
                             <HomePage currentUser={currentUser}/>}/>
-                        <Route path={"/ui/Clients"}
-                               element={!currentUser?.principal ? <Navigate to={"/ui"}/> : <ClientsTable/>}/>
-                        <Route path={"/ui/Candidates"}
+                        <Route path={"/ui/Customers"}
+                               element={!currentUser?.principal ? <Navigate to={"/ui"}/> : <CustomersTable/>}/>
+                        <Route path={"/ui/Professionals"}
                                element={!currentUser?.principal ? <Navigate to={"/ui"}/> : <ProfessionalsTable/>}/>
                         <Route path={"/ui/JobOffers"}
                                element={!currentUser?.principal ? <Navigate to={"/ui"}/> : <JobOffersTable/>}/>
@@ -135,7 +135,8 @@ function Skeleton() {
                                element={<Messages/>}/>
                         <Route path={"/ui/Messages/:messageId"}
                                element={<MessageDetails currentUser={currentUser}/>}/>
-                        <Route path={"/ui/Analytics"} element={<Analytics/>}/>
+                        <Route path={"/ui/Analytics"}
+                               element={!currentUser?.principal ? <Navigate to={"/ui"}/> : <Analytics/>}/>
                         <Route path={"/ui/file"} element={<FileForm currentUser={currentUser}/>}/>
                     </Routes>
                 </div>
