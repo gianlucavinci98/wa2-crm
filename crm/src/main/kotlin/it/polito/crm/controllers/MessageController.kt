@@ -66,7 +66,7 @@ class MessageController(private val messageService: MessageService) {
     }
 
     @GetMapping("/{messageId}/history")
-    @PreAuthorize("hasAnyRole('ROLE_operator', 'ROLE_guest', 'ROLE_manager')")
+    @PreAuthorize("hasAnyRole('ROLE_operator', 'ROLE_manager', 'ROLE_recruiter')")
     fun getMessageHistoryById(@PathVariable messageId: Long): List<MessageHistoryDTO> {
         return messageService.getMessageHistoryById(messageId)
     }
