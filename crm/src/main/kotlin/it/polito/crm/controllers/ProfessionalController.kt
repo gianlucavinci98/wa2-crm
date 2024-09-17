@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/api/professionals")
 class ProfessionalController(private val professionalService: ProfessionalService) {
     @GetMapping("", "/")
-    @PreAuthorize("hasAnyRole('ROLE_operator', 'ROLE_guest', 'ROLE_manager')")
+    @PreAuthorize("hasAnyRole('ROLE_operator', 'ROLE_manager')")
     fun getAllProfessionals(
         @RequestParam("pageNumber", required = false)
         @Min(
@@ -38,7 +38,7 @@ class ProfessionalController(private val professionalService: ProfessionalServic
     }
 
     @GetMapping("/{professionalId}")
-    @PreAuthorize("hasAnyRole('ROLE_operator', 'ROLE_guest', 'ROLE_manager')")
+    @PreAuthorize("hasAnyRole('ROLE_operator', 'ROLE_manager')")
     fun getProfessionalById(@PathVariable("professionalId", required = true) professionalId: Long): ProfessionalDTO {
         return professionalService.getProfessionalById(professionalId)
     }
