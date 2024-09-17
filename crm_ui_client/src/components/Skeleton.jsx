@@ -37,9 +37,9 @@ function TopBar({switchFilter, openFilter, addNew, setAddNew, filterPresent, cur
                                   onClick={() => switchFilter()}/>
                         }
                         {
-                            (location.pathname.split("/").pop() !== 'ui' && !location.pathname.includes("Messages"))
+                            (location.pathname.split("/").pop() !== 'ui' && !location.pathname.includes("Messages") && !location.pathname.includes("JobOffers"))
                                 ?
-                                    !addNew  ?
+                                    !addNew?
                                         <Icon name='plus'
                                                     className={`w-10 h-10 cursor-pointer hover:fill-blue-500`}
                                                     onClick={() => setAddNew()}/> :
@@ -49,6 +49,11 @@ function TopBar({switchFilter, openFilter, addNew, setAddNew, filterPresent, cur
 
                                 :
                                 <>
+                                    {
+                                        (addNew && location.pathname.includes("JobOffers")) && <Icon name='back'
+                                                        className={`w-10 h-10 cursor-pointer hover:fill-blue-500`}
+                                                        onClick={() => setAddNew()}/>
+                                    }
                                     {
                                         (currentUser === null || currentUser?.principal === null) &&
                                         <button className={"page-button hover:bg-blue-500 hover:text-white"}

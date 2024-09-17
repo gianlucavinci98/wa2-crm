@@ -11,6 +11,7 @@ import {Email} from "../api/crm/dto/Email.ts";
 import {Telephone} from "../api/crm/dto/Telephone.ts";
 import EditClient from "./EditClient.jsx";
 import {TopBar} from "./Skeleton.jsx";
+import {useNavigate} from "react-router-dom";
 
 
 function ClientsTable() {
@@ -20,7 +21,7 @@ function ClientsTable() {
     const [page, setPage] = useState(1);
     const [editClient, setEditClient] = useState(false);
     const [editingClient, setEditingClient] = useState();
-
+    const navigate = useNavigate()
     const [tooltip, setTooltip] = useState({visible: false, showDetails: false, details: null, x: 0, y: 0});
 
     // Function to fetch data
@@ -135,13 +136,19 @@ function ClientsTable() {
                                 {/*    ))}*/}
                                 {/*</td> /!* Emails *!/*/}
                                 <td>{Array.from(customer.notes).join(', ')}</td>
-                                <td>
-                                    <button className={'table-button text-blue-500'} onClick={() => {
-                                        setEditingClient(customer)
-                                        setEditClient(!editClient)
-                                    }}>Edit
-                                    </button>
-                                    <button className={'table-button text-red-500'}>Delete</button>
+                                <td className={""}>
+                                    <div className={"flex gap-2 items-center"}>
+                                        <Icon name={"file"} className={'w-4 h-4 fill-orange-500'} onClick={() => {
+                                            navigate("/ui/JobOffers", { state: { customer: customer }})
+                                        }}>Create Job Offer
+                                        </Icon>
+                                        <Icon name={"pencil"} className={'w-4 h-4 fill-blue-500'} onClick={() => {
+                                            setEditingClient(customer)
+                                            setEditClient(!editClient)
+                                        }}>Edit
+                                        </Icon>
+                                        <Icon name={"garbage"} className={'w-4 h-4 fill-red-500'}>Delete</Icon>
+                                    </div>
                                 </td>
                             </tr>
                         ))}
