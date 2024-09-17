@@ -475,9 +475,10 @@ function JobOfferForm(props) {
                             className={"border-[1px] p-2 border-stone-500 bg-stone-100 rounded-md shadow-md w-full flex flex-col gap-2 overflow-auto "}>
                             {jobOfferHistory.map((history, index) =>
                                 <div className={"flex w-full justify-between"} key={index}>
-                                    <div>{JobOfferStatus[history.jobOfferStatus]}</div>
-                                    <div className={"break-words"}>{history?.note}</div>
-                                    <div>{dayjs(history.date).format('DD-MM-YYYY')}</div>
+                                    <div className={"w-1/4"}>{JobOfferStatus[history.jobOfferStatus]}</div>
+                                    <div className={"w-1/4 break-words"}>{history.note!==''?`Note: ${history?.note}`: ''}</div>
+                                    <div className={"w-1/4 text-center break-words"}>Applicants: {history?.candidates?.length>0?history?.candidates?.length:0}</div>
+                                    <div className={"w-1/4 text-center"}>{dayjs(history.date).format('DD-MM-YYYY')}</div>
                                 </div>
                             )}
                         </div>
