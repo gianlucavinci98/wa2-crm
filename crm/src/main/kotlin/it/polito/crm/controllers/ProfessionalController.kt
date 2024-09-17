@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/api/professionals")
 class ProfessionalController(private val professionalService: ProfessionalService) {
     @GetMapping("", "/")
-    @PreAuthorize("hasAnyRole('ROLE_operator', 'ROLE_manager')")
+    @PreAuthorize("hasAnyRole('ROLE_operator', 'ROLE_manager', 'ROLE_recruiter')")
     fun getAllProfessionals(
         @RequestParam("pageNumber", required = false)
         @Min(
@@ -38,13 +38,13 @@ class ProfessionalController(private val professionalService: ProfessionalServic
     }
 
     @GetMapping("/{professionalId}")
-    @PreAuthorize("hasAnyRole('ROLE_operator', 'ROLE_manager')")
+    @PreAuthorize("hasAnyRole('ROLE_operator', 'ROLE_manager', 'ROLE_recruiter')")
     fun getProfessionalById(@PathVariable("professionalId", required = true) professionalId: Long): ProfessionalDTO {
         return professionalService.getProfessionalById(professionalId)
     }
 
     @PostMapping("/{contactId}")
-    @PreAuthorize("hasAnyRole('ROLE_operator', 'ROLE_manager')")
+    @PreAuthorize("hasAnyRole('ROLE_operator', 'ROLE_manager', 'ROLE_recruiter')")
     @ResponseStatus(HttpStatus.CREATED)
     fun insertNewProfessional(
         @PathVariable("contactId", required = true) contactId: Long,
@@ -54,7 +54,7 @@ class ProfessionalController(private val professionalService: ProfessionalServic
     }
 
     @PutMapping("/{professionalId}")
-    @PreAuthorize("hasAnyRole('ROLE_operator','ROLE_manager')")
+    @PreAuthorize("hasAnyRole('ROLE_operator','ROLE_manager', 'ROLE_recruiter')")
     fun updateProfessional(
         @PathVariable("professionalId", required = true) professionalId: Long,
         @Valid @RequestBody(required = true) professional: ProfessionalDTO
@@ -63,7 +63,7 @@ class ProfessionalController(private val professionalService: ProfessionalServic
     }
 
     @DeleteMapping("/{professionalId}")
-    @PreAuthorize("hasAnyRole('ROLE_manager')")
+    @PreAuthorize("hasAnyRole('ROLE_operator', 'ROLE_manager', 'ROLE_recruiter')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun deleteProfessional(
         @PathVariable("professionalId", required = true) professionalId: Long

@@ -33,7 +33,7 @@ class HomeController {
         val roles = principal?.getAttribute<List<String>>("roles")
 
         var allRoles = (clientRoles ?: emptyList()) + (roles ?: emptyList())
-        allRoles = allRoles.filter { it.contains("operator") || it.contains("manager")}
+        allRoles = allRoles.filter { it.contains("operator") || it.contains("manager") || it.contains("recruiter")}
 
         return mapOf(
             "username" to username,

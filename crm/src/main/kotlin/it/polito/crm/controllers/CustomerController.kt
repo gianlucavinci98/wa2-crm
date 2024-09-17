@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/api/customers")
 class CustomerController(private val customerServiceImpl: CustomerServiceImpl) {
     @GetMapping("", "/")
-    @PreAuthorize("hasAnyRole('ROLE_operator', 'ROLE_guest', 'ROLE_manager')")
+    @PreAuthorize("hasAnyRole('ROLE_operator', 'ROLE_manager', 'ROLE_recruiter')")
     fun getAllCustomers(
         @RequestParam("pageNumber", required = false) @Min(
             value = 0,
@@ -26,7 +26,7 @@ class CustomerController(private val customerServiceImpl: CustomerServiceImpl) {
     }
 
     @GetMapping("/{customerId}")
-    @PreAuthorize("hasAnyRole('ROLE_operator', 'ROLE_guest', 'ROLE_manager')")
+    @PreAuthorize("hasAnyRole('ROLE_operator', 'ROLE_manager', 'ROLE_recruiter')")
     fun getCustomerById(@PathVariable("customerId", required = true) customerId: Long): CustomerDTO {
         return customerServiceImpl.getCustomerById(customerId)
     }
@@ -39,14 +39,14 @@ class CustomerController(private val customerServiceImpl: CustomerServiceImpl) {
     }
 
     @DeleteMapping("/{customerId}")
-    @PreAuthorize("hasAnyRole('ROLE_manager')")
+    @PreAuthorize("hasAnyRole('ROLE_operator', 'ROLE_manager')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun deleteCustomerById(@PathVariable("customerId", required = true) customerId: Long) {
         customerServiceImpl.deleteCustomer(customerId)
     }
 
     @PostMapping("/{customerId}/notes")
-    @PreAuthorize("hasAnyRole('ROLE_operator', 'ROLE_manager')")
+    @PreAuthorize("hasAnyRole('ROLE_operator', 'ROLE_manager', 'ROLE_recruiter')")
     @ResponseStatus(HttpStatus.CREATED)
     fun insertNewNote(
         @PathVariable("customerId", required = true) customerId: Long,

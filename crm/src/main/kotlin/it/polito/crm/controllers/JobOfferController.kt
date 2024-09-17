@@ -16,13 +16,13 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/api/joboffers")
 class JobOfferController(val jobOfferService: JobOfferService) {
     @GetMapping("/{jobOfferId}")
-    @PreAuthorize("hasAnyRole('ROLE_operator', 'ROLE_guest', 'ROLE_manager')")
+    @PreAuthorize("hasAnyRole('ROLE_operator', 'ROLE_manager', 'ROLE_recruiter')")
     fun getJobOfferById(@PathVariable("jobOfferId", required = true) jobOfferId: Long): JobOfferDTO {
         return jobOfferService.getJobOfferById(jobOfferId)
     }
 
     @PostMapping("/{customerId}")
-    @PreAuthorize("hasAnyRole('ROLE_operator', 'ROLE_manager')")
+    @PreAuthorize("hasAnyRole('ROLE_operator', 'ROLE_manager', 'ROLE_recruiter')")
     @ResponseStatus(HttpStatus.CREATED)
     fun insertNewJobOffer(
         @PathVariable(
@@ -35,7 +35,7 @@ class JobOfferController(val jobOfferService: JobOfferService) {
     }
 
     @PutMapping("/{jobOfferId}/details")
-    @PreAuthorize("hasAnyRole('ROLE_operator', 'ROLE_manager')")
+    @PreAuthorize("hasAnyRole('ROLE_manager', 'ROLE_recruiter')")
     @ResponseStatus(HttpStatus.CREATED)
     fun insetNewDetails(
         @PathVariable(
@@ -48,7 +48,7 @@ class JobOfferController(val jobOfferService: JobOfferService) {
     }
 
     @PostMapping("/{jobOfferId}/status")
-    @PreAuthorize("hasAnyRole('ROLE_operator', 'ROLE_manager')")
+    @PreAuthorize("hasAnyRole('ROLE_manager', 'ROLE_recruiter')")
     @ResponseStatus(HttpStatus.CREATED)
     fun updateJobOfferById(
         @PathVariable(name = "jobOfferId", required = true) jobOfferId: Long,
@@ -58,14 +58,14 @@ class JobOfferController(val jobOfferService: JobOfferService) {
     }
 
     @DeleteMapping("/{jobOfferId}")
-    @PreAuthorize("hasAnyRole('ROLE_manager')")
+    @PreAuthorize("hasAnyRole('ROLE_manager', 'ROLE_recruiter')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun deleteJobOfferById(@PathVariable("jobOfferId", required = true) jobOfferId: Long) {
         jobOfferService.deleteJobOfferById(jobOfferId)
     }
 
     @PostMapping("/{jobOfferId}/{professionalId}")
-    @PreAuthorize("hasAnyRole('ROLE_operator', 'ROLE_manager')")
+    @PreAuthorize("hasAnyRole('ROLE_operator', 'ROLE_manager', 'ROLE_recruiter')")
     @ResponseStatus(HttpStatus.CREATED)
     fun insertNewApplication(
         @PathVariable(name = "jobOfferId", required = true) jobOfferId: Long,
@@ -75,7 +75,7 @@ class JobOfferController(val jobOfferService: JobOfferService) {
     }
 
     @DeleteMapping("/{jobOfferId}/{professionalId}")
-    @PreAuthorize("hasAnyRole('ROLE_operator', 'ROLE_manager')")
+    @PreAuthorize("hasAnyRole('ROLE_operator', 'ROLE_manager', 'ROLE_recruiter')")
     @ResponseStatus(HttpStatus.CREATED)
     fun deleteNewApplication(
         @PathVariable(name = "jobOfferId", required = true) jobOfferId: Long,
@@ -85,13 +85,13 @@ class JobOfferController(val jobOfferService: JobOfferService) {
     }
 
     @GetMapping("/{jobOfferId}/value")
-    @PreAuthorize("hasAnyRole('ROLE_operator', 'ROLE_guest', 'ROLE_manager')")
+    @PreAuthorize("hasAnyRole('ROLE_operator', 'ROLE_manager', 'ROLE_recruiter')")
     fun getJobOfferValue(@PathVariable("jobOfferId", required = true) jobOfferId: Long): Float {
         return jobOfferService.getJobOfferValue(jobOfferId)
     }
 
     @GetMapping("", "/")
-    @PreAuthorize("hasAnyRole('ROLE_operator', 'ROLE_guest', 'ROLE_manager')")
+    @PreAuthorize("hasAnyRole('ROLE_operator', 'ROLE_manager', 'ROLE_recruiter')")
     fun getAllJobOffers(
         @RequestParam("pageNumber", required = false) @Min(
             value = 0,
