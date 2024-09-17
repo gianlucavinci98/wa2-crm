@@ -104,9 +104,10 @@ class JobOfferController(val jobOfferService: JobOfferService) {
         ) pageSize: Int = 20,
         @RequestParam("category", required = false) category: Category?,
         @RequestParam("id", required = false) id: Long?,
-        @NotEmpty @RequestParam("status", required = true) status: List<JobOfferStatus>
+        @RequestParam("status", required = false) status: List<JobOfferStatus>?
     ): List<JobOfferDTO> {
-        return jobOfferService.getAllJobOffers(pageNumber, pageSize, category, id, status)
+        println(status)
+        return jobOfferService.getAllJobOffers(pageNumber, pageSize, category, id, status ?: emptyList())
     }
 
     @GetMapping("/{jobOfferId}/history")

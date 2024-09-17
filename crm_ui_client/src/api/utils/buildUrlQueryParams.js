@@ -1,9 +1,7 @@
 function arrayQueryParams(baseUrl, key, value) {
-    for (let i = 0; i < value; i++) {
-        if (i < value.length - 2) {
-            baseUrl += key + '=' + value + '&'
-        } else {
-            baseUrl += key + '=' + value
+    for (let i = 0; i < value.length; i++) {
+        if (value[i] !== null) {
+            baseUrl += key + '=' + value[i] + '&'
         }
     }
 
@@ -16,7 +14,7 @@ function buildUrlQueryParams(baseUrl, filter) {
 
         if (value instanceof Array) {
             baseUrl += arrayQueryParams(baseUrl, key, value)
-        } else {
+        } else if (value !== null) {
             baseUrl += key + '=' + value + '&'
         }
     }
@@ -25,14 +23,24 @@ function buildUrlQueryParams(baseUrl, filter) {
 }
 
 export function buildUrl(baseUrl, filter, pagination) {
-    let urlQueryParams = "?"
-
+    let url1 = ""
+    let url2 = ""
     if (filter ?? false) {
-        urlQueryParams = buildUrlQueryParams(urlQueryParams, filter)
+        url1 = buildUrlQueryParams(url1, filter)
     }
     if (pagination ?? false) {
-        urlQueryParams = buildUrlQueryParams(urlQueryParams, pagination)
+        url2 = buildUrlQueryParams(url2, pagination)
     }
 
-    return baseUrl + (urlQueryParams !== "?" ? urlQueryParams : "")
+    if (url1.length > 0) {
+        if (url2.length > 0) {
+            return baseUrl + "?" + url1 + "&" + url2
+        } else {
+            return baseUrl + "?" + url1
+        }
+    } else if (url2.length > 0) {
+        return baseUrl + "?" + url2
+    } else {
+        return baseUrl
+    }
 }

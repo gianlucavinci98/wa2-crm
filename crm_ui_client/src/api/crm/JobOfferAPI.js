@@ -14,6 +14,7 @@ async function GetJobOffers(filter, pagination) {
         })
     const obj = await response.json()
 
+    console.log(obj)
     if (response.ok) {
         return obj.map((e) => JobOffer.fromJsonObject(e))
     } else {
@@ -35,6 +36,7 @@ async function GetJobOfferById(jobOfferId) {
         throw obj
     }
 }
+
 async function GetJobOfferHistory(jobOfferId) {
     const response = await fetch(
         buildUrl(`${URL_JOB_OFFERS}/${jobOfferId}/history`, null, null), {

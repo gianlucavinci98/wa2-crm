@@ -69,6 +69,7 @@ function JobOfferForm(props) {
     useEffect(() => {
         fetchJobOfferHistory();
     }, []);
+
     const validate = () => {
         const errors = {};
 

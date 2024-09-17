@@ -240,7 +240,7 @@ class JobOfferServiceImpl(
 
             // Combine all filters in OR
             cqJobOffer.where(cb.or(*predicates.toTypedArray()))
-
+            
             val query = entityManager.createQuery(cqJobOffer)
             query.firstResult = pageNumber * pageSize
             query.maxResults = pageSize

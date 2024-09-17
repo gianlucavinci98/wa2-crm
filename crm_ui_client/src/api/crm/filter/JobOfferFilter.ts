@@ -8,12 +8,12 @@ export class JobOfferFilter {
      * */
     id: number | null
     category: Category | null
-    status: Set<JobOfferStatus>
+    status: JobOfferStatus[]
 
     /**
      * The parameters `id` and `category` go in pairs; if one of them is missing, the request returns an error.
      * */
-    constructor(id: number | null, category: Category | null, status: Set<JobOfferStatus>) {
+    constructor(id: number | null, category: Category | null, status: JobOfferStatus[]) {
         this.id = id
         this.category = category
         this.status = status
