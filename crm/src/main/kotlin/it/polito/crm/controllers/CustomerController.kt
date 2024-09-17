@@ -46,7 +46,7 @@ class CustomerController(private val customerServiceImpl: CustomerServiceImpl) {
     }
 
     @PostMapping("/{customerId}/notes")
-    @PreAuthorize("hasAnyRole('ROLE_operator', 'ROLE_manager', 'ROLE_recruiter')")
+    @PreAuthorize("hasAnyRole('ROLE_operator', 'ROLE_manager')")
     @ResponseStatus(HttpStatus.CREATED)
     fun insertNewNote(
         @PathVariable("customerId", required = true) customerId: Long,
