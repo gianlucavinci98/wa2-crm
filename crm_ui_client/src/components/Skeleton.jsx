@@ -154,7 +154,8 @@ function Skeleton() {
                                element={<Messages/>}/>
                         <Route path={"/ui/Messages/:messageId"}
                                element={<MessageDetails currentUser={currentUser}/>}/>
-                        <Route path={"/ui/Analytics"} element={<Analytics/>}/>
+                        <Route path={"/ui/Analytics"}
+                               element={!currentUser?.principal ? <Navigate to={"/ui"}/> : <Analytics/>}/>
                         <Route path={"/ui/file"} element={<FileForm currentUser={currentUser}/>}/>
                     </Routes>
                 </div>
