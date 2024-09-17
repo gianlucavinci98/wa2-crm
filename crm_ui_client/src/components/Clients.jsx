@@ -96,10 +96,11 @@ function ClientsTable({currentUser}) {
         </div>;
     } else return (
         <>
-            <TopBar addNew={editClient} setAddNew={() => {
+            <TopBar currentUser={currentUser} addNew={editClient} setAddNew={() => {
                 setEditingClient(undefined)
                 setEditClient(!editClient)
-            }}></TopBar>
+            }
+            }></TopBar>
             {!editClient ?
                 <div className={"w-full flex-1 p-6 flex flex-col justify-between items-center"}>
                     <table className={"w-full rounded-2xl border-stone-600 shadow-md  overflow-hidden text-stone-800"}>
@@ -141,20 +142,22 @@ function ClientsTable({currentUser}) {
                                 {/*</td> /!* Emails *!/*/}
                                 <td>{Array.from(customer.notes).join(', ')}</td>
                                 <td className={""}>
-                                    <div className={"flex gap-2 items-center"}>
-                                        <Icon name={"file"} className={'w-4 h-4 fill-orange-500'} onClick={() => {
-                                            navigate("/ui/JobOffers", { state: { customer: customer }})
-                                        }}>Create Job Offer
-                                        </Icon>
-                                        <Icon name={"pencil"} className={'w-4 h-4 fill-blue-500'} onClick={() => {
-                                            setEditingClient(customer)
-                                            setEditClient(!editClient)
-                                        }}>Edit
-                                        </Icon>
-                                        <Icon name={"garbage"} className={'w-4 h-4 fill-red-500'} onClick={()=>{
-                                            onDeleteHandler(customer)
-                                        }}>Delete</Icon>
-                                    </div>
+                                    {!(currentUser?.roles.filter(it=>it.includes('recruiter')).length>0 && location.pathname.includes("Customers")) &&
+                                        <div className={"flex gap-2 items-center"}>
+                                            <Icon name={"file"} className={'w-4 h-4 fill-orange-500'} onClick={() => {
+                                                navigate("/ui/JobOffers", { state: { customer: customer }})
+                                            }}>Create Job Offer
+                                            </Icon>
+                                            <Icon name={"pencil"} className={'w-4 h-4 fill-blue-500'} onClick={() => {
+                                                setEditingClient(customer)
+                                                setEditClient(!editClient)
+                                            }}>Edit
+                                            </Icon>
+                                            <Icon name={"garbage"} className={'w-4 h-4 fill-red-500'} onClick={()=>{
+                                                onDeleteHandler(customer)
+                                            }}>Delete</Icon>
+                                        </div>
+                                    }
                                 </td>
                             </tr>
                         ))}

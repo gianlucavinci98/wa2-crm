@@ -37,12 +37,13 @@ function TopBar({switchFilter, openFilter, addNew, setAddNew, filterPresent, cur
                                   onClick={() => switchFilter()}/>
                         }
                         {
-                            (location.pathname.split("/").pop() !== 'ui' && !location.pathname.includes("Messages") && !location.pathname.includes("JobOffers"))
+                            (location.pathname.split("/").pop() !== 'ui' && !location.pathname.includes("Messages") && !location.pathname.includes("JobOffers") && !location.pathname.includes("Analytics"))
                                 ?
                                     !addNew?
+                                        (!(currentUser?.roles.filter(it=>it.includes('recruiter')).length>0 && location.pathname.includes("Customers")) &&
                                         <Icon name='plus'
                                                     className={`w-10 h-10 cursor-pointer hover:fill-blue-500`}
-                                                    onClick={() => setAddNew()}/> :
+                                                    onClick={() => setAddNew()}/> ) :
                                         <Icon name='back'
                                               className={`w-10 h-10 cursor-pointer hover:fill-blue-500`}
                                               onClick={() => setAddNew()}/>
@@ -96,17 +97,21 @@ function SideBar({currentUser}) {
                     onClick={() => navigate("/ui/Messages")}>Messages
                 </button>
             </div>
+
             <div className={"w-full flex flex-col gap-6 flex-1 justify-end"}>
-                <button
-                    className={location.pathname.includes("/ui/Analytics") ? "clicked-side-button" : "side-button"}
-                    onClick={() => navigate("/ui/Analytics")}>Analytics
+                {currentUser.roles.filter(it=>it.includes('manager')).length>0 &&
+                    <button
+                        className={location.pathname.includes("/ui/Analytics") ? "clicked-side-button" : "side-button"}
+                        onClick={() => navigate("/ui/Analytics")}>Analytics
                     </button>
-                    <form method={"post"} action={currentUser.logoutUrl}>
-                        <input type="hidden" name="_csrf" value={currentUser.xsrfToken}/>
-                        <button className={"side-button w-full"} type={"submit"}>Logout
-                        </button>
-                    </form>
-                </div>
+                }
+                <form method={"post"} action={currentUser.logoutUrl}>
+                    <input type="hidden" name="_csrf" value={currentUser.xsrfToken}/>
+                    <button className={"side-button w-full"} type={"submit"}>Logout
+                    </button>
+                </form>
+            </div>
+
 
         </div>
     )
@@ -123,7 +128,7 @@ function Skeleton() {
                 setCurrentUser(User.fromJsonObject(currentUser))
             } catch (error) {
                 setCurrentUser(null)
-                //setCurrentUser({principal:'yess'}) /*da cambiare*/
+                //setCurrentUser({principal: 'yess', roles: ['manager']}) /*da cambiare*/
                 console.error(error)
             }
         }

@@ -130,7 +130,7 @@ function JobOffersTable({currentUser}) {
 
     return (
         <>
-            <TopBar addNew={editJobOffer} setAddNew={()=>{
+            <TopBar currentUser={currentUser} addNew={editJobOffer} setAddNew={()=>{
                 setEditingJobOffer(undefined)
                 setEditJobOffer(!editJobOffer)}
             } filterPresent={!editJobOffer} openFilter={openFilter} switchFilter={()=>setOpenFilter(!openFilter)}></TopBar>

@@ -9,10 +9,11 @@ import {
     XAxis,
     YAxis,
     Legend,
-    ResponsiveContainer, Rectangle
+    Rectangle
 } from 'recharts'
 import {useEffect, useState} from "react"
 import AnalyticsAPI from "../api/analytics/AnalyticsAPI.js"
+import {TopBar} from "./Skeleton.jsx";
 
 
 function TimeElapsedChart() {
@@ -60,7 +61,7 @@ function TimeElapsedChart() {
     }, [averageTimes, load, numberOfElements]);
 
     return (
-        <ResponsiveContainer width={"60%"} height={"80%"}>
+        <div className={"w-full flex justify-around"}>
             <LineChart width={600} height={300} data={data} margin={{top: 5, right: 20, bottom: 5, left: 0}}>
                 <Line type="monotone" dataKey="timeSpent" stroke="#8884d8"/>
                 <CartesianGrid stroke="#ccc" strokeDasharray="5 5"/>
@@ -69,36 +70,46 @@ function TimeElapsedChart() {
                 <Tooltip/>
                 <Legend/>
             </LineChart>
-        </ResponsiveContainer>
+            <div className={"w-1/2 break-words font-normal text-2xl flex flex-col gap-4"}>
+                <h2 className={"text-2xl font-semibold"}>Description</h2>
+                This chart represent the average time (expressed in working days (8hrs)) needed to take a job offer from
+                a status to another.
+            </div>
+        </div>
     )
 }
 
-/*
-function TimeElapsedChart() {
 
-    const data = [
-        {name: "Created", timeSpent: 1},
-        {name: "Selection Phase", timeSpent: 2.2},
-        {name: "Candidate Proposal", timeSpent: 3.4},
-        {name: "Consolidated", timeSpent: 1},
-        {name: "Done", timeSpent: 0.5},
-        {name: "Aborted", timeSpent: 0}
-    ]
+// function TimeElapsedChart() {
+//
+//     const data = [
+//         {name: "Created", timeSpent: 1},
+//         {name: "Selection Phase", timeSpent: 2.2},
+//         {name: "Candidate Proposal", timeSpent: 3.4},
+//         {name: "Consolidated", timeSpent: 1},
+//         {name: "Done", timeSpent: 0.5},
+//         {name: "Aborted", timeSpent: 0}
+//     ]
+//
+//     return (
+//         <div className={"w-full flex justify-around"}>
+//             <LineChart width={600} height={300} data={data} margin={{top: 5, right: 20, bottom: 5, left: 0}}>
+//                 <Line type="monotone" dataKey="timeSpent" stroke="#8884d8"/>
+//                 <CartesianGrid stroke="#ccc" strokeDasharray="5 5"/>
+//                 <XAxis dataKey="name"/>
+//                 <YAxis/>
+//                 <Tooltip/>
+//                 <Legend/>
+//             </LineChart>
+//             <div className={"w-1/2 break-words font-normal text-2xl flex flex-col gap-4"}>
+//                 <h2 className={"text-2xl font-semibold"}>Description</h2>
+//                 This chart represent the average time (expressed in working days (8hrs)) needed to take a job offer from
+//                 a status to another.
+//             </div>
+//         </div>
+//     )
+// }
 
-    return (
-        <ResponsiveContainer width={"60%"} height={"80%"}>
-            <LineChart width={600} height={300} data={data} margin={{top: 5, right: 20, bottom: 5, left: 0}}>
-                <Line type="monotone" dataKey="timeSpent" stroke="#8884d8"/>
-                <CartesianGrid stroke="#ccc" strokeDasharray="5 5"/>
-                <XAxis dataKey="name"/>
-                <YAxis/>
-                <Tooltip/>
-                <Legend/>
-            </LineChart>
-        </ResponsiveContainer>
-    )
-}
-*/
 
 function SkillsCountChart() {
 
@@ -129,29 +140,7 @@ function SkillsCountChart() {
     }, [load]);
 
     return (
-        <ResponsiveContainer width={"60%"} height={"80%"}>
-            <BarChart width={600} height={300} data={data} margin={{top: 5, right: 20, bottom: 5, left: 0}}>
-                <CartesianGrid stroke="#ccc" strokeDasharray="5 5"/>
-                <Bar dataKey="jobOffersNum" fill="#8884d8" activeBar={<Rectangle fill="pink" stroke="blue" />}/>
-                <XAxis dataKey="name"/>
-                <YAxis/>
-                <Tooltip/>
-                <Legend/>
-            </BarChart>
-        </ResponsiveContainer>
-    )
-}
-
-/*
-function SkillsCountChart() {
-
-    const data = [{name: "Pizzaiolo", jobOffersNum: 3}, {name: "Venditore", jobOffersNum: 4}, {
-        name: "Commesso",
-        jobOffersNum: 2
-    }]
-
-    return (
-        <ResponsiveContainer width={"60%"} height={"80%"}>
+        <div className={"w-full flex justify-around"}>
             <BarChart width={600} height={300} data={data} margin={{top: 5, right: 20, bottom: 5, left: 0}}>
                 <CartesianGrid stroke="#ccc" strokeDasharray="5 5"/>
                 <Bar dataKey="jobOffersNum" fill="#8884d8" activeBar={<Rectangle fill="pink" stroke="blue"/>}/>
@@ -160,16 +149,49 @@ function SkillsCountChart() {
                 <Tooltip/>
                 <Legend/>
             </BarChart>
-        </ResponsiveContainer>
+            <div className={"w-1/2 break-words font-normal text-2xl flex flex-col gap-4"}>
+                <h2 className={"text-2xl font-semibold"}>Description</h2>
+                This chart represent the number of job offer per professional category
+            </div>
+        </div>
     )
 }
-*/
+
+
+// function SkillsCountChart() {
+//
+//     const data = [{name: "Pizzaiolo", jobOffersNum: 3}, {name: "Venditore", jobOffersNum: 4}, {
+//         name: "Commesso",
+//         jobOffersNum: 2
+//     }]
+//
+//     return (
+//         <div className={"w-full flex justify-around"}>
+//             <BarChart width={600} height={300} data={data} margin={{top: 5, right: 20, bottom: 5, left: 0}}>
+//                 <CartesianGrid stroke="#ccc" strokeDasharray="5 5"/>
+//                 <Bar dataKey="jobOffersNum" fill="#8884d8" activeBar={<Rectangle fill="pink" stroke="blue"/>}/>
+//                 <XAxis dataKey="name"/>
+//                 <YAxis/>
+//                 <Tooltip/>
+//                 <Legend/>
+//             </BarChart>
+//             <div className={"w-1/2 break-words font-normal text-2xl flex flex-col gap-4"}>
+//                 <h2 className={"text-2xl font-semibold"}>Description</h2>
+//                 This chart represent the number of job offer per professional category
+//             </div>
+//         </div>
+//     )
+// }
+
 
 function Analytics() {
     return (
-        <div className="flex flex-col flex-1 justify-around">
-            <TimeElapsedChart/>
-            <SkillsCountChart/>
+        <div className="flex flex-col flex-1 w-full items-center">
+            <TopBar/>
+            <div className={" flex w-full flex-col flex-1 justify-around items-center"}>
+                <TimeElapsedChart/>
+                <SkillsCountChart/>
+            </div>
         </div>)
 }
 

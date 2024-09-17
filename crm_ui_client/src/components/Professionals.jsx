@@ -170,7 +170,7 @@ function ProfessionalsTable({currentUser}) {
             <TopBar addNew={editProfessional} setAddNew={()=>{
                 setEditingProfessional(undefined)
                 setEditProfessional(!editProfessional)
-            }} filterPresent={!editProfessional} openFilter={openFilter} switchFilter={()=>setOpenFilter(!openFilter)}></TopBar>
+            }} filterPresent={!editProfessional} openFilter={openFilter} switchFilter={()=>setOpenFilter(!openFilter)} currentUser={currentUser}></TopBar>
             {!editProfessional ?
                 <div className={"w-full flex-1 p-6 flex flex-col justify-between items-center"}>
                     {openFilter ? <SearchBar onFilterChange={handleFilterChange}/> : ""}
