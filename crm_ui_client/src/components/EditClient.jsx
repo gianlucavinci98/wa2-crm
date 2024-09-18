@@ -1,7 +1,4 @@
 import {useEffect, useState} from "react";
-import PropTypes from "prop-types";
-import {Customer} from "../api/crm/dto/Customer.ts";
-/*import CustomerAPI from "../api/crm/CustomerAPI";*/
 import ContactAPI from "../api/crm/ContactAPI.js";
 import {Category, Contact} from "../api/crm/dto/Contact.ts";
 import Icon from "./Icon.jsx";
@@ -13,7 +10,6 @@ function EditClient({currentUser}) {
     const {contactId} = useParams();
 
     const [contactDetails, setContactDetails] = useState(null);
-    /*const [newNote, setNewNote] = useState("");*/
     const [newContact, setNewContact] = useState(new ContactDetails(null, "", "", "", Category.Unknown, [], [], [], null, null));
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -207,7 +203,6 @@ function EditClient({currentUser}) {
                                 </div>
                             </div>
                         </div>
-                        {/* Sezione Email */}
                         <div className={"col-field"}>
                             <strong>Emails</strong>
                             <div className={"flex flex-col gap-2"}>
@@ -251,7 +246,6 @@ function EditClient({currentUser}) {
                                 </div>
                             </div>
                         </div>
-                        {/* Sezione Telefono */}
                         <div className={"col-field"}>
                             <strong>Telephones</strong>
                             <div className={"flex flex-col gap-2"}>
@@ -305,29 +299,8 @@ function EditClient({currentUser}) {
                     </button>
                 </div>
             </div>
-            {/*{
-                contactDetails && (
-                    <>
-                        <div className={"h-[90%] w-[1px] bg-stone-800"}></div>
-                        <div className={"flex h-full flex-col items-center justify-around"}>
-                            <h3 className={"text-2xl font-semibold"}>Add a new note:</h3>
-                            <textarea
-                                value={newNote}
-                                onChange={(e) => setNewNote(e.target.value)}
-                                placeholder="Enter a new note"
-                            />
-                            <button className={"page-button"} onClick={handleAddNote}>Add Note</button>
-                        </div>
-                    </>
-
-                )
-            }*/}
         </div>
     );
 }
-
-EditClient.propTypes = {
-    customer: PropTypes.instanceOf(Customer)
-};
 
 export default EditClient;

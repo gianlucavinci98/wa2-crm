@@ -14,12 +14,36 @@ export class ContactFilter {
                 address: string | null,
                 emailAddress: string | null,
                 telephoneNumber: string | null) {
-        this.name = name
-        this.surname = surname
-        this.ssn = ssn
-        this.address = address
-        this.emailAddress = emailAddress
-        this.telephoneNumber = telephoneNumber
+        if (name?.trim() === "") {
+            this.name = null
+        } else {
+            this.name = name
+        }
+        if (surname?.trim() === "") {
+            this.surname = null
+        } else {
+            this.surname = surname
+        }
+        if (ssn?.trim() === "") {
+            this.ssn = null
+        } else {
+            this.ssn = ssn
+        }
+        if (address?.trim() === "") {
+            this.address = null
+        } else {
+            this.address = address
+        }
+        if (emailAddress?.trim() === "") {
+            this.emailAddress = null
+        } else {
+            this.emailAddress = emailAddress
+        }
+        if (telephoneNumber?.trim() === "") {
+            this.telephoneNumber = null
+        } else {
+            this.telephoneNumber = telephoneNumber
+        }
 
         switch (category) {
             case 0:

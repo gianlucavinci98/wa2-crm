@@ -12,7 +12,7 @@ interface ProfessionalRawData {
     dailyRate: number
     location: string
     contact: ContactRawData | null
-    candidates: ApplicationRawData[]
+    jobApplications: ApplicationRawData[]
 }
 
 export class Professional implements ProfessionalRawData {
@@ -22,7 +22,7 @@ export class Professional implements ProfessionalRawData {
     dailyRate: number
     location: string
     contact: ContactRawData | null
-    candidates: Application[]
+    jobApplications: Application[]
 
     constructor(
         professionalId: number | null,
@@ -30,7 +30,7 @@ export class Professional implements ProfessionalRawData {
         employmentState: EmploymentState | null,
         dailyRate: number, location: string,
         contact: ContactRawData | null,
-        candidates: Application[]
+        jobApplications: Application[]
     ) {
         this.professionalId = professionalId
         this.skills = skills
@@ -38,12 +38,12 @@ export class Professional implements ProfessionalRawData {
         this.dailyRate = dailyRate
         this.location = location
         this.contact = contact
-        this.candidates = candidates
+        this.jobApplications = jobApplications
     }
 
     static fromJsonObject(obj: ProfessionalRawData): Professional | null {
         try {
-            const tmp: Array<Application> = Array.from(obj.candidates.values()).map((e: ApplicationRawData) => Application.fromJsonObject(e)!)
+            const tmp: Array<Application> = obj.jobApplications.map((e: ApplicationRawData) => Application.fromJsonObject(e)!)
             const candidates: Application[] | null = []
 
             tmp.forEach((e: Application) => {
@@ -51,6 +51,7 @@ export class Professional implements ProfessionalRawData {
             })
 
             if (obj.contact ?? false) {
+                console.log(obj.contact)
                 return new Professional(
                     obj.professionalId,
                     obj.skills,

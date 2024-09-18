@@ -8,93 +8,158 @@ import {ContactFilter} from "../api/crm/filter/ContactFilter.ts";
 
 function Filter({setLoad, setFilter}) {
     const [localFilter, setLocalFilter] = useState(new ContactFilter(null, null, null, null, null, null, null));
-    const [check, setCheck] = useState(-1)
+    const [check, setCheck] = useState(-1);
 
-    const hadleSubmit = (event) => {
-        event.preventDefault()
+    const handleSubmit = (event) => {
+        event.preventDefault();
 
-        setFilter(new ContactFilter(localFilter.name, localFilter.surname, localFilter.ssn, check, localFilter.address, localFilter.emailAddress, localFilter.telephoneNumber))
-        setLoad(false)
-    }
+        setFilter(new ContactFilter(localFilter.name, localFilter.surname, localFilter.ssn, check, localFilter.address, localFilter.emailAddress, localFilter.telephoneNumber));
+        setLoad(false);
+    };
 
     const handleFilterChange = (event) => {
         event.preventDefault();
 
-        let {name, value} = event;
+        let {name, value} = event.target;
 
         if (name !== "category") {
             if (value === "") {
-                value = null
+                value = null;
             }
 
             setLocalFilter((old) => ({
                 ...old,
-                [name]: value
-            }))
+                [name]: value,
+            }));
         }
-    }
+    };
 
     return (
-        <form className="w-full flex flex-row justify-around items-center" onSubmit={hadleSubmit}>
-            <div className="flex-1">
-                <label>Name: </label>
-                <input type="text" onChange={handleFilterChange} name="name"
-                       value={localFilter.name !== null ? "" : localFilter.name}/>
+        <form className="w-full flex flex-col space-y-4 p-4" onSubmit={handleSubmit}>
+            <div className="flex flex-wrap justify-between space-x-4">
+                <div className="flex-1">
+                    <label>Name: </label>
+                    <input
+                        type="text"
+                        onChange={handleFilterChange}
+                        name="name"
+                        value={localFilter.name === null ? "" : localFilter.name}
+                        className="border p-1 rounded"
+                    />
+                </div>
+                <div className="flex-1">
+                    <label>Surname: </label>
+                    <input
+                        type="text"
+                        onChange={handleFilterChange}
+                        name="surname"
+                        value={localFilter.surname === null ? "" : localFilter.surname}
+                        className="border p-1 rounded"
+                    />
+                </div>
+                <div className="flex-1">
+                    <label>SSN: </label>
+                    <input
+                        type="text"
+                        onChange={handleFilterChange}
+                        name="ssn"
+                        value={localFilter.ssn === null ? "" : localFilter.ssn}
+                        className="border p-1 rounded"
+                    />
+                </div>
+                <div className="flex-1">
+                    <label>Address: </label>
+                    <input
+                        type="text"
+                        onChange={handleFilterChange}
+                        name="address"
+                        value={localFilter.address === null ? "" : localFilter.address}
+                        className="border p-1 rounded"
+                    />
+                </div>
+                <div className="flex-1">
+                    <label>Email: </label>
+                    <input
+                        type="text"
+                        onChange={handleFilterChange}
+                        name="emailAddress"
+                        value={localFilter.emailAddress === null ? "" : localFilter.emailAddress}
+                        className="border p-1 rounded"
+                    />
+                </div>
+                <div className="flex-1">
+                    <label>Telephone: </label>
+                    <input
+                        type="text"
+                        onChange={handleFilterChange}
+                        name="telephoneNumber"
+                        value={localFilter.telephoneNumber === null ? "" : localFilter.telephoneNumber}
+                        className="border p-1 rounded"
+                    />
+                </div>
             </div>
-            <div className="flex-1">
-                <label>Surname: </label>
-                <input type="text" onChange={handleFilterChange} name="surname"
-                       value={localFilter.surname !== null ? "" : localFilter.surname}/>
-            </div>
-            <div className="flex-1">
-                <label>SSN: </label>
-                <input type="text" onChange={handleFilterChange} name="ssn"
-                       value={localFilter.ssn !== null ? "" : localFilter.ssn}/>
-            </div>
-            <div className="flex-1">
-                <label>Address: </label>
-                <input type="text" onChange={handleFilterChange} name="address"
-                       value={localFilter.address !== null ? "" : localFilter.address}/>
-            </div>
-            <div className="flex-1">
-                <label>Email: </label>
-                <input type="text" onChange={handleFilterChange} name="emailAddress"
-                       value={localFilter.emailAddress !== null ? "" : localFilter.emailAddress}/>
-            </div>
-            <div className="flex-1">
-                <label>Telephone: </label>
-                <input type="text" onChange={handleFilterChange} name="telephoneNumber"
-                       value={localFilter.telephoneNumber !== null ? "" : localFilter.telephoneNumber}/>
-            </div>
-            <div className="flex-1">
-                <label>Category: </label>
-                <input type="radio" name={"category"}
-                       checked={check === 0}
-                       onChange={() => setCheck(0)}/>
-                <input type="radio" name={"category"}
-                       checked={check === 1}
-                       onChange={() => setCheck(1)}/>
-                <input type="radio" name={"category"}
-                       checked={check === 2}
-                       onChange={() => setCheck(2)}/>
-                <input type="radio" name={"category"}
-                       checked={check === 3}
-                       onChange={() => setCheck(3)}/>
-            </div>
-            <div className="w-full flex flex-1 flex-col items-center justify-around">
-                <button type="submit" className="border p-2 rounded-lg">Search</button>
-                <button type="reset" className="border p-2 rounded-lg"
-                        onClick={(event) => {
-                            event.preventDefault()
 
-                            setCheck(-1)
-                            setLocalFilter(new ContactFilter(null, null, null, null, null, null, null))
-                            setFilter(new ContactFilter(null, null, null, null, null, null, null))
-                        }}>Reset
+            <div className="w-full flex flex-col">
+                <label>Category: </label>
+                <div className="w-full flex flex-row items-center space-x-4">
+                    <div className="flex-1">
+                        <label>Customer</label>
+                        <input
+                            type="radio"
+                            name="category"
+                            checked={check === 0}
+                            onChange={() => setCheck(0)}
+                        />
+                    </div>
+                    <div className="flex-1">
+                        <label>Professional</label>
+                        <input
+                            type="radio"
+                            name="category"
+                            checked={check === 1}
+                            onChange={() => setCheck(1)}
+                        />
+                    </div>
+                    <div className="flex-1">
+                        <label>Unknown</label>
+                        <input
+                            type="radio"
+                            name="category"
+                            checked={check === 2}
+                            onChange={() => setCheck(2)}
+                        />
+                    </div>
+                    <div className="flex-1">
+                        <label>CustomerProfessional</label>
+                        <input
+                            type="radio"
+                            name="category"
+                            checked={check === 3}
+                            onChange={() => setCheck(3)}
+                        />
+                    </div>
+                </div>
+            </div>
+
+            <div className="flex space-x-4 justify-center">
+                <button type="submit" className="border p-2 rounded-lg">Search</button>
+                <button
+                    type="reset"
+                    className="border p-2 rounded-lg"
+                    onClick={(event) => {
+                        event.preventDefault();
+
+                        setCheck(-1);
+                        setLocalFilter(new ContactFilter(null, null, null, null, null, null, null));
+                        setFilter(new ContactFilter(null, null, null, null, null, null, null));
+                        setLoad(false);
+                    }}
+                >
+                    Reset
                 </button>
             </div>
         </form>
-    )
+    );
 }
 
 function ContactRow({currentUser, contact}) {

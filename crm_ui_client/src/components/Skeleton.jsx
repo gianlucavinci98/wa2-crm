@@ -16,6 +16,7 @@ import FileForm from "./FileForm.jsx";
 import Contacts from "./Contacts.jsx";
 import ContactDetails from "./ContactDetails.jsx";
 import EditClient from "./EditClient.jsx";
+import EditProfessional from "./EditProfessional.jsx";
 
 
 // eslint-disable-next-line react/prop-types
@@ -40,23 +41,24 @@ function TopBar({switchFilter, openFilter, addNew, setAddNew, filterPresent, cur
                                   onClick={() => switchFilter()}/>
                         }
                         {
-                            (location.pathname.split("/").pop() !== 'ui' && !location.pathname.includes("Messages") && !location.pathname.includes("JobOffers") && !location.pathname.includes("Analytics"))
+                            (
+                                location.pathname.split("/").pop() !== 'ui' && !location.pathname.includes("Messages") && !location.pathname.includes("Professionals") && !location.pathname.includes("Customers") && !location.pathname.includes("JobOffers") && !location.pathname.includes("Analytics"))
                                 ?
-                                    !addNew?
-                                        (!(currentUser?.roles.filter(it=>it.includes('recruiter')).length>0 && location.pathname.includes("Customers")) &&
+                                !addNew ?
+                                    (!(currentUser?.roles.filter(it => it.includes('recruiter')).length > 0 && location.pathname.includes("Customers")) &&
                                         <Icon name='plus'
-                                                    className={`w-10 h-10 cursor-pointer hover:fill-blue-500`}
-                                                    onClick={() => setAddNew()}/> ) :
-                                        <Icon name='back'
                                               className={`w-10 h-10 cursor-pointer hover:fill-blue-500`}
-                                              onClick={() => setAddNew()}/>
+                                              onClick={() => setAddNew()}/>) :
+                                    <Icon name='back'
+                                          className={`w-10 h-10 cursor-pointer hover:fill-blue-500`}
+                                          onClick={() => setAddNew()}/>
 
                                 :
                                 <>
                                     {
                                         (addNew && location.pathname.includes("JobOffers")) && <Icon name='back'
-                                                        className={`w-10 h-10 cursor-pointer hover:fill-blue-500`}
-                                                        onClick={() => setAddNew()}/>
+                                                                                                     className={`w-10 h-10 cursor-pointer hover:fill-blue-500`}
+                                                                                                     onClick={() => setAddNew()}/>
                                     }
                                     {
                                         (currentUser === null || currentUser?.principal === null) &&
@@ -150,7 +152,8 @@ function Skeleton() {
                     currentUser && currentUser.principal &&
                     <SideBar currentUser={currentUser} setCurrentUser={setCurrentUser}></SideBar>
                 }
-                <div className={`flex flex-col items-center ${currentUser && currentUser.principal ? "w-4/5" : "w-full"}` }>
+                <div
+                    className={`flex flex-col items-center ${currentUser && currentUser.principal ? "w-4/5" : "w-full"}`}>
                     <Routes>
                         <Route path={"/ui"}
                                element={currentUser?.principal ? <Navigate to={"/ui/Customers"}/> :
@@ -168,18 +171,26 @@ function Skeleton() {
                                element={!currentUser?.principal ? <Navigate to={"/ui"}/> :
                                    <EditClient currentUser={currentUser}/>}/>
                         <Route path={"/ui/Customers"}
-                               element={!currentUser?.principal ? <Navigate to={"/ui"}/> : <ClientsTable currentUser={currentUser}/>}/>
+                               element={!currentUser?.principal ? <Navigate to={"/ui"}/> :
+                                   <ClientsTable currentUser={currentUser}/>}/>
                         <Route path={"/ui/Professionals"}
-                               element={!currentUser?.principal ? <Navigate to={"/ui"}/> : <ProfessionalsTable currentUser={currentUser}/>}/>
+                               element={!currentUser?.principal ? <Navigate to={"/ui"}/> :
+                                   <ProfessionalsTable currentUser={currentUser}/>}/>
+                        <Route path={"/ui/Professionals/:contactId/add"}
+                               element={!currentUser?.principal ? <Navigate to={"/ui"}/> :
+                                   <EditProfessional currentUser={currentUser}/>}/>
                         <Route path={"/ui/JobOffers"}
-                               element={!currentUser?.principal ? <Navigate to={"/ui"}/> : <JobOffersTable currentUser={currentUser}/>}/>
+                               element={!currentUser?.principal ? <Navigate to={"/ui"}/> :
+                                   <JobOffersTable currentUser={currentUser}/>}/>
                         <Route path={"/ui/JobOffers/add"}
-                               element={!currentUser?.principal ? <Navigate to={"/ui"}/> : <JobOfferForm currentUser={currentUser}/>}/>
+                               element={!currentUser?.principal ? <Navigate to={"/ui"}/> :
+                                   <JobOfferForm currentUser={currentUser}/>}/>
                         <Route path={"/ui/Messages"}
                                element={!currentUser?.principal ? <Navigate to={"/ui"}/> :
                                    <Messages currentUser={currentUser}/>}/>
                         <Route path={"/ui/Messages/:messageId"}
-                               element={!currentUser?.principal ? <Navigate to={"/ui"}/> : <MessageDetails currentUser={currentUser}/>}/>
+                               element={!currentUser?.principal ? <Navigate to={"/ui"}/> :
+                                   <MessageDetails currentUser={currentUser}/>}/>
                         <Route path={"/ui/Analytics"}
                                element={!currentUser?.principal ? <Navigate to={"/ui"}/> : <Analytics/>}/>
                         <Route path={"/ui/file"} element={<FileForm currentUser={currentUser}/>}/>

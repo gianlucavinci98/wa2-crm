@@ -5,28 +5,29 @@ import {Professional} from "./dto/Professional.ts";
 const URL_PROFESSIONALS = 'http://localhost:8082/crm/api/professionals'
 
 
-async function GetProfessionals(filter, pagination, xsrfToken) {
+async function GetProfessionals(filter, pagination) {
     const response = await fetch(
         buildUrl(URL_PROFESSIONALS, null, pagination), {
             method: 'GET',
             credentials: 'include',
-            headers: {'Content-Type': 'application/json', 'X-XSRF-TOKEN': xsrfToken},
+            headers: {'Content-Type': 'application/json'},
         })
     const obj = await response.json()
 
     if (response.ok) {
+        console.log(obj)
         return obj.map((e) => Professional.fromJsonObject(e))
     } else {
         throw obj
     }
 }
 
-async function GetProfessionalById(professionalId, xsrfToken) {
+async function GetProfessionalById(professionalId) {
     const response = await fetch(
         buildUrl(`${URL_PROFESSIONALS}/${professionalId}`, null, null), {
             method: 'GET',
             credentials: 'include',
-            headers: {'Content-Type': 'application/json', 'X-XSRF-TOKEN': xsrfToken},
+            headers: {'Content-Type': 'application/json'},
         })
     const obj = await response.json()
 
@@ -43,7 +44,7 @@ async function InsertNewProfessional(contactId, professional, xsrfToken) {
             method: 'POST',
             credentials: 'include',
             headers: {'Content-Type': 'application/json', 'X-XSRF-TOKEN': xsrfToken},
-            body: JSON.stringify({professional})
+            body: JSON.stringify(professional)
         })
 
     const obj = await response.json()
@@ -61,7 +62,7 @@ async function UpdateProfessional(professional, xsrfToken) {
             method: 'PUT',
             credentials: 'include',
             headers: {'Content-Type': 'application/json', 'X-XSRF-TOKEN': xsrfToken},
-            body: JSON.stringify({professional})
+            body: JSON.stringify(professional)
         })
 
     const obj = await response.json()
@@ -81,10 +82,8 @@ async function DeleteProfessional(professionalId, xsrfToken) {
             headers: {'Content-Type': 'application/json', 'X-XSRF-TOKEN': xsrfToken},
         })
 
-    const obj = await response.json()
-
     if (!response.ok) {
-        throw obj
+        throw "Error"
     }
 }
 

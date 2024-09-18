@@ -83,7 +83,8 @@ function CustomerDetails({currentUser, customerId}) {
                                 <div className="flex flex-col items-start p-3 gap-3">
                                     {
                                         customer.notes.map((note, i) => (
-                                            <div key={i} className="text-clip break-all overflow-wrap max-w-full">{`- ${note}`}</div>
+                                            <div key={i}
+                                                 className="text-clip break-all overflow-wrap max-w-full">{`- ${note}`}</div>
                                         ))
                                     }
                                 </div>
@@ -222,7 +223,9 @@ function ContactDetails({currentUser}) {
                             {
                                 contactDetails.professionalId === null
                                     ?
-                                    <div></div>
+                                    <button className="border p-2 rounded-lg"
+                                            onClick={() => navigate(`/ui/Professionals/${contactId}/add`)}>Add
+                                        professional profile</button>
                                     :
                                     <div className="w-full flex flex-col gap-2">
                                         <div className="w-full flex flex-row">

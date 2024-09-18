@@ -124,26 +124,11 @@ function ClientsTable({currentUser}) {
                                         </div>
                                     )}
                                 </td>
-                                {/*<td className={"flex flex-col items-center justify-center gap-1"}>*/}
-                                {/*    {customer.contact.addresses.map((address) => (*/}
-                                {/*        <div key={address.id}>addess.address</div>*/}
-                                {/*    ))}*/}
-                                {/*</td> /!* Addresses *!/*/}
-                                {/*<td className={"flex flex-col items-center justify-center gap-1"}>*/}
-                                {/*    {customer.contact.telephones.map((telephone) => (*/}
-                                {/*        <div key={telephone.id}>telephone.telephone</div>*/}
-                                {/*    ))}*/}
-                                {/*</td> /!* Telephones *!/*/}
-                                {/*<td className={"flex flex-col items-center justify-center gap-1"}>*/}
-                                {/*    {customer.contact.emails.map((email) => (*/}
-                                {/*        <div key={email.id}>email.email</div>*/}
-                                {/*    ))}*/}
-                                {/*</td> /!* Emails *!/*/}
-                                <td className="truncate">
+                                {/*<td className="truncate">
                                     {
                                         customer.notes.join(', ')
                                     }
-                                </td>
+                                </td>*/}
                                 <td className={""}>
                                     {!(currentUser?.roles.filter(it => it.includes('recruiter')).length > 0 && location.pathname.includes("Customers")) &&
                                         <div className={"flex gap-2 items-center"}>
