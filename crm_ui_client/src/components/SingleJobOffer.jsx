@@ -19,7 +19,7 @@ function SingleJobOffer({currentUser, jobOfferId}) {
 
     return (
         <>
-            <TopBar></TopBar>
+            <TopBar currentUser={currentUser}></TopBar>
             <div>
                 <h2>Description:</h2>
                 <p>data.description</p>

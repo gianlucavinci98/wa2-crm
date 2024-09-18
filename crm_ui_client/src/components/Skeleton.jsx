@@ -18,6 +18,7 @@ import ContactDetails from "./ContactDetails.jsx";
 import EditClient from "./EditClient.jsx";
 import EditProfessional from "./EditProfessional.jsx";
 import SingleJobOffer from "./SingleJobOffer.jsx";
+import Documents from "./Documents.jsx";
 
 
 // eslint-disable-next-line react/prop-types
@@ -106,6 +107,10 @@ function SideBar({currentUser}) {
                     className={location.pathname.includes("/ui/Messages") ? "clicked-side-button" : "side-button"}
                     onClick={() => navigate("/ui/Messages")}>Messages
                 </button>
+                <button
+                    className={location.pathname.includes("/ui/Documents") ? "clicked-side-button" : "side-button"}
+                    onClick={() => navigate("/ui/Documents")}>Documents
+                </button>
             </div>
 
             <div className={"w-full flex flex-col gap-6 flex-1 justify-end"}>
@@ -174,6 +179,9 @@ function Skeleton() {
                         <Route path={"/ui/Customers"}
                                element={!currentUser?.principal ? <Navigate to={"/ui"}/> :
                                    <ClientsTable currentUser={currentUser}/>}/>
+                        <Route path={"/ui/Documents"}
+                               element={!currentUser?.principal ? <Navigate to={"/ui"}/> :
+                                   <Documents currentUser={currentUser}/>}/>
                         <Route path={"/ui/Professionals"}
                                element={!currentUser?.principal ? <Navigate to={"/ui"}/> :
                                    <ProfessionalsTable currentUser={currentUser}/>}/>
