@@ -137,7 +137,7 @@ async function DeleteJobOffer(jobOfferId, xsrfToken) {
 
 async function InsertNewApplication(jobOfferId, professionalId, xsrfToken) {
     const response = await fetch(
-        buildUrl(`${URL_JOB_OFFERS}/${jobOfferId}/${professionalId}`, null, null), {
+        buildUrl(`${URL_JOB_OFFERS}/${jobOfferId}/applications/${professionalId}`, null, null), {
             method: 'POST',
             credentials: 'include',
             headers: {'Content-Type': 'application/json', 'X-XSRF-TOKEN': xsrfToken},
