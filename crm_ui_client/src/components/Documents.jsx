@@ -40,24 +40,32 @@ function DocumentSearchBar({onFilterChange, filter}) {
                         Status Selection
                         <Icon name={'arrowDown'} className={"w-2 h-2"}></Icon>
                     </button>
-                    {openSelectedStatuses ?
-                        <div className="absolute z-10 w-full bg-white border border-gray-300 rounded-md shadow-lg mt-1">
-                            <div className="p-2 w-fit">
-                                {['Curriculum', 'Contact', 'Attachment', 'Unknown',].map(status => (
-                                    <div key={status}>
-                                        <label className="flex items-center gap-2">
-                                            <input
-                                                type="checkbox"
-                                                value={status}
-                                                checked={selectedStatuses.includes(status)}
-                                                onChange={() => handleStatusChange(status)}
-                                            />
-                                            <span>{status}</span>
-                                        </label>
-                                    </div>
-                                ))}
+                    {
+                        openSelectedStatuses
+                            ?
+                            <div
+                                className="absolute z-10 w-full bg-white border border-gray-300 rounded-md shadow-lg mt-1">
+                                <div className="p-2 w-fit">
+                                    {
+                                        ['Curriculum', 'Contact', 'Attachment', 'Unknown',].map(status => (
+                                            <div key={status}>
+                                                <label className="flex items-center gap-2">
+                                                    <input
+                                                        type="checkbox"
+                                                        value={status}
+                                                        checked={selectedStatuses.includes(status)}
+                                                        onChange={() => handleStatusChange(status)}
+                                                    />
+                                                    <span>{status}</span>
+                                                </label>
+                                            </div>
+                                        ))
+                                    }
+                                </div>
                             </div>
-                        </div> : ""}
+                            :
+                            <></>
+                    }
                 </div>
             </div>
             <button className="page-button" onClick={handleSearch}>Search</button>
@@ -68,7 +76,6 @@ function DocumentSearchBar({onFilterChange, filter}) {
 
 // eslint-disable-next-line react/prop-types
 function Documents({currentUser}) {
-
     const [data, setData] = useState(null)
     const [load, setLoad] = useState(false)
     const [page, setPage] = useState(1);
@@ -131,53 +138,65 @@ function Documents({currentUser}) {
     }
 
     return (<>
-        <TopBar currentUser={currentUser}
-                openFilter={openFilter}
-                switchFilter={() => setOpenFilter(!openFilter)}></TopBar>
+            <TopBar currentUser={currentUser}
+                    openFilter={openFilter}
+                    switchFilter={() => setOpenFilter(!openFilter)}></TopBar>
 
-        <div className={"w-full flex-1 p-6 flex flex-col justify-between items-center"}>
-            {openFilter ? <DocumentSearchBar onFilterChange={handleFilterChange} filter={filter}/> : ""}
-            <table className={"w-full rounded-2xl border-stone-600 shadow-md  overflow-hidden text-stone-800"}>
-                <thead className={"w-full h-12 bg-stone-200"}>
-                <tr>
-                    <th>Name</th>
-                    <th>Size</th>
-                    <th>Timestamp</th>
-                    <th>Category</th>
-                </tr>
-                </thead>
-                <tbody>
-                {data.map((document) => (
-                    <tr key={document.metadataId} className={'hover:bg-stone-100 cursor-pointer'}>
-                        <td>{document.name}</td>
-                        <td>{document.size}</td>
-                        <td>{document.timestamp}</td>
-                        <td>{document.category}</td>
-                        <td>
-                            <div className={"flex gap-2 items-center"}>
-                                <Icon name={"download"} className={'w-4 h-4 fill-blue-500'} onClick={() => {
-                                    DocumentStoreAPI.GetDocumentDataById(document.metadataId).then().catch(err => console.log(err))
-                                }}>Download
-                                </Icon>
-                            </div>
-                        </td>
+            <div className={"w-full flex-1 p-6 flex flex-col justify-between items-center"}>
+                {
+                    openFilter
+                        ?
+                        <DocumentSearchBar onFilterChange={handleFilterChange} filter={filter}/>
+                        :
+                        <></>
+                }
+                <table className={"w-full rounded-2xl border-stone-600 shadow-md  overflow-hidden text-stone-800"}>
+                    <thead className={"w-full h-12 bg-stone-200"}>
+                    <tr>
+                        <th>Name</th>
+                        <th>Size</th>
+                        <th>Timestamp</th>
+                        <th>Category</th>
                     </tr>
-                ))}
-                </tbody>
-            </table>
-            <div className="w-full h-[10%] flex items-center justify-between">
-                <button className={"page-button"} onClick={() => setPage(page - 1)} disabled={page === 1}>
-                    <Icon name='arrowLeft' className="w-4 h-4"/>
-                    Previous
-                </button>
-                <span className={"text-xl text-stone-600"}>Page {page}</span>
-                <button className={"page-button"} onClick={() => setPage(page + 1)}>
-                    Next
-                    <Icon name='arrowRight' className="w-4 h-4"/>
-                </button>
+                    </thead>
+                    <tbody>
+                    {
+                        !load
+                            ?
+                            <></>
+                            :
+                            data.map((document) => (
+                                <tr key={document.metadataId} className={'hover:bg-stone-100 cursor-pointer'}>
+                                    <td>{document.name}</td>
+                                    <td>{document.size}</td>
+                                    <td>{document.timestamp}</td>
+                                    <td>{document.category}</td>
+                                    <td>
+                                        <div className={"flex gap-2 items-center"}>
+                                            <Icon name={"download"} className={'w-4 h-4 fill-blue-500'} onClick={() => {
+                                                DocumentStoreAPI.GetDocumentDataById(document.metadataId).then().catch(err => console.log(err))
+                                            }}>Download
+                                            </Icon>
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))
+                    }
+                    </tbody>
+                </table>
+                <div className="w-full h-[10%] flex items-center justify-between">
+                    <button className={"page-button"} onClick={() => setPage(page - 1)} disabled={page === 1}>
+                        <Icon name='arrowLeft' className="w-4 h-4"/>
+                        Previous
+                    </button>
+                    <span className={"text-xl text-stone-600"}>Page {page}</span>
+                    <button className={"page-button"} onClick={() => setPage(page + 1)}>
+                        Next
+                        <Icon name='arrowRight' className="w-4 h-4"/>
+                    </button>
+                </div>
             </div>
-        </div>
-    </>
+        </>
     )
 }
 

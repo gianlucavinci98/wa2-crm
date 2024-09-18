@@ -14,7 +14,6 @@ async function GetJobOffers(filter, pagination) {
         })
     const obj = await response.json()
 
-    console.log(obj)
     if (response.ok) {
         return obj.map((e) => JobOffer.fromJsonObject(e))
     } else {
