@@ -328,7 +328,7 @@ function JobOfferForm({currentUser}) {
                     </svg>
                 </div>
                 :
-                <div className={"flex flex-col justify-between"}>
+                <div className={"h-full w-full flex flex-col justify-between p-4"}>
                     <div className="w-full flex flex-row justify-center items-start">
                         <div className="flex flex-row justify-start">
                             <button onClick={() => navigate("/ui/JobOffers")}>
