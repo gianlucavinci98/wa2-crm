@@ -338,23 +338,7 @@ function JobOfferForm({currentUser}) {
                         <div className="flex flex-1 flex-row justify-center">
                             <h1 className="font-bold text-2xl">Job Offer Details</h1>
                         </div>
-                        <div className="flex flex-row p-2">
-                            <button className="bg-yellow-300 border rounded-lg p-2"
-                                    onClick={() => navigate(`/ui/JobOffers/${jobOfferId}/edit`)}>
-                                <TbUserEdit size={20}/>
-                            </button>
-                        </div>
-                        <div className="flex flex-row p-2">
-                            <button className="bg-red-300 border rounded-lg p-2" onClick={() => {
-                                JobOfferAPI.DeleteJobOffer(jobOfferId, currentUser.xsrfToken).then(() => {
-                                    alert("Correctly removed jobOffer")
-                                    navigate("/ui/JobOffers")
-                                }).catch((err) => {
-                                    console.log(err);
-                                    alert("Error during jobOffer cancellation.")
-                                })
-                            }}><LuTrash2 size={20}/></button>
-                        </div>
+                        <div></div>
                     </div>
                     <div className={"flex flex-1 w-full justify-around items-center"}>
                         <div className={"flex flex-col justify-around p-6 h-full items-center"}>
