@@ -140,7 +140,8 @@ function Documents({currentUser}) {
     return (<>
             <TopBar currentUser={currentUser}
                     openFilter={openFilter}
-                    switchFilter={() => setOpenFilter(!openFilter)}></TopBar>
+                    switchFilter={() => setOpenFilter(!openFilter)}
+            filterPresent={true}></TopBar>
 
             <div className={"w-full flex-1 p-6 flex flex-col justify-between items-center"}>
                 {
