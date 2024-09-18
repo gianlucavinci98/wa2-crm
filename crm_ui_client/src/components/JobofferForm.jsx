@@ -336,7 +336,7 @@ function JobOfferForm({currentUser}) {
                             </button>
                         </div>
                         <div className="flex flex-1 flex-row justify-center">
-                            <h1 className="font-bold text-2xl">Job Offer Details</h1>
+                            <h1 className="font-bold text-2xl">Job Offer Edit</h1>
                         </div>
                         <div></div>
                     </div>
@@ -363,7 +363,7 @@ function JobOfferForm({currentUser}) {
                                 </div>
 
                                 <div className={"col-field"}>
-                                    <div className={"col-field"}>
+                                    <div className={"col-field break-words"}>
                                         <label className={""}>Required skills:</label>
                                         {jobOffer.requiredSkills.map((item, index) =>
                                             <label key={index} className={"flex-1 font-normal"}>

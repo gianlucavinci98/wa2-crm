@@ -65,7 +65,7 @@ function SingleJobOffer({currentUser}) {
                             </div>
                         </div>
                         <div className={"p-6 flex flex-1 w-full justify-around items-center"}>
-                            <div className={"p-6 flex flex-col gap-4 h-full"}>
+                            <div className={"p-6 flex flex-col gap-4 h-full items-center"}>
                                 <div className={"col-field items-center"}>
                                     <h2 className={'font-semibold text-lg'}>Description:</h2>
                                     <p className={''}>{data.description}</p>
@@ -80,7 +80,7 @@ function SingleJobOffer({currentUser}) {
                                 </div>
                                 <div className={"col-field items-center"}>
                                     <h2 className={'font-semibold text-lg'}>Required skills:</h2>
-                                    <p className={''}>{data.requiredSkills !== null ? data.requiredSkills.map(e => e) : ""}</p>
+                                    <p className={'break-words'}>{data.requiredSkills !== null ? data.requiredSkills.map(e => e) : ""}</p>
                                 </div>
                                 <div className={"col-field items-center"}>
                                     <h2 className={'font-semibold text-lg'}>Duration: </h2>
