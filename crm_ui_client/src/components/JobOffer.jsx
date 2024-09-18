@@ -146,7 +146,7 @@ function JobOffersTable({currentUser}) {
                 setEditingJobOffer(undefined)
                 setEditJobOffer(!editJobOffer)
             }
-            } filterPresent={!editJobOffer} openFilter={openFilter}
+            } filterPresent={false} openFilter={openFilter}
                     switchFilter={() => setOpenFilter(!openFilter)}></TopBar>
             {!editJobOffer ?
                 <div className={"w-full flex-1 p-6 flex flex-col justify-between items-center"}>
