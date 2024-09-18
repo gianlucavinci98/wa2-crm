@@ -44,7 +44,7 @@ function TopBar({switchFilter, openFilter, addNew, setAddNew, filterPresent, cur
                         }
                         {
                             (
-                                location.pathname.split("/").pop() !== 'ui' && !location.pathname.includes("Messages") && !location.pathname.includes("Professionals") && !location.pathname.includes("Customers") && !location.pathname.includes("JobOffers") && !location.pathname.includes("Analytics"))
+                                location.pathname.split("/").pop() !== 'ui' && !location.pathname.includes("Messages") && !location.pathname.includes("Professionals") && !location.pathname.includes("Customers") && !location.pathname.includes("JobOffers") && !location.pathname.includes("Analytics") && !location.pathname.includes("Documents"))
                                 ?
                                 !addNew ?
                                     (!(currentUser?.roles.filter(it => it.includes('recruiter')).length > 0 && location.pathname.includes("Customers")) &&
