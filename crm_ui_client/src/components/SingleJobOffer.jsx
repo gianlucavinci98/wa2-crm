@@ -1,11 +1,10 @@
 import {useEffect, useState} from "react";
 import JobOfferAPI from "../api/crm/JobOfferAPI.js";
 import {useNavigate, useParams} from "react-router-dom";
-import {JobOfferStatus} from "../api/crm/dto/JobOffer.js";
+import {JobOfferStatus} from "../api/crm/dto/JobOffer.ts";
 import dayjs from "dayjs";
 import {FaArrowLeft} from "react-icons/fa";
 import {TbUserEdit} from "react-icons/tb";
-import ContactAPI from "../api/crm/ContactAPI.js";
 import {LuTrash2} from "react-icons/lu";
 
 function SingleJobOffer({currentUser}) {
@@ -20,7 +19,7 @@ function SingleJobOffer({currentUser}) {
             JobOfferAPI.GetJobOfferById(jobOfferId).then((result) => {
                     setData(result)
                 }
-            ).then(()=>{
+            ).then(() => {
                 JobOfferAPI.GetJobOfferHistory(jobOfferId).then((result2) => {
                     setHistory(result2)
                     setLoad(true)
@@ -69,7 +68,7 @@ function SingleJobOffer({currentUser}) {
                             <div className={"p-6 flex flex-col gap-4 h-full"}>
                                 <div className={"col-field items-center"}>
                                     <h2 className={'font-semibold text-lg'}>Description:</h2>
-                                    <p className={}>{data.description}</p>
+                                    <p className={''}>{data.description}</p>
                                 </div>
                                 <div className={"col-field items-center"}>
                                     <h2 className={'font-semibold text-lg'}>Details:</h2>

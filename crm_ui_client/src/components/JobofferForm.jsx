@@ -1,62 +1,60 @@
 import {useEffect, useState} from "react";
-import {JobOffer, JobOfferStatus} from "../api/crm/dto/JobOffer.ts";
+import {JobOfferStatus} from "../api/crm/dto/JobOffer.ts";
 import JobOfferAPI from "../api/crm/JobOfferAPI.js";
 import Icon from "./Icon.jsx";
 import {UpdateJobOffer} from "../api/crm/dto/UpdateJobOffer.ts";
-import {JobOfferHistory} from "../api/crm/dto/JobOfferHistory.ts";
-import dayjs from "dayjs";
 import ContactAPI from "../api/crm/ContactAPI.js";
 import {ContactFilter} from "../api/crm/filter/ContactFilter.ts";
 import {Category, Contact} from "../api/crm/dto/Contact.ts";
-import ProfessionalAPI from "../api/crm/ProfessionalAPI.js";
-import {Application, ApplicationStatus} from "../api/crm/dto/Application.ts";
 import {EmploymentState, Professional} from "../api/crm/dto/Professional.ts";
+import {useParams} from "react-router-dom";
+import CustomerAPI from "../api/crm/CustomerAPI.js";
 
-function JobOfferForm(props) {
+function JobOfferForm({currentUser}) {
+    const {customerId} = useParams()
+    const {jobOfferId} = useParams()
 
-    const [jobOffer, setJobOffer] = useState(
-        props.jobOffer !== undefined && props.jobOffer !== null
-            ?
-            props.jobOffer
-            :
-            new JobOffer(null, "", "", null, [], 1, null, null)
-    )
+    const [jobOffer, setJobOffer] = useState(null)
+    const [jobOfferHistory, setJobOfferHistory] = useState(null)
+    const [customer, setCustomer] = useState(null)
+
     const [currentSkill, setCurrentSkill] = useState("")
     const [errors, setErrors] = useState({})
     const [applicant, setApplicant] = useState({})
-    const [applicants, setApplicants] = useState([new Professional(4, [''],EmploymentState.Unemployed, 3, '', new Contact(3, 'carlo', 'mass', 'vyefwuew', Category.Professional, 4,null),null)])
-    const [loading, setLoading] = useState(true);
+    const [applicants, setApplicants] = useState([new Professional(4, [''], EmploymentState.Unemployed, 3, '', new Contact(3, 'carlo', 'mass', 'vyefwuew', Category.Professional, 4, null), null)])
+    const [load, setLoad] = useState(false);
     const [note, setNote] = useState("");
-    const [customer, setCustomer] = useState(props?.customer)
-    const [professionals, setProfessionals] = useState([new Contact(2, 'mario', 'bianchi', 'vf4328f7f', Category.Professional,5, null )])
+    const [professionals, setProfessionals] = useState([new Contact(2, 'mario', 'bianchi', 'vf4328f7f', Category.Professional, 5, null)])
     const [ssn, setSsn] = useState('')
     const [ssnSearchOpen, setSsnSearchOpen] = useState(false)
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [serverResponse, setServerResponse] = useState("")
-    const [jobOfferHistory, setJobOfferHistory] = useState([
-        new JobOfferHistory(4, JobOfferStatus.Created, Date.now().toString(), null, "si parte"),
-        new JobOfferHistory(4, JobOfferStatus.SelectionPhase, Date.now().toString(), [new Application(4,4,ApplicationStatus.Pending, Date.now().toString())], ""),
-        new JobOfferHistory(4, JobOfferStatus.CandidateProposal, Date.now().toString(), null, ""),
-        new JobOfferHistory(4, JobOfferStatus.Consolidated, Date.now().toString(), null, "preso"),
-        new JobOfferHistory(4, JobOfferStatus.Done, Date.now().toString(), null, "fatto"),
-    ])
 
-    const fetchJobOfferHistory = async () => {
-        setLoading(true);
-        try {
-            const data = await JobOfferAPI.GetJobOfferHistory(jobOffer.jobOfferId);
-            setJobOfferHistory(data);
-            let professionals = []
-            jobOfferHistory.find((history) => history.jobOfferStatus === jobOffer.status).candidates.map(async (it) => {
-                professionals.push(await ProfessionalAPI.GetProfessionalById(it.professionalId))
+    useEffect(() => {
+        if (!load && jobOfferId) {
+            // update
+            JobOfferAPI.GetJobOfferById(jobOfferId).then((res) => {
+                setJobOffer(res)
+            }).then(() => {
+                JobOfferAPI.GetJobOfferHistory(jobOfferId).then((res1) => {
+                    setJobOfferHistory(res1)
+                    setLoad(true)
+                }).catch((err) => console.log(err))
+            }).catch((err) => {
+                console.log(err)
             })
-            setApplicants(professionals)
-        } catch (error) {
-            console.error('Failed to fetch job Offer History:', error);
-        } finally {
-            setLoading(false);
+        } else if (!load && customerId) {
+            CustomerAPI.GetCustomerById(customerId).then((res) => {
+                setCustomer(res)
+                setLoad(true)
+            }).catch((err) => {
+                console.log(err)
+            })
+        } else {
+            setLoad(true)
         }
-    };
+    }, [customerId, jobOfferId, load])
+
     const fetchProfessionals = async () => {
         try {
             const data = await ContactAPI.GetContacts(new ContactFilter(null, null, ssn, Category.Professional, null, null, null));
@@ -64,11 +62,7 @@ function JobOfferForm(props) {
         } catch (error) {
             console.error('Failed to fetch Professional:', error);
         }
-    };
-
-    useEffect(() => {
-        fetchJobOfferHistory();
-    }, []);
+    }
 
     const validate = () => {
         const errors = {};
@@ -91,7 +85,7 @@ function JobOfferForm(props) {
     const onStatusNextHandler = async () => {
         try {
             let response
-            response = await JobOfferAPI.UpdateJobOffer(jobOffer.jobOfferId, new UpdateJobOffer(JobOfferStatus[jobOffer.status+1], note, jobOffer?.selectedProfessionalId), props.currentUser.xsrfToken)
+            response = await JobOfferAPI.UpdateJobOffer(jobOffer.jobOfferId, new UpdateJobOffer(JobOfferStatus[jobOffer.status + 1], note, jobOffer?.selectedProfessionalId), currentUser.xsrfToken)
 
             setServerResponse("Status changed successfully!")
             console.log(response)
@@ -103,10 +97,11 @@ function JobOfferForm(props) {
             setIsSubmitting(false)
         }
     }
+
     const onStatusPrevHandler = async () => {
         try {
             let response
-            response = await JobOfferAPI.UpdateJobOffer(jobOffer.jobOfferId, new UpdateJobOffer(JobOfferStatus.SelectionPhase, note, jobOffer?.selectedProfessionalId), props.currentUser.xsrfToken)
+            response = await JobOfferAPI.UpdateJobOffer(jobOffer.jobOfferId, new UpdateJobOffer(JobOfferStatus.SelectionPhase, note, jobOffer?.selectedProfessionalId), currentUser.xsrfToken)
 
             setServerResponse("Status changed successfully!")
             console.log(response)
@@ -118,10 +113,11 @@ function JobOfferForm(props) {
             setIsSubmitting(false)
         }
     }
+
     const onStatusAbortHandler = async () => {
         try {
             let response
-            response = await JobOfferAPI.UpdateJobOffer(jobOffer.jobOfferId, new UpdateJobOffer(JobOfferStatus.Aborted, note, jobOffer?.selectedProfessionalId), props.currentUser.xsrfToken)
+            response = await JobOfferAPI.UpdateJobOffer(jobOffer.jobOfferId, new UpdateJobOffer(JobOfferStatus.Aborted, note, jobOffer?.selectedProfessionalId), currentUser.xsrfToken)
 
             setServerResponse("Status changed successfully!")
             setNote('')
@@ -133,11 +129,12 @@ function JobOfferForm(props) {
             setIsSubmitting(false)
         }
     }
+
     const onApplyHandler = async () => {
-        if (applicant==='') return
+        if (applicant === '') return
         try {
             let response
-            response = await JobOfferAPI.InsertNewApplication(jobOffer.jobOfferId, applicant.professionalId, props.currentUser.xsrfToken)
+            response = await JobOfferAPI.InsertNewApplication(jobOffer.jobOfferId, applicant.professionalId, currentUser.xsrfToken)
             setSsn('')
             setApplicant({})
             setServerResponse("Applicant added successfully!")
@@ -149,11 +146,12 @@ function JobOfferForm(props) {
             setIsSubmitting(false)
         }
     }
+
     const onRemoveHandler = async () => {
-        if (applicant==='') return
+        if (applicant === '') return
         try {
             let response
-            response = await JobOfferAPI.DeleteApplication(jobOffer.jobOfferId, applicant.professionalId, props.currentUser.xsrfToken)
+            response = await JobOfferAPI.DeleteApplication(jobOffer.jobOfferId, applicant.professionalId, currentUser.xsrfToken)
             setApplicant({})
             setServerResponse("Applicant updated successfully!")
             console.log(response)
@@ -164,11 +162,12 @@ function JobOfferForm(props) {
             setIsSubmitting(false)
         }
     }
+
     const onDetailSaveHandler = async () => {
-        if (jobOffer.details==='') return
+        if (jobOffer.details === '') return
         try {
             let response
-            response = await JobOfferAPI.InsertNewJobOfferDetails(jobOffer.jobOfferId, jobOffer.details, props.currentUser.xsrfToken)
+            response = await JobOfferAPI.InsertNewJobOfferDetails(jobOffer.jobOfferId, jobOffer.details, currentUser.xsrfToken)
 
             setServerResponse("Details updated successfully!")
             console.log(response)
@@ -179,6 +178,7 @@ function JobOfferForm(props) {
             setIsSubmitting(false)
         }
     }
+
     const onSubmitHandler = async (event) => {
         event.preventDefault()
 
@@ -192,7 +192,7 @@ function JobOfferForm(props) {
 
         try {
             let response
-            response = await JobOfferAPI.InsertNewJobOffer(customer.customerId, jobOffer, props.currentUser.xsrfToken)
+            response = await JobOfferAPI.InsertNewJobOffer(customerId, jobOffer, currentUser.xsrfToken)
 
             setServerResponse("Message sent successfully!")
             console.log(response)
@@ -237,7 +237,7 @@ function JobOfferForm(props) {
     }
 
     return (
-        props.jobOffer === undefined
+        jobOfferId === undefined
             ?
             <form className={"flex flex-col flex-1 justify-around items-center"} onSubmit={onSubmitHandler}>
                 <h1 className={"text-2xl font-semibold"}>Create new job offer</h1>
@@ -304,7 +304,9 @@ function JobOfferForm(props) {
                 </button>
             </form>
             :
-            loading ? <div className="loading-container">
+            !load
+                ?
+                <div className="loading-container">
                     <svg
                         aria-hidden="true"
                         viewBox="0 0 100 101"
@@ -326,7 +328,8 @@ function JobOfferForm(props) {
                             <h1 className={"text-2xl font-semibold"}>JobOffer Details</h1>
                             {
                                 jobOffer.status !== JobOfferStatus.Aborted && jobOffer.status !== JobOfferStatus.Done &&
-                                <button className={"page-button"} onClick={onStatusAbortHandler}>{isSubmitting ? "Submitting..." : "Abort"}</button>
+                                <button className={"page-button"}
+                                        onClick={onStatusAbortHandler}>{isSubmitting ? "Submitting..." : "Abort"}</button>
                             }
 
                         </div>
@@ -382,7 +385,8 @@ function JobOfferForm(props) {
                                 className={`border p-2 resize-none ${errors.body ? "border-red-500" : ""} textarea-home`}
                             >
                             </textarea>
-                            <button className={"page-button"} onClick={onDetailSaveHandler}>{isSubmitting ? "Submitting..." : "Save"}</button>
+                            <button className={"page-button"}
+                                    onClick={onDetailSaveHandler}>{isSubmitting ? "Submitting..." : "Save"}</button>
                         </div>
                         {jobOffer.status === JobOfferStatus.SelectionPhase &&
                             <div className={"col-field items-start w-full"}>
@@ -395,18 +399,19 @@ function JobOfferForm(props) {
                                         onChange={(e) => {
                                             fetchProfessionals()
                                             setSsnSearchOpen(true)
-                                            setSsn(e.target.value)}
-                                    }
+                                            setSsn(e.target.value)
+                                        }
+                                        }
                                     >
                                     </input>
-                                    {applicants.map((item, index)=>
+                                    {applicants.map((item, index) =>
                                         // TO-DO
                                         <div key={index} className={"flex gap-2 items-center"}>
                                             <label className={"font-semibold"}>
                                                 {item.contact.ssn}
                                             </label>
                                             <label className={"font-normal"}>
-                                                {ApplicationStatus[jobOfferHistory.find((it)=>it.jobOfferStatus === jobOffer.status).candidates.find((can)=>can.professionalId===item.professionalId).status]}
+                                                {ApplicationStatus[jobOfferHistory.find((it) => it.jobOfferStatus === jobOffer.status).candidates.find((can) => can.professionalId === item.professionalId).status]}
                                             </label>
                                             <Icon name={'cross'} className={"w-4 h-4 fill-red-500"} onClick={() => {
                                                 setApplicant(item)
@@ -422,7 +427,7 @@ function JobOfferForm(props) {
                                             {professionals.map((professional, index) => (
                                                 <div key={index}>
                                                     <label className="flex items-center gap-2">
-                                                    <span onClick={()=> {
+                                                    <span onClick={() => {
                                                         setSsnSearchOpen(false)
                                                         setSsn(professional.ssn)
                                                         setApplicant(professional)
@@ -431,7 +436,7 @@ function JobOfferForm(props) {
                                                 </div>
                                             ))}
                                         </div>
-                                    </div>:""}
+                                    </div> : ""}
                                 </div>
                                 <button className={"page-button"}
                                         onClick={onApplyHandler}>{isSubmitting ? "Submitting..." : "Apply"}</button>
@@ -442,46 +447,37 @@ function JobOfferForm(props) {
                                 className={"flex-1 font-normal"}>
                                 {JobOfferStatus[jobOffer.status]}
                             </label>
-                            {(jobOffer.status!==JobOfferStatus.Done && jobOffer.status!==JobOfferStatus.Aborted) ?
+                            {(jobOffer.status !== JobOfferStatus.Done && jobOffer.status !== JobOfferStatus.Aborted) ?
                                 <>
                                     <input
-                                    type={"text"}
-                                    value={note}
-                                    placeholder={"note to change status..."}
-                                    onChange={(e)=>{setNote(e.target.value)}}
+                                        type={"text"}
+                                        value={note}
+                                        placeholder={"note to change status..."}
+                                        onChange={(e) => {
+                                            setNote(e.target.value)
+                                        }}
                                     />
-                                    <button className={"page-button"} onClick={onStatusNextHandler}>{isSubmitting ? "Submitting..." : "Advance"}</button>
+                                    <button className={"page-button"}
+                                            onClick={onStatusNextHandler}>{isSubmitting ? "Submitting..." : "Advance"}</button>
                                     {(jobOffer.status === JobOfferStatus.CandidateProposal || jobOffer.status === JobOfferStatus.Consolidated) &&
-                                        <button className={"page-button"} onClick={onStatusPrevHandler}>{isSubmitting ? "Submitting..." : "SelectionPhase"}</button>
+                                        <button className={"page-button"}
+                                                onClick={onStatusPrevHandler}>{isSubmitting ? "Submitting..." : "SelectionPhase"}</button>
                                     }
                                 </>
-                                : jobOffer.status!==JobOfferStatus.Aborted &&
+                                : jobOffer.status !== JobOfferStatus.Aborted &&
                                 <>
                                     <input
                                         type={"text"}
                                         value={note}
                                         placeholder={"note to change phase..."}
-                                        onChange={(e)=>{setNote(e.target.value)}}
+                                        onChange={(e) => {
+                                            setNote(e.target.value)
+                                        }}
                                     />
-                                    <button className={"page-button"} onClick={onStatusPrevHandler}>{isSubmitting ? "Submitting..." : "SelectionPhase"}</button>
+                                    <button className={"page-button"}
+                                            onClick={onStatusPrevHandler}>{isSubmitting ? "Submitting..." : "SelectionPhase"}</button>
                                 </>
                             }
-
-                        </div>
-                    </div>
-                    <div className={"h-[90%] w-[1px] bg-stone-600"}></div>
-                    <div className={"flex flex-col justify-around p-6 h-full flex-1 items-center overflow-auto"}>
-                        <h1 className={"text-2xl font-semibold"}>JobOffer history</h1>
-                        <div
-                            className={"border-[1px] p-2 border-stone-500 bg-stone-100 rounded-md shadow-md w-full flex flex-col gap-2 overflow-auto "}>
-                            {jobOfferHistory.map((history, index) =>
-                                <div className={"flex w-full justify-between"} key={index}>
-                                    <div className={"w-1/4"}>{JobOfferStatus[history.jobOfferStatus]}</div>
-                                    <div className={"w-1/4 break-words"}>{history.note!==''?`Note: ${history?.note}`: ''}</div>
-                                    <div className={"w-1/4 text-center break-words"}>Applicants: {history?.candidates?.length>0?history?.candidates?.length:0}</div>
-                                    <div className={"w-1/4 text-center"}>{dayjs(history.date).format('DD-MM-YYYY')}</div>
-                                </div>
-                            )}
                         </div>
                     </div>
                 </div>

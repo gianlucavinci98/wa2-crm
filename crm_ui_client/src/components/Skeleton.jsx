@@ -3,7 +3,7 @@ import {BrowserRouter as Router, Navigate, Route, Routes, useLocation, useNaviga
 import logo from '../assets/logo.png';
 import ProfessionalsTable from "./Professionals.jsx";
 import Icon from "./Icon.jsx";
-import ClientsTable from "./Clients.jsx";
+import Clients from "./Clients.jsx";
 import JobOffersTable from "./JobOffer.jsx";
 import {User} from "../api/api_gateway/dto/User.ts";
 import "./Skeleton.css"
@@ -178,7 +178,7 @@ function Skeleton() {
                                    <EditClient currentUser={currentUser}/>}/>
                         <Route path={"/ui/Customers"}
                                element={!currentUser?.principal ? <Navigate to={"/ui"}/> :
-                                   <ClientsTable currentUser={currentUser}/>}/>
+                                   <Clients currentUser={currentUser}/>}/>
                         <Route path={"/ui/Documents"}
                                element={!currentUser?.principal ? <Navigate to={"/ui"}/> :
                                    <Documents currentUser={currentUser}/>}/>
@@ -192,7 +192,10 @@ function Skeleton() {
                                element={!currentUser?.principal ? <Navigate to={"/ui"}/> :  <JobOffersTable currentUser={currentUser}/>}/>
                         <Route path={"/ui/JobOffers/:jobOfferId"}
                                element={!currentUser?.principal ? <Navigate to={"/ui"}/> : <SingleJobOffer currentUser={currentUser}/>}/>
-                        <Route path={"/ui/JobOffers/add"}
+                        <Route path={"/ui/JobOffers/:customerId/add"}
+                               element={!currentUser?.principal ? <Navigate to={"/ui"}/> :
+                                   <JobOfferForm currentUser={currentUser}/>}/>
+                        <Route path={"/ui/JobOffers/:jobOfferId/edit"}
                                element={!currentUser?.principal ? <Navigate to={"/ui"}/> :
                                    <JobOfferForm currentUser={currentUser}/>}/>
                         <Route path={"/ui/Messages"}
