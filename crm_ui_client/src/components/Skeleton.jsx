@@ -17,6 +17,7 @@ import Contacts from "./Contacts.jsx";
 import ContactDetails from "./ContactDetails.jsx";
 import EditClient from "./EditClient.jsx";
 import EditProfessional from "./EditProfessional.jsx";
+import SingleJobOffer from "./SingleJobOffer.jsx";
 
 
 // eslint-disable-next-line react/prop-types
@@ -182,6 +183,9 @@ function Skeleton() {
                         <Route path={"/ui/JobOffers"}
                                element={!currentUser?.principal ? <Navigate to={"/ui"}/> :
                                    <JobOffersTable currentUser={currentUser}/>}/>
+                               element={!currentUser?.principal ? <Navigate to={"/ui"}/> : <JobOffersTable currentUser={currentUser}/>}/>
+                        <Route path={"/ui/JobOffers/:jobOfferId"}
+                               element={!currentUser?.principal ? <Navigate to={"/ui"}/> : <SingleJobOffer currentUser={currentUser}/>}/>
                         <Route path={"/ui/JobOffers/add"}
                                element={!currentUser?.principal ? <Navigate to={"/ui"}/> :
                                    <JobOfferForm currentUser={currentUser}/>}/>

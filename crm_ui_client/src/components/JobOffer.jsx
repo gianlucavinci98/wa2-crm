@@ -5,7 +5,7 @@ import Icon from "./Icon.jsx";
 import {TopBar} from "./Skeleton.jsx";
 import JobOfferForm from "./JobofferForm.jsx";
 import {JobOfferStatus} from "../api/crm/dto/JobOffer.ts";
-import {useLocation} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import {JobOfferFilter} from "../api/crm/filter/JobOfferFilter.ts";
 import {Pagination} from "../api/utils/Pagination.ts";
 
@@ -74,6 +74,7 @@ function JobOfferSearchBar({onFilterChange, filter}) {
 function JobOffersTable({currentUser}) {
 
     const location = useLocation();
+    const navigate = useNavigate()
     const {customer} = location?.state || {};
     const [openFilter, setOpenFilter] = useState(false);
     const [jobOffers, setJobOffers] = useState([]);
@@ -166,7 +167,7 @@ function JobOffersTable({currentUser}) {
                         </thead>
                         <tbody>
                         {jobOffers.map((jobOffer) => (
-                            <tr key={jobOffer.selectedProfessionalId} className={'hover:bg-stone-100 cursor-pointer'}>
+                            <tr key={jobOffer.selectedProfessionalId} className={'hover:bg-stone-100 cursor-pointer'} onClick={() => navigate(`/ui/JobOffers/${jobOffer.jobOfferId}`)}>
                                 <td>{jobOffer.description}</td>
                                 <td>{Array.from(jobOffer.requiredSkills).join(', ')}</td>
                                 <td>{jobOffer.duration} days</td>
