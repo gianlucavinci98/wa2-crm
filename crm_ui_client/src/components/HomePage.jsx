@@ -128,7 +128,7 @@ function HomePage({currentUser}) {
                         {errors.body && <p className="text-red-500">{errors.body}</p>}
                     </div>
 
-                    <button type="submit" className="page-button" disabled={isSubmitting}>
+                    <button type="submit" className="page-button w-60" disabled={isSubmitting}>
                         {isSubmitting ? "Sending..." : "Send message"}
                     </button>
                 </form>

@@ -8,7 +8,7 @@ services:
       - 'POSTGRES_PASSWORD=secret'
       - 'POSTGRES_USER=myuser'
     ports:
-      - '5432'
+      - '60600:5432'
     command:
       - "postgres"
       - "-c"

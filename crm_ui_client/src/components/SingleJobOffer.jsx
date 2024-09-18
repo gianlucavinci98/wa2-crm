@@ -1,7 +1,6 @@
 import {useEffect, useState} from "react";
 import JobOfferAPI from "../api/crm/JobOfferAPI.js";
 import {useNavigate, useParams} from "react-router-dom";
-import {JobOfferStatus} from "../api/crm/dto/JobOffer.ts";
 import dayjs from "dayjs";
 import {FaArrowLeft} from "react-icons/fa";
 import {TbUserEdit} from "react-icons/tb";
@@ -101,11 +100,11 @@ function SingleJobOffer({currentUser}) {
                                 <h1 className={"text-2xl font-semibold"}>JobOffer history</h1>
                                 <div
                                     className={"border-[1px] p-2 border-stone-500 bg-stone-100 rounded-md shadow-md w-full flex flex-col gap-2 overflow-auto "}>
-                                    {history.map((history, index) =>
+                                    {history.sort((a, b) => dayjs(a.date).diff(dayjs(b.date))).map((history, index) =>
                                         <div className={"flex w-full justify-between"} key={index}>
-                                            <div className={"w-1/4"}>{JobOfferStatus[history.jobOfferStatus]}</div>
+                                            <div className={"w-1/4"}>{history.jobOfferStatus}</div>
                                             <div
-                                                className={"w-1/4 break-words"}>{history.note !== '' ? `Note: ${history?.note}` : ''}</div>
+                                                className={"w-1/4 break-words"}>{history.note !== '' && history.note !== null ? `Note: ${history?.note}` : ''}</div>
                                             <div
                                                 className={"w-1/4 text-center break-words"}>Applicants: {history?.candidates?.length > 0 ? history?.candidates?.length : 0}</div>
                                             <div
