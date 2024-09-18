@@ -9,11 +9,17 @@ import {Category, Contact} from "../api/crm/dto/Contact.ts";
 import {EmploymentState, Professional} from "../api/crm/dto/Professional.ts";
 import {useParams} from "react-router-dom";
 import CustomerAPI from "../api/crm/CustomerAPI.js";
+import {FaArrowLeft} from "react-icons/fa";
+import {TbUserEdit} from "react-icons/tb";
+import {LuTrash2} from "react-icons/lu";
+import {useNavigate} from "react-router-dom";
+import {ApplicationStatus} from "../api/crm/dto/Application.js";
 
 function JobOfferForm({currentUser}) {
     const {customerId} = useParams()
     const {jobOfferId} = useParams()
 
+    const navigate = useNavigate()
     const [jobOffer, setJobOffer] = useState(null)
     const [jobOfferHistory, setJobOfferHistory] = useState(null)
     const [customer, setCustomer] = useState(null)
@@ -322,165 +328,196 @@ function JobOfferForm({currentUser}) {
                     </svg>
                 </div>
                 :
-                <div className={"flex flex-1 w-full justify-around items-center"}>
-                    <div className={"flex flex-col justify-around p-6 h-full items-center"}>
-                        <div className={"flex justify-around items-center w-full"}>
-                            <h1 className={"text-2xl font-semibold"}>JobOffer Details</h1>
-                            {
-                                jobOffer.status !== JobOfferStatus.Aborted && jobOffer.status !== JobOfferStatus.Done &&
-                                <button className={"page-button"}
-                                        onClick={onStatusAbortHandler}>{isSubmitting ? "Submitting..." : "Abort"}</button>
-                            }
-
+                <div className={"flex flex-col justify-between"}>
+                    <div className="w-full flex flex-row justify-center items-start">
+                        <div className="flex flex-row justify-start">
+                            <button onClick={() => navigate("/ui/JobOffers")}>
+                                <FaArrowLeft size={20}/>
+                            </button>
                         </div>
+                        <div className="flex flex-1 flex-row justify-center">
+                            <h1 className="font-bold text-2xl">Job Offer Details</h1>
+                        </div>
+                        <div className="flex flex-row p-2">
+                            <button className="bg-yellow-300 border rounded-lg p-2"
+                                    onClick={() => navigate(`/ui/JobOffers/${jobOfferId}/edit`)}>
+                                <TbUserEdit size={20}/>
+                            </button>
+                        </div>
+                        <div className="flex flex-row p-2">
+                            <button className="bg-red-300 border rounded-lg p-2" onClick={() => {
+                                JobOfferAPI.DeleteJobOffer(jobOfferId, currentUser.xsrfToken).then(() => {
+                                    alert("Correctly removed jobOffer")
+                                    navigate("/ui/JobOffers")
+                                }).catch((err) => {
+                                    console.log(err);
+                                    alert("Error during jobOffer cancellation.")
+                                })
+                            }}><LuTrash2 size={20}/></button>
+                        </div>
+                    </div>
+                    <div className={"flex flex-1 w-full justify-around items-center"}>
+                        <div className={"flex flex-col justify-around p-6 h-full items-center"}>
+                            <div className={"flex justify-around items-center w-full"}>
+                                <h1 className={"text-2xl font-semibold"}>JobOffer Details</h1>
+                                {
+                                    jobOffer.status !== JobOfferStatus.Aborted && jobOffer.status !== JobOfferStatus.Done &&
+                                    <button className={"page-button"}
+                                            onClick={onStatusAbortHandler}>{isSubmitting ? "Submitting..." : "Abort"}</button>
+                                }
 
-                        {serverResponse && (
-                            <div className={"w-full bg-blue-100 text-center p-4"}>{serverResponse}</div>)}
-                        <div className={"flex flex-col w-full gap-6 justify-around"}>
-                            <div className={"col-field"}>
-                                <label className={""}>Description:</label>
-                                <label className={"flex-1 font-normal break-words"}>
-                                    {jobOffer.description}
-                                </label>
                             </div>
 
-                            <div className={"col-field"}>
+                            {serverResponse && (
+                                <div className={"w-full bg-blue-100 text-center p-4"}>{serverResponse}</div>)}
+                            <div className={"flex flex-col w-full gap-6 justify-around"}>
                                 <div className={"col-field"}>
-                                    <label className={""}>Required skills:</label>
-                                    {jobOffer.requiredSkills.map((item, index) =>
-                                        <label key={index} className={"flex-1 font-normal"}>
-                                            {item}
-                                        </label>
-                                    )
-                                    }
+                                    <label className={""}>Description:</label>
+                                    <label className={"flex-1 font-normal break-words"}>
+                                        {jobOffer.description}
+                                    </label>
+                                </div>
+
+                                <div className={"col-field"}>
+                                    <div className={"col-field"}>
+                                        <label className={""}>Required skills:</label>
+                                        {jobOffer.requiredSkills.map((item, index) =>
+                                            <label key={index} className={"flex-1 font-normal"}>
+                                                {item}
+                                            </label>
+                                        )
+                                        }
+                                    </div>
+                                </div>
+
+                                <div className={"col-field"}>
+                                    <label className={""}>Duration:</label>
+                                    <label
+                                        className={"flex-1 font-normal"}>
+                                        {jobOffer.duration.toString() + " days"}
+                                    </label>
+                                </div>
+                                <div className={"col-field"}>
+                                    <label className={""}>Value:</label>
+                                    <label
+                                        className={"flex-1 font-normal"}>
+                                        {jobOffer.value.toString()}
+                                    </label>
                                 </div>
                             </div>
-
-                            <div className={"col-field"}>
-                                <label className={""}>Duration:</label>
-                                <label
-                                    className={"flex-1 font-normal"}>
-                                    {jobOffer.duration.toString() + " days"}
-                                </label>
-                            </div>
-                            <div className={"col-field"}>
-                                <label className={""}>Value:</label>
-                                <label
-                                    className={"flex-1 font-normal"}>
-                                    {jobOffer.value.toString()}
-                                </label>
-                            </div>
-                        </div>
-                        <div className={"col-field items-center"}>
-                            <label className={""}>Detail</label>
-                            <textarea
-                                required
-                                name={"details"}
-                                value={jobOffer.details}
-                                onChange={onChangeHandler}
-                                maxLength={500}
-                                rows={10}
-                                cols={50}
-                                placeholder="Insert some details here..."
-                                className={`border p-2 resize-none ${errors.body ? "border-red-500" : ""} textarea-home`}
-                            >
+                            <div className={"col-field items-center"}>
+                                <label className={""}>Detail</label>
+                                <textarea
+                                    required
+                                    name={"details"}
+                                    value={jobOffer.details}
+                                    onChange={onChangeHandler}
+                                    maxLength={500}
+                                    rows={10}
+                                    cols={50}
+                                    placeholder="Insert some details here..."
+                                    className={`border p-2 resize-none ${errors.body ? "border-red-500" : ""} textarea-home`}
+                                >
                             </textarea>
-                            <button className={"page-button"}
-                                    onClick={onDetailSaveHandler}>{isSubmitting ? "Submitting..." : "Save"}</button>
-                        </div>
-                        {jobOffer.status === JobOfferStatus.SelectionPhase &&
-                            <div className={"col-field items-start w-full"}>
-                                <label className={""}>Applicant:</label>
-                                <div className={'relative flex flex-col gap-2'}>
-                                    <input
-                                        type={"text"}
-                                        className={"flex-1 font-normal"}
-                                        value={ssn}
-                                        onChange={(e) => {
-                                            fetchProfessionals()
-                                            setSsnSearchOpen(true)
-                                            setSsn(e.target.value)
-                                        }
-                                        }
-                                    >
-                                    </input>
-                                    {applicants.map((item, index) =>
-                                        // TO-DO
-                                        <div key={index} className={"flex gap-2 items-center"}>
-                                            <label className={"font-semibold"}>
-                                                {item.contact.ssn}
-                                            </label>
-                                            <label className={"font-normal"}>
-                                                {ApplicationStatus[jobOfferHistory.find((it) => it.jobOfferStatus === jobOffer.status).candidates.find((can) => can.professionalId === item.professionalId).status]}
-                                            </label>
-                                            <Icon name={'cross'} className={"w-4 h-4 fill-red-500"} onClick={() => {
-                                                setApplicant(item)
-                                                onRemoveHandler()
+                                <button className={"page-button"}
+                                        onClick={onDetailSaveHandler}>{isSubmitting ? "Submitting..." : "Save"}</button>
+                            </div>
+                            {jobOffer.status === JobOfferStatus.SelectionPhase &&
+                                <div className={"col-field items-start w-full"}>
+                                    <label className={""}>Applicant:</label>
+                                    <div className={'relative flex flex-col gap-2'}>
+                                        <input
+                                            type={"text"}
+                                            className={"flex-1 font-normal"}
+                                            value={ssn}
+                                            onChange={(e) => {
+                                                fetchProfessionals()
+                                                setSsnSearchOpen(true)
+                                                setSsn(e.target.value)
                                             }
-                                            }></Icon>
-                                        </div>
-                                    )
-                                    }
-                                    {ssnSearchOpen ? <div
-                                        className="absolute z-10 w-44 bg-white border border-gray-300 rounded-md shadow-lg mt-6 h-24 overflow-auto">
-                                        <div className="p-2 w-fit">
-                                            {professionals.map((professional, index) => (
-                                                <div key={index}>
-                                                    <label className="flex items-center gap-2">
+                                            }
+                                        >
+                                        </input>
+                                        {applicants.map((item, index) =>
+                                            // TO-DO
+                                            <div key={index} className={"flex gap-2 items-center"}>
+                                                <label className={"font-semibold"}>
+                                                    {item.contact.ssn}
+                                                </label>
+                                                <label className={"font-normal"}>
+                                                    {ApplicationStatus[jobOfferHistory.find((it) => it.jobOfferStatus === jobOffer.status).candidates.find((can) => can.professionalId === item.professionalId).status]}
+                                                </label>
+                                                <Icon name={'cross'} className={"w-4 h-4 fill-red-500"} onClick={() => {
+                                                    setApplicant(item)
+                                                    onRemoveHandler()
+                                                }
+                                                }></Icon>
+                                            </div>
+                                        )
+                                        }
+                                        {ssnSearchOpen ? <div
+                                            className="absolute z-10 w-44 bg-white border border-gray-300 rounded-md shadow-lg mt-6 h-24 overflow-auto">
+                                            <div className="p-2 w-fit">
+                                                {professionals.map((professional, index) => (
+                                                    <div key={index}>
+                                                        <label className="flex items-center gap-2">
                                                     <span onClick={() => {
                                                         setSsnSearchOpen(false)
                                                         setSsn(professional.ssn)
                                                         setApplicant(professional)
                                                     }}>{professional.ssn}</span>
-                                                    </label>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </div> : ""}
-                                </div>
-                                <button className={"page-button"}
-                                        onClick={onApplyHandler}>{isSubmitting ? "Submitting..." : "Apply"}</button>
-                            </div>}
-                        <div className={"col-field items-center w-full"}>
-                            <label className={""}>Status:</label>
-                            <label
-                                className={"flex-1 font-normal"}>
-                                {JobOfferStatus[jobOffer.status]}
-                            </label>
-                            {(jobOffer.status !== JobOfferStatus.Done && jobOffer.status !== JobOfferStatus.Aborted) ?
-                                <>
-                                    <input
-                                        type={"text"}
-                                        value={note}
-                                        placeholder={"note to change status..."}
-                                        onChange={(e) => {
-                                            setNote(e.target.value)
-                                        }}
-                                    />
+                                                        </label>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div> : ""}
+                                    </div>
                                     <button className={"page-button"}
-                                            onClick={onStatusNextHandler}>{isSubmitting ? "Submitting..." : "Advance"}</button>
-                                    {(jobOffer.status === JobOfferStatus.CandidateProposal || jobOffer.status === JobOfferStatus.Consolidated) &&
+                                            onClick={onApplyHandler}>{isSubmitting ? "Submitting..." : "Apply"}</button>
+                                </div>}
+                            <div className={"col-field items-center w-full"}>
+                                <label className={""}>Status:</label>
+                                <label
+                                    className={"flex-1 font-normal"}>
+                                    {JobOfferStatus[jobOffer.status]}
+                                </label>
+                                {(jobOffer.status !== JobOfferStatus.Done && jobOffer.status !== JobOfferStatus.Aborted) ?
+                                    <>
+                                        <input
+                                            type={"text"}
+                                            value={note}
+                                            placeholder={"note to change status..."}
+                                            onChange={(e) => {
+                                                setNote(e.target.value)
+                                            }}
+                                        />
+                                        <button className={"page-button"}
+                                                onClick={onStatusNextHandler}>{isSubmitting ? "Submitting..." : "Advance"}</button>
+                                        {(jobOffer.status === JobOfferStatus.CandidateProposal || jobOffer.status === JobOfferStatus.Consolidated) &&
+                                            <button className={"page-button"}
+                                                    onClick={onStatusPrevHandler}>{isSubmitting ? "Submitting..." : "SelectionPhase"}</button>
+                                        }
+                                    </>
+                                    : jobOffer.status !== JobOfferStatus.Aborted &&
+                                    <>
+                                        <input
+                                            type={"text"}
+                                            value={note}
+                                            placeholder={"note to change phase..."}
+                                            onChange={(e) => {
+                                                setNote(e.target.value)
+                                            }}
+                                        />
                                         <button className={"page-button"}
                                                 onClick={onStatusPrevHandler}>{isSubmitting ? "Submitting..." : "SelectionPhase"}</button>
-                                    }
-                                </>
-                                : jobOffer.status !== JobOfferStatus.Aborted &&
-                                <>
-                                    <input
-                                        type={"text"}
-                                        value={note}
-                                        placeholder={"note to change phase..."}
-                                        onChange={(e) => {
-                                            setNote(e.target.value)
-                                        }}
-                                    />
-                                    <button className={"page-button"}
-                                            onClick={onStatusPrevHandler}>{isSubmitting ? "Submitting..." : "SelectionPhase"}</button>
-                                </>
-                            }
+                                    </>
+                                }
+
+                            </div>
                         </div>
                     </div>
                 </div>
+
     )
 }
 
