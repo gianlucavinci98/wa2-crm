@@ -72,7 +72,6 @@ function JobOfferSearchBar({onFilterChange, filter}) {
 
 // eslint-disable-next-line react/prop-types
 function JobOffersTable({currentUser}) {
-
     const location = useLocation();
     const navigate = useNavigate()
     const {customer} = location?.state || {};
@@ -177,8 +176,7 @@ function JobOffersTable({currentUser}) {
                                 <td>
                                     <div className={"flex gap-2 items-center"}>
                                         <Icon name={"pencil"} className={'w-4 h-4 fill-blue-500'} onClick={() => {
-                                            setEditingJobOffer(jobOffer)
-                                            setEditJobOffer(!editJobOffer)
+                                            navigate(`/ui/JobOffers/${jobOffer.jobOfferId}/edit`)
                                         }}>Edit
                                         </Icon>
                                         <Icon name={"garbage"} className={'w-4 h-4 fill-red-500'} onClick={() => {

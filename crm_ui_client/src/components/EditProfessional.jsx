@@ -2,6 +2,7 @@ import {useEffect, useState} from "react";
 import {EmploymentState, Professional} from "../api/crm/dto/Professional.ts";
 import ProfessionalAPI from "../api/crm/ProfessionalAPI.js";
 import {useNavigate, useParams} from "react-router-dom";
+import {FaArrowLeft} from "react-icons/fa";
 
 function EditProfessional({currentUser}) {
     const {contactId} = useParams()
@@ -69,57 +70,69 @@ function EditProfessional({currentUser}) {
         }
     }
     return (
-        <div className={"flex-1 p-6 flex items-center w-full justify-around"}>
-            <div className={"flex h-full flex-col items-center justify-around"}>
-                <h2 className={"text-2xl font-semibold"}>{professional ? "Edit Professional" : "Insert new Professional"}</h2>
-                <div className={"flex w-full justify-around gap-8"}>
-                    <div className={"flex flex-col gap-6 justify-around"}>
-                        <div className={"col-field"}>
-                            <strong>Skills:</strong>
-                            <input
-                                name="skills"
-                                type="text"
-                                placeholder={"Skill separated by \",\""}
-                                value={professional ? skills : newProfessional.skills}
-                                onChange={handleChange}
-                            />
-                        </div>
-                        <div className={"col-field"}>
-                            <strong>Daily Rate:</strong>
-                            <input
-                                name="dailyRate"
-                                type="number"
-                                value={professional ? professional?.dailyRate : newProfessional.dailyRate}
-                                onChange={handleChange}
-                            />
-                        </div>
-                        <div className={"col-field"}>
-                            <strong>Location:</strong>
-                            <input
-                                name="location"
-                                type="text"
-                                value={professional ? professional?.location : newProfessional.location}
-                                onChange={handleChange}
-                            />
-                        </div>
-                        {professional &&
-                            <div className={"col-field"}>
-                                <strong>Employment State:</strong>
-                                <select
-                                    name="employmentState"
-                                    onChange={handleChange}>
-                                    <option value={EmploymentState.NotAvailable}>Not Available</option>
-                                    <option value={EmploymentState.Employed}>Employed</option>
-                                    <option value={EmploymentState.Unemployed}>Unemployed</option>
-                                </select>
-                            </div>
-                        }
-
-                    </div>
+        <div className={'h-full w-full flex flex-col justify-between p-4'}>
+            <div className="w-full flex flex-row justify-center items-start">
+                <div className="flex flex-row justify-start">
+                    <button onClick={() => navigate(`/ui/Contacts/${contactId}`)}>
+                        <FaArrowLeft size={20}/>
+                    </button>
                 </div>
-                <div>
-                    <button className={'page-button'}
-                            onClick={handleSaveProfessional}>{professional ? "Save Changes" : "Create"}</button>
+                <div className="flex flex-1 flex-row justify-center">
+                    <h1 className="font-bold text-2xl">Insert professional profile</h1>
+                </div>
+            </div>
+            <div className={"flex-1 p-6 flex items-center w-full justify-around"}>
+                <div className={"flex h-full flex-col items-center justify-around"}>
+                    <h2 className={"text-2xl font-semibold"}>{professional ? "Edit Professional" : "Insert new Professional"}</h2>
+                    <div className={"flex w-full justify-around gap-8"}>
+                        <div className={"flex flex-col gap-6 justify-around"}>
+                            <div className={"col-field"}>
+                                <strong>Skills:</strong>
+                                <input
+                                    name="skills"
+                                    type="text"
+                                    placeholder={"Skill separated by \",\""}
+                                    value={professional ? skills : newProfessional.skills}
+                                    onChange={handleChange}
+                                />
+                            </div>
+                            <div className={"col-field"}>
+                                <strong>Daily Rate:</strong>
+                                <input
+                                    name="dailyRate"
+                                    type="number"
+                                    value={professional ? professional?.dailyRate : newProfessional.dailyRate}
+                                    onChange={handleChange}
+                                />
+                            </div>
+                            <div className={"col-field"}>
+                                <strong>Location:</strong>
+                                <input
+                                    name="location"
+                                    type="text"
+                                    value={professional ? professional?.location : newProfessional.location}
+                                    onChange={handleChange}
+                                />
+                            </div>
+                            {professional &&
+                                <div className={"col-field"}>
+                                    <strong>Employment State:</strong>
+                                    <select
+                                        name="employmentState"
+                                        onChange={handleChange}>
+                                        <option value={EmploymentState.NotAvailable}>Not Available</option>
+                                        <option value={EmploymentState.Employed}>Employed</option>
+                                        <option value={EmploymentState.Unemployed}>Unemployed</option>
+                                    </select>
+                                </div>
+                            }
+
+                        </div>
+                    </div>
+                    <div>
+                        <button className={'page-button'}
+                                onClick={handleSaveProfessional}>{professional ? "Save Changes" : "Create"}</button>
+                    </div>
                 </div>
             </div>
         </div>

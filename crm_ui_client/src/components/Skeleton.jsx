@@ -3,7 +3,6 @@ import {BrowserRouter as Router, Navigate, Route, Routes, useLocation, useNaviga
 import logo from '../assets/logo.png';
 import ProfessionalsTable from "./Professionals.jsx";
 import Icon from "./Icon.jsx";
-import Clients from "./Clients.jsx";
 import JobOffersTable from "./JobOffer.jsx";
 import {User} from "../api/api_gateway/dto/User.ts";
 import "./Skeleton.css"
@@ -44,10 +43,10 @@ function TopBar({switchFilter, openFilter, addNew, setAddNew, filterPresent, cur
                         }
                         {
                             (
-                                location.pathname.split("/").pop() !== 'ui' && !location.pathname.includes("Messages") && !location.pathname.includes("Professionals") && !location.pathname.includes("Customers") && !location.pathname.includes("JobOffers") && !location.pathname.includes("Analytics"))
+                                location.pathname.split("/").pop() !== 'ui' && !location.pathname.includes("Messages") && !location.pathname.includes("Professionals") && !location.pathname.includes("JobOffers") && !location.pathname.includes("Analytics"))
                                 ?
                                 !addNew ?
-                                    (!(currentUser?.roles.filter(it => it.includes('recruiter')).length > 0 && location.pathname.includes("Customers")) &&
+                                    (!(currentUser?.roles.filter(it => it.includes('recruiter')).length > 0 && location.pathname.includes("Contacts")) &&
                                         <Icon name='plus'
                                               className={`w-10 h-10 cursor-pointer hover:fill-blue-500`}
                                               onClick={() => setAddNew()}/>) :
@@ -90,10 +89,6 @@ function SideBar({currentUser}) {
                 <button
                     className={location.pathname.includes("/ui/Contacts") ? "clicked-side-button" : "side-button"}
                     onClick={() => navigate("/ui/Contacts")}>Contacts
-                </button>
-                <button
-                    className={location.pathname.includes("/ui/Customers") ? "clicked-side-button" : "side-button"}
-                    onClick={() => navigate("/ui/Customers")}>Customers
                 </button>
                 <button
                     className={location.pathname.includes("/ui/Professionals") ? "clicked-side-button" : "side-button"}
@@ -162,7 +157,7 @@ function Skeleton() {
                     className={`flex flex-col items-center ${currentUser && currentUser.principal ? "w-4/5" : "w-full"}`}>
                     <Routes>
                         <Route path={"/ui"}
-                               element={currentUser?.principal ? <Navigate to={"/ui/Customers"}/> :
+                               element={currentUser?.principal ? <Navigate to={"/ui/Contacts"}/> :
                                    <HomePage currentUser={currentUser}/>}/>
                         <Route path={"/ui/Contacts"}
                                element={!currentUser?.principal ? <Navigate to={"/ui"}/> :
@@ -176,9 +171,6 @@ function Skeleton() {
                         <Route path={"/ui/Contacts/:contactId/edit"}
                                element={!currentUser?.principal ? <Navigate to={"/ui"}/> :
                                    <EditClient currentUser={currentUser}/>}/>
-                        <Route path={"/ui/Customers"}
-                               element={!currentUser?.principal ? <Navigate to={"/ui"}/> :
-                                   <Clients currentUser={currentUser}/>}/>
                         <Route path={"/ui/Documents"}
                                element={!currentUser?.principal ? <Navigate to={"/ui"}/> :
                                    <Documents currentUser={currentUser}/>}/>

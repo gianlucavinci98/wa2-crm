@@ -1,16 +1,5 @@
 import "./HomePage.css";
-import {
-    Bar,
-    BarChart,
-    CartesianGrid,
-    Line,
-    LineChart,
-    Tooltip,
-    XAxis,
-    YAxis,
-    Legend,
-    Rectangle
-} from 'recharts'
+import {Bar, BarChart, CartesianGrid, Legend, Line, LineChart, Rectangle, Tooltip, XAxis, YAxis} from 'recharts'
 import {useEffect, useState} from "react"
 import AnalyticsAPI from "../api/analytics/AnalyticsAPI.js"
 import {TopBar} from "./Skeleton.jsx";
@@ -112,32 +101,24 @@ function TimeElapsedChart() {
 
 
 function SkillsCountChart() {
-
-    const [data, setData] = useState(null)
+    const [data, setData] = useState([])
     const [load, setLoad] = useState(false)
 
     useEffect(() => {
         if (!load) {
             AnalyticsAPI.GetSkillsCount().then((result) => {
-                Object.entries(result.skillCount).forEach((key, value) => {
-                    setData(oldState => oldState.push({
-                            name: key,
-                            jobOffersNum: value
-                        })
-                    )
-                })
+                const vet = Object.entries(result.skillCount).map(e => ({
+                    name: e[0],
+                    jobOffersNum: e[1]
+                }))
 
-                for (let i = 0; i < result.length; i++) {
-                    setData(oldState => oldState.push({
-                        name: result.skillCount.key(),
-                        jobOffersNum: result.skillCount.value()
-                    }))
-                }
-
+                setData(vet)
                 setLoad(true)
             }).catch(err => console.log(err))
         }
     }, [load]);
+
+    console.log(data)
 
     return (
         <div className={"w-full flex justify-around"}>

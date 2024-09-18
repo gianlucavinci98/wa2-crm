@@ -94,6 +94,7 @@ function AddFile({currentUser, setLoad, professionalId, onClose}) {
 
         DocumentStoreAPI.InsertNewDocument(file, DocumentCategory.Curriculum, professionalId, currentUser.xsrfToken).then((res) => {
             console.log(res)
+            onClose()
             setLoad(false)
         }).catch((err) => console.log(err))
     }

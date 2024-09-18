@@ -113,6 +113,7 @@ class JobOfferController(val jobOfferService: JobOfferService) {
         @PathVariable(name = "jobOfferId", required = true) jobOfferId: Long,
         @PathVariable(name = "professionalId", required = true) professionalId: Long
     ) {
+        println("CIAO: " + jobOfferId + " - " + professionalId)
         jobOfferService.insertNewApplication(jobOfferId, professionalId)
     }
 }

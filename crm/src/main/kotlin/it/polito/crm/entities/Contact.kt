@@ -49,8 +49,8 @@ class Contact {
         t.telephoneContacts.add(this)
     }
 
-    fun toDto(): ContactDTO =
-        ContactDTO(this.contactId, this.name, this.surname, this.ssn, this.category)
+    fun toDto(professionalId: Long? = null, customerId: Long? = null): ContactDTO =
+        ContactDTO(this.contactId, this.name, this.surname, this.ssn, this.category, professionalId, customerId)
 
     fun toDetailsDto(professionalId: Long? = null, customerId: Long? = null): ContactDetailsDTO = ContactDetailsDTO(
         this.contactId,

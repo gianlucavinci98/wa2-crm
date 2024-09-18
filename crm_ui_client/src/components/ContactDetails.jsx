@@ -6,6 +6,8 @@ import {TbUserEdit} from "react-icons/tb";
 import {LuTrash2} from "react-icons/lu";
 import CustomerAPI from "../api/crm/CustomerAPI.js";
 import {IoIosArrowDown, IoIosArrowUp} from "react-icons/io";
+import "./Clients.css";
+import ProfessionalAPI from "../api/crm/ProfessionalAPI.js";
 
 function AddNoteDialog({customerId, currentUser, onClose, setLoad}) {
     const [note, setNote] = useState("")
@@ -48,7 +50,22 @@ function AddNoteDialog({customerId, currentUser, onClose, setLoad}) {
     )
 }
 
-function CustomerDetails({currentUser, customerId}) {
+function ProfessionalDetails({currentUser, professionalId, setContactLoad}) {
+    return (
+        <button className="border p-2 rounded-lg"
+                onClick={() => {
+                    ProfessionalAPI.DeleteProfessional(professionalId, currentUser.xsrfToken).then(() => {
+                            alert("Correct deleted customer profile")
+                            setContactLoad(false)
+                        }
+                    ).catch((err) => console.log(err))
+                }}>Remove customer profile
+        </button>
+    )
+}
+
+function CustomerDetails({currentUser, customerId, setContactLoad}) {
+    const navigate = useNavigate()
     const [customer, setCustomer] = useState(null)
     const [load, setLoad] = useState(false)
     const [showDialog, setShowDialog] = useState(false)
@@ -92,6 +109,18 @@ function CustomerDetails({currentUser, customerId}) {
                                 <div>No notes for this customer profile</div>
                         }
                         <button className="border p-2 rounded-lg" onClick={handleOpenDialog}>Add Note</button>
+                        <button className="border p-2 rounded-lg"
+                                onClick={() => navigate(`/ui/JobOffers/${customerId}/add`)}>Add Job Offer
+                        </button>
+                        <button className="border p-2 rounded-lg"
+                                onClick={() => {
+                                    CustomerAPI.DeleteCustomer(customerId, currentUser.xsrfToken).then(() => {
+                                            alert("Correct deleted customer profile")
+                                            setContactLoad(false)
+                                        }
+                                    ).catch((err) => console.log(err))
+                                }}>Remove customer profile
+                        </button>
                         {showDialog &&
                             <AddNoteDialog customerId={customerId} currentUser={currentUser} onClose={handleCloseDialog}
                                            setLoad={setLoad}/>}
@@ -172,11 +201,11 @@ function ContactDetails({currentUser}) {
                                 <div className="flex-1">{contactDetails.category}</div>
                             </div>
                             <div className="w-full flex flex-row">
-                                <label>Addresses: </label>
+                                <label className="flex-1">Addresses: </label>
                                 {
                                     contactDetails.addresses.length !== 0
                                         ?
-                                        <div className=" flex flex-col gap-2 border p-3 rounded-lg">
+                                        <div className="flex flex-1 flex-col gap-2 border p-3 rounded-lg">
                                             {
                                                 contactDetails.addresses.map((e) => (
                                                     <div key={e.addressId} className="">{`- ${e.address}`}</div>
@@ -184,15 +213,15 @@ function ContactDetails({currentUser}) {
                                             }
                                         </div>
                                         :
-                                        <div>No addresses for this contact</div>
+                                        <div className="flex-1">No addresses for this contact</div>
                                 }
                             </div>
                             <div className="w-full flex flex-row">
-                                <label>Emails: </label>
+                                <label className="flex-1">Emails: </label>
                                 {
                                     contactDetails.emails.length !== 0
                                         ?
-                                        <div className=" flex flex-col gap-2 border p-3 rounded-lg">
+                                        <div className=" flex flex-1 flex-col gap-2 border p-3 rounded-lg">
                                             {
                                                 contactDetails.emails.map((e) => (
                                                     <div key={e.emailId} className="">{`- ${e.emailAddress}`}</div>
@@ -200,15 +229,15 @@ function ContactDetails({currentUser}) {
                                             }
                                         </div>
                                         :
-                                        <div>No emails for this contact</div>
+                                        <div className="flex-1">No emails for this contact</div>
                                 }
                             </div>
                             <div className="w-full flex flex-row">
-                                <label>Telephones: </label>
+                                <label className="flex-1">Telephones: </label>
                                 {
                                     contactDetails.telephones.length !== 0
                                         ?
-                                        <div className=" flex flex-col gap-2 border p-3 rounded-lg">
+                                        <div className=" flex flex-1 flex-col gap-2 border p-3 rounded-lg">
                                             {
                                                 contactDetails.telephones.map((e) => (
                                                     <div key={e.telephoneId}
@@ -217,7 +246,7 @@ function ContactDetails({currentUser}) {
                                             }
                                         </div>
                                         :
-                                        <div>No telephone numbers for this contact</div>
+                                        <div className="flex-1">No telephone numbers for this contact</div>
                                 }
                             </div>
                             {
@@ -231,22 +260,25 @@ function ContactDetails({currentUser}) {
                                         <div className="w-full flex flex-row">
                                             <label className="flex-1">This contact is associated to a Professional
                                                 profile</label>
-                                            <button
-                                                className="w-full border-b-blue-400 bg-blue-200 rounded-lg p-2 h-1/2">
-                                                {
-                                                    showCustomerDetails
-                                                        ?
-                                                        <IoIosArrowDown size={20}
-                                                                        onClick={() => setShowProfessionalDetails(!showProfessionalDetails)}/>
-                                                        :
-                                                        <IoIosArrowUp size={20}
-                                                                      onClick={() => setShowProfessionalDetails(!showProfessionalDetails)}/>
-                                                }
-                                            </button>
+                                            <div className="flex-1">
+                                                <button
+                                                    className="border-b-blue-400 bg-blue-200 rounded-lg p-2 h-1/2">
+                                                    {
+                                                        showProfessionalDetails
+                                                            ?
+                                                            <IoIosArrowDown size={20}
+                                                                            onClick={() => setShowProfessionalDetails(!showProfessionalDetails)}/>
+                                                            :
+                                                            <IoIosArrowUp size={20}
+                                                                          onClick={() => setShowProfessionalDetails(!showProfessionalDetails)}/>
+                                                    }
+                                                </button>
+                                            </div>
                                         </div>
                                         {
-                                            showCustomerDetails && (
-                                                <div>ciao</div>
+                                            showProfessionalDetails && (
+                                                <ProfessionalDetails setLoad={setLoad} currentUser={currentUser}
+                                                                     professionalId={contactDetails.professionalId}/>
                                             )
                                         }
                                     </div>
@@ -254,27 +286,37 @@ function ContactDetails({currentUser}) {
                             {
                                 contactDetails.customerId === null
                                     ?
-                                    <div></div>
+                                    <button className="border p-2 rounded-lg"
+                                            onClick={() => {
+                                                CustomerAPI.InsertNewCustomer(contactId, currentUser.xsrfToken).then(() => {
+                                                        alert("Add customer profile")
+                                                        setLoad(false)
+                                                    }
+                                                ).catch((err) => console.log(err))
+                                            }}>Add customer profile</button>
                                     :
                                     <div className="w-full flex flex-col gap-2">
                                         <div className="w-full flex flex-row">
-                                            <label>This contact is associated to a Customer profile</label>
-                                            <button
-                                                className="border-b-blue-400 bg-blue-200 rounded-lg p-2 h-1/2">
-                                                {
-                                                    showCustomerDetails
-                                                        ?
-                                                        <IoIosArrowDown size={20}
-                                                                        onClick={() => setShowCustomerDetails(!showCustomerDetails)}/>
-                                                        :
-                                                        <IoIosArrowUp size={20}
-                                                                      onClick={() => setShowCustomerDetails(!showCustomerDetails)}/>
-                                                }
-                                            </button>
+                                            <label className="flex-1">This contact is associated to a Customer
+                                                profile</label>
+                                            <div className="flex-1">
+                                                <button
+                                                    className="border-b-blue-400 bg-blue-200 rounded-lg p-2 h-1/2">
+                                                    {
+                                                        showCustomerDetails
+                                                            ?
+                                                            <IoIosArrowDown size={20}
+                                                                            onClick={() => setShowCustomerDetails(!showCustomerDetails)}/>
+                                                            :
+                                                            <IoIosArrowUp size={20}
+                                                                          onClick={() => setShowCustomerDetails(!showCustomerDetails)}/>
+                                                    }
+                                                </button>
+                                            </div>
                                         </div>
                                         {
                                             showCustomerDetails && (
-                                                <CustomerDetails currentUser={currentUser}
+                                                <CustomerDetails setLoad={setLoad} currentUser={currentUser}
                                                                  customerId={contactDetails.customerId}/>
                                             )
                                         }

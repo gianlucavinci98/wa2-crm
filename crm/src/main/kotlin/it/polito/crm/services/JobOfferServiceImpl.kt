@@ -6,10 +6,7 @@ import it.polito.crm.dtos.UpdateJobOfferDTO
 import it.polito.crm.entities.ApplicationStatus
 import it.polito.crm.entities.JobOffer
 import it.polito.crm.entities.JobOfferHistory
-import it.polito.crm.repositories.CustomerRepository
-import it.polito.crm.repositories.JobOfferHistoryRepository
-import it.polito.crm.repositories.JobOfferRepository
-import it.polito.crm.repositories.ProfessionalRepository
+import it.polito.crm.repositories.*
 import it.polito.crm.utils.*
 import jakarta.persistence.EntityManager
 import jakarta.persistence.criteria.CriteriaBuilder
@@ -19,6 +16,7 @@ import jakarta.persistence.criteria.Root
 import org.hibernate.type.descriptor.jdbc.SmallIntJdbcType
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import kotlin.jvm.optionals.getOrNull
 
 @Service
 class JobOfferServiceImpl(
@@ -26,7 +24,8 @@ class JobOfferServiceImpl(
     private val jobOfferRepository: JobOfferRepository,
     private val professionalRepository: ProfessionalRepository,
     private val jobOfferHistoryRepository: JobOfferHistoryRepository,
-    private val entityManager: EntityManager
+    private val entityManager: EntityManager,
+    private val contactRepository: ContactRepository
 ) : JobOfferService {
     /* Basic operation (GET, POST, PUT, DELETE) */
     override fun getJobOfferById(jobOfferId: Long): JobOfferDTO {
@@ -140,18 +139,27 @@ class JobOfferServiceImpl(
     ) {
         val jobOffer = jobOfferRepository.findById(jobOfferId)
             .orElseThrow { JobOfferNotFoundException("Job offer with $jobOfferId not found") }
-
+println("MARIO")
+        val contact = contactRepository.findById(professionalId).orElseThrow {
+            ContactNotFoundException("Contact with $professionalId not found")
+        }
+println("LUIGI")
         if (jobOffer.status == JobOfferStatus.SelectionPhase) {
-            val professional = professionalRepository.findById(professionalId).orElseThrow {
-                ProfessionalNotFoundException("Professional with id: $professionalId not found")
-            }
+            val professional = professionalRepository.findByContact(contact).getOrNull()
+                ?: throw ProfessionalNotFoundException("Professional with id: $professionalId not found")
+println("LUCIA")
+            val jobOfferHistory = jobOffer.jobHistory
+                .filter { it.jobOfferStatus == JobOfferStatus.SelectionPhase }
+                .maxByOrNull { it.date }
+                ?: throw JobOfferProcessingException("No job history found in selection phase for job offer with id: $jobOfferId")
 
-            val jobOfferHistory = jobOffer.jobHistory.filter { it.jobOfferStatus == JobOfferStatus.SelectionPhase }
-                .maxByOrNull { it.date }!!
 
             jobOfferHistory.addJobApplication(professional)
+            println("Vaffanculo")
             jobOfferHistoryRepository.save(jobOfferHistory)
+            println("LUCIA 2")
         } else {
+            println("STO CAZZO")
             throw JobOfferProcessingException("To add an application the status of the job offer must be equal to 'Selection Phase'")
         }
     }
@@ -240,7 +248,7 @@ class JobOfferServiceImpl(
 
             // Combine all filters in OR
             cqJobOffer.where(cb.or(*predicates.toTypedArray()))
-            
+
             val query = entityManager.createQuery(cqJobOffer)
             query.firstResult = pageNumber * pageSize
             query.maxResults = pageSize

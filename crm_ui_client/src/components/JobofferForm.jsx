@@ -1,36 +1,31 @@
 import {useEffect, useState} from "react";
-import {JobOfferStatus} from "../api/crm/dto/JobOffer.ts";
+import {JobOffer, JobOfferStatus} from "../api/crm/dto/JobOffer.ts";
 import JobOfferAPI from "../api/crm/JobOfferAPI.js";
 import Icon from "./Icon.jsx";
 import {UpdateJobOffer} from "../api/crm/dto/UpdateJobOffer.ts";
 import ContactAPI from "../api/crm/ContactAPI.js";
 import {ContactFilter} from "../api/crm/filter/ContactFilter.ts";
-import {Category, Contact} from "../api/crm/dto/Contact.ts";
-import {EmploymentState, Professional} from "../api/crm/dto/Professional.ts";
-import {useParams} from "react-router-dom";
+import {Category} from "../api/crm/dto/Contact.ts";
+import {useNavigate, useParams} from "react-router-dom";
 import CustomerAPI from "../api/crm/CustomerAPI.js";
 import {FaArrowLeft} from "react-icons/fa";
-import {TbUserEdit} from "react-icons/tb";
-import {LuTrash2} from "react-icons/lu";
-import {useNavigate} from "react-router-dom";
-import {ApplicationStatus} from "../api/crm/dto/Application.js";
+import {ApplicationStatus} from "../api/crm/dto/Application.ts";
 
 function JobOfferForm({currentUser}) {
     const {customerId} = useParams()
     const {jobOfferId} = useParams()
 
     const navigate = useNavigate()
-    const [jobOffer, setJobOffer] = useState(null)
+    const [jobOffer, setJobOffer] = useState(new JobOffer(null, "", "", JobOfferStatus.Created, [], 1, null, null))
     const [jobOfferHistory, setJobOfferHistory] = useState(null)
     const [customer, setCustomer] = useState(null)
 
     const [currentSkill, setCurrentSkill] = useState("")
     const [errors, setErrors] = useState({})
     const [applicant, setApplicant] = useState({})
-    const [applicants, setApplicants] = useState([new Professional(4, [''], EmploymentState.Unemployed, 3, '', new Contact(3, 'carlo', 'mass', 'vyefwuew', Category.Professional, 4, null), null)])
     const [load, setLoad] = useState(false);
     const [note, setNote] = useState("");
-    const [professionals, setProfessionals] = useState([new Contact(2, 'mario', 'bianchi', 'vf4328f7f', Category.Professional, 5, null)])
+    const [professionals, setProfessionals] = useState([])
     const [ssn, setSsn] = useState('')
     const [ssnSearchOpen, setSsnSearchOpen] = useState(false)
     const [isSubmitting, setIsSubmitting] = useState(false)
@@ -56,8 +51,6 @@ function JobOfferForm({currentUser}) {
             }).catch((err) => {
                 console.log(err)
             })
-        } else {
-            setLoad(true)
         }
     }, [customerId, jobOfferId, load])
 
@@ -91,7 +84,8 @@ function JobOfferForm({currentUser}) {
     const onStatusNextHandler = async () => {
         try {
             let response
-            response = await JobOfferAPI.UpdateJobOffer(jobOffer.jobOfferId, new UpdateJobOffer(JobOfferStatus[jobOffer.status + 1], note, jobOffer?.selectedProfessionalId), currentUser.xsrfToken)
+
+            response = await JobOfferAPI.UpdateJobOffer(jobOffer.jobOfferId, new UpdateJobOffer(JobOfferStatus[jobOffer.status] + 1, note, jobOffer?.selectedProfessionalId), currentUser.xsrfToken)
 
             setServerResponse("Status changed successfully!")
             console.log(response)
@@ -138,9 +132,10 @@ function JobOfferForm({currentUser}) {
 
     const onApplyHandler = async () => {
         if (applicant === '') return
+        console.log(applicant)
         try {
             let response
-            response = await JobOfferAPI.InsertNewApplication(jobOffer.jobOfferId, applicant.professionalId, currentUser.xsrfToken)
+            response = await JobOfferAPI.InsertNewApplication(jobOffer.jobOfferId, applicant.contactId, currentUser.xsrfToken)
             setSsn('')
             setApplicant({})
             setServerResponse("Applicant added successfully!")
@@ -157,7 +152,7 @@ function JobOfferForm({currentUser}) {
         if (applicant === '') return
         try {
             let response
-            response = await JobOfferAPI.DeleteApplication(jobOffer.jobOfferId, applicant.professionalId, currentUser.xsrfToken)
+            response = await JobOfferAPI.DeleteApplication(jobOffer.jobOfferId, applicant.contactId, currentUser.xsrfToken)
             setApplicant({})
             setServerResponse("Applicant updated successfully!")
             console.log(response)
@@ -242,86 +237,107 @@ function JobOfferForm({currentUser}) {
         }));
     }
 
+    console.log(jobOffer)
+
     return (
         jobOfferId === undefined
             ?
-            <div className={"h-full w-full flex flex-col justify-between p-4"}>
-                <div className="w-full flex flex-row justify-center items-start">
-                    <div className="flex flex-row justify-start">
-                        <button onClick={() => navigate("/ui/Clients")}>
-                            <FaArrowLeft size={20}/>
-                        </button>
-                    </div>
-                    <div className="flex flex-1 flex-row justify-center">
-                        <h1 className="font-bold text-2xl">New Job Offer</h1>
-                    </div>
-                    <div></div>
+            !load
+                ?
+                <div className="loading-container">
+                    <svg
+                        aria-hidden="true"
+                        viewBox="0 0 100 101"
+                        fill="none"
+                        className={"loading"}
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                            fill="currentColor"/>
+                        <path
+                            d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                            fill="currentFill"/>
+                    </svg>
                 </div>
-                <form className={"flex flex-col flex-1 justify-around items-center"} onSubmit={onSubmitHandler}>
-                    <h1 className={"text-2xl font-semibold"}>Create new job offer</h1>
-                    {serverResponse && (<div className={"w-full bg-blue-100 text-center p-4"}>{serverResponse}</div>)}
-                    <div className={"flex flex-col gap-6 justify-around"}>
-                        <div className={"col-field"}>
-                            <label className={""}>Customer:</label>
-                            <input className={"flex-1"} type={"text"}
-                                   value={"" + customer.contact.name + " " + customer.contact.surname}
-                                   disabled={true}/>
+                :
+                <div className={"h-full w-full flex flex-col justify-between p-4"}>
+                    <div className="w-full flex flex-row justify-center items-start">
+                        <div className="flex flex-row justify-start">
+                            <button onClick={() => navigate("/ui/Contacts")}>
+                                <FaArrowLeft size={20}/>
+                            </button>
                         </div>
-                        <div className={"col-field"}>
-                            <div className={"h-full flex flex-col justify-between"}>
-                                <label className={errors.description ? "text-red-500" : ""}>Description:</label>
-                                <div>{jobOffer.description.length}/1000</div>
-                            </div>
-                            <textarea
-                                name={"description"}
-                                className={"h-52"}
-                                value={jobOffer.description}
-                                maxLength={1000}
-                                cols={50}
-                                required={true}
-                                placeholder="Insert description here..."
-                                onChange={onChangeHandler}/>
-
+                        <div className="flex flex-1 flex-row justify-center">
+                            <h1 className="font-bold text-2xl">New Job Offer</h1>
                         </div>
-
-                        <div className={"col-field"}>
-                            <label className={errors.requiredSkills ? "text-red-500" : ""}>Required skills:</label>
-                            <div className={"flex flex-col gap-2 flex-1"}>
-                                <div className={"flex-1 flex gap-2 items-center"}>
-                                    <input type={"text"} name={"requiredSkills"} value={currentSkill}
-                                           className={"p-2 flex-1"}
-                                           placeholder={"Insert a required skill here..."}
-                                           onChange={(e) => setCurrentSkill(e.target.value)}/>
-                                    <Icon className={"w-4 h-4 fill-blue-500"} name={"plus"} onClick={onAdd}/>
-                                </div>
-
-                                {
-                                    jobOffer.requiredSkills.map((item, index) =>
-                                        <div className={"flex items-center gap-2"}
-                                             key={index}>
-                                            <p>{item}</p>
-                                            <Icon className={"w-4 h-4 fill-red-500"} name={"cross"}
-                                                  onClick={() => onRemove(index)}/>
-                                        </div>
-                                    )
-                                }
-                            </div>
-                        </div>
-
-                        <div className={"col-field"}>
-                            <label className={errors.duration ? "text-red-500" : ""}>Duration of contract in
-                                days:</label>
-                            <input className={"flex-1"} type={"number"} name={"duration"} min={1} max={1825}
-                                   value={jobOffer.duration.toString()}
-                                   required={true} onChange={onChangeHandler}/>
-                        </div>
+                        <div></div>
                     </div>
-                    <button className={"page-button"} type="submit" onSubmit={onSubmitHandler}
-                            disabled={isSubmitting}>
-                        {isSubmitting ? "Submitting..." : "Create"}
-                    </button>
-                </form>
-            </div>
+                    <form className={"flex flex-col flex-1 justify-around items-center"} onSubmit={onSubmitHandler}>
+                        <h1 className={"text-2xl font-semibold"}>Create new job offer</h1>
+                        {serverResponse && (
+                            <div className={"w-full bg-blue-100 text-center p-4"}>{serverResponse}</div>)}
+                        <div className={"flex flex-col gap-6 justify-around"}>
+                            <div className={"col-field"}>
+                                <label className={""}>Customer:</label>
+                                <input className={"flex-1"} type={"text"}
+                                       value={"" + customer.contact.name + " " + customer.contact.surname}
+                                       disabled={true}/>
+                            </div>
+                            <div className={"col-field"}>
+                                <div className={"h-full flex flex-col justify-between"}>
+                                    <label className={errors.description ? "text-red-500" : ""}>Description:</label>
+                                    <div>{jobOffer.description.length}/1000</div>
+                                </div>
+                                <textarea
+                                    name={"description"}
+                                    className={"h-52"}
+                                    value={jobOffer.description}
+                                    maxLength={1000}
+                                    cols={50}
+                                    required={true}
+                                    placeholder="Insert description here..."
+                                    onChange={onChangeHandler}/>
+
+                            </div>
+
+                            <div className={"col-field"}>
+                                <label className={errors.requiredSkills ? "text-red-500" : ""}>Required skills:</label>
+                                <div className={"flex flex-col gap-2 flex-1"}>
+                                    <div className={"flex-1 flex gap-2 items-center"}>
+                                        <input type={"text"} name={"requiredSkills"} value={currentSkill}
+                                               className={"p-2 flex-1"}
+                                               placeholder={"Insert a required skill here..."}
+                                               onChange={(e) => setCurrentSkill(e.target.value)}/>
+                                        <Icon className={"w-4 h-4 fill-blue-500"} name={"plus"} onClick={onAdd}/>
+                                    </div>
+
+                                    {
+                                        jobOffer.requiredSkills.map((item, index) =>
+                                            <div className={"flex items-center gap-2"}
+                                                 key={index}>
+                                                <p>{item}</p>
+                                                <Icon className={"w-4 h-4 fill-red-500"} name={"cross"}
+                                                      onClick={() => onRemove(index)}/>
+                                            </div>
+                                        )
+                                    }
+                                </div>
+                            </div>
+
+                            <div className={"col-field"}>
+                                <label className={errors.duration ? "text-red-500" : ""}>Duration of contract in
+                                    days:</label>
+                                <input className={"flex-1"} type={"number"} name={"duration"} min={1} max={1825}
+                                       value={jobOffer.duration.toString()}
+                                       required={true} onChange={onChangeHandler}/>
+                            </div>
+                        </div>
+                        <button className={"page-button"} type="submit" onSubmit={onSubmitHandler}
+                                disabled={isSubmitting}>
+                            {isSubmitting ? "Submitting..." : "Create"}
+                        </button>
+                    </form>
+                </div>
             :
             !load
                 ?
@@ -419,55 +435,59 @@ function JobOfferForm({currentUser}) {
                                 <button className={"page-button"}
                                         onClick={onDetailSaveHandler}>{isSubmitting ? "Submitting..." : "Save"}</button>
                             </div>
-                            {jobOffer.status === JobOfferStatus.SelectionPhase &&
+                            {JobOfferStatus[jobOffer?.status] === JobOfferStatus.SelectionPhase &&
                                 <div className={"col-field items-start w-full"}>
                                     <label className={""}>Applicant:</label>
                                     <div className={'relative flex flex-col gap-2'}>
                                         <input
                                             type={"text"}
-                                            className={"flex-1 font-normal"}
+                                            className={"flex-1 font-normal border"}
                                             value={ssn}
                                             onChange={(e) => {
                                                 fetchProfessionals()
                                                 setSsnSearchOpen(true)
                                                 setSsn(e.target.value)
-                                            }
-                                            }
-                                        >
-                                        </input>
-                                        {applicants.map((item, index) =>
-                                            // TO-DO
-                                            <div key={index} className={"flex gap-2 items-center"}>
-                                                <label className={"font-semibold"}>
-                                                    {item.contact.ssn}
-                                                </label>
-                                                <label className={"font-normal"}>
-                                                    {ApplicationStatus[jobOfferHistory.find((it) => it.jobOfferStatus === jobOffer.status).candidates.find((can) => can.professionalId === item.professionalId).status]}
-                                                </label>
-                                                <Icon name={'cross'} className={"w-4 h-4 fill-red-500"} onClick={() => {
-                                                    setApplicant(item)
-                                                    onRemoveHandler()
-                                                }
-                                                }></Icon>
-                                            </div>
-                                        )
+                                            }}
+                                        />
+                                        {
+                                            jobOfferHistory.find((it) => it.jobOfferStatus === JobOfferStatus[jobOffer.status])?.candidates.map((item, index) =>
+                                                // TO-DO
+                                                <div key={index} className={"flex gap-2 items-center"}>
+                                                    <label className={"font-semibold"}>
+                                                        {item.contact.ssn}
+                                                    </label>
+                                                    <label className={"font-normal"}>
+                                                        {ApplicationStatus[jobOfferHistory.find((it) => it.jobOfferStatus === JobOfferStatus[jobOffer.status])?.candidates.find((can) => can.professionalId === item.professionalId).status]}
+                                                    </label>
+                                                    <Icon name={'cross'} className={"w-4 h-4 fill-red-500"}
+                                                          onClick={() => {
+                                                              setApplicant(item)
+                                                              onRemoveHandler()
+                                                          }}></Icon>
+                                                </div>
+                                            )
                                         }
-                                        {ssnSearchOpen ? <div
-                                            className="absolute z-10 w-44 bg-white border border-gray-300 rounded-md shadow-lg mt-6 h-24 overflow-auto">
-                                            <div className="p-2 w-fit">
-                                                {professionals.map((professional, index) => (
-                                                    <div key={index}>
-                                                        <label className="flex items-center gap-2">
-                                                    <span onClick={() => {
-                                                        setSsnSearchOpen(false)
-                                                        setSsn(professional.ssn)
-                                                        setApplicant(professional)
-                                                    }}>{professional.ssn}</span>
-                                                        </label>
+                                        {
+                                            ssnSearchOpen
+                                                ?
+                                                <div
+                                                    className="absolute z-10 w-44 bg-white border border-gray-300 rounded-md shadow-lg mt-6 h-24 overflow-auto">
+                                                    <div className="p-2 w-fit">
+                                                        {
+                                                            professionals.map((professional, index) => (
+                                                                <div key={index}>
+                                                                    <label className="flex items-center gap-2">
+                                                                        <span onClick={() => {
+                                                                            setSsnSearchOpen(false)
+                                                                            setSsn(professional.ssn)
+                                                                            setApplicant(professional)
+                                                                        }}>{professional.ssn}</span>
+                                                                    </label>
+                                                                </div>
+                                                            ))
+                                                        }
                                                     </div>
-                                                ))}
-                                            </div>
-                                        </div> : ""}
+                                                </div> : ""}
                                     </div>
                                     <button className={"page-button"}
                                             onClick={onApplyHandler}>{isSubmitting ? "Submitting..." : "Apply"}</button>
@@ -476,7 +496,7 @@ function JobOfferForm({currentUser}) {
                                 <label className={""}>Status:</label>
                                 <label
                                     className={"flex-1 font-normal"}>
-                                    {JobOfferStatus[jobOffer.status]}
+                                    {jobOffer.status}
                                 </label>
                                 {(jobOffer.status !== JobOfferStatus.Done && jobOffer.status !== JobOfferStatus.Aborted) ?
                                     <>

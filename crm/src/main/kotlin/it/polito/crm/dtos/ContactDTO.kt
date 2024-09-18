@@ -15,5 +15,7 @@ data class ContactDTO(
     val surname: String,
     @field:NotBlank(message = "Invalid ssn, it must not be blank")
     val ssn: String,
-    val category: Category?
+    val category: Category?,
+    val professionalId: Long?,
+    val customerId: Long?
 )
