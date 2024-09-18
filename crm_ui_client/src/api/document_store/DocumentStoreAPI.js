@@ -37,8 +37,8 @@ async function GetDocumentMetadataById(documentMetadataId) {
     }
 }
 
-async function GetDocumentDataById(documentMetadataId) {
-    const response = await fetch(
+async function GetDocumentDataById(documentMetadataId, filename) {
+    /*const response = await fetch(
         buildUrl(`${URL_DOCUMENT_STORE}/${documentMetadataId}/data`, null, null), {
             method: 'GET',
             credentials: 'include'
@@ -49,7 +49,14 @@ async function GetDocumentDataById(documentMetadataId) {
         return obj
     } else {
         throw obj
-    }
+    }*/
+
+    const link = document.createElement('a');
+    link.href = `${URL_DOCUMENT_STORE}/${documentMetadataId}/data`;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
 }
 
 async function InsertNewDocument(file, category, id, xsrfToken) {

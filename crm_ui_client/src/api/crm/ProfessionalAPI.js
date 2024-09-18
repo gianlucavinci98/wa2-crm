@@ -6,16 +6,17 @@ const URL_PROFESSIONALS = 'http://localhost:8082/crm/api/professionals'
 
 
 async function GetProfessionals(filter, pagination) {
+    console.log(pagination)
     const response = await fetch(
-        buildUrl(URL_PROFESSIONALS, null, pagination), {
+        buildUrl(URL_PROFESSIONALS, filter, pagination), {
             method: 'GET',
             credentials: 'include',
             headers: {'Content-Type': 'application/json'},
         })
+
     const obj = await response.json()
 
     if (response.ok) {
-        console.log(obj)
         return obj.map((e) => Professional.fromJsonObject(e))
     } else {
         throw obj
@@ -29,6 +30,7 @@ async function GetProfessionalById(professionalId) {
             credentials: 'include',
             headers: {'Content-Type': 'application/json'},
         })
+
     const obj = await response.json()
 
     if (response.ok) {

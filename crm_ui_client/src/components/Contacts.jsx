@@ -17,6 +17,15 @@ function Filter({setLoad, setFilter}) {
         setLoad(false);
     };
 
+    const handleReset = (event) => {
+        event.preventDefault();
+
+        setCheck(-1);
+        setLocalFilter(new ContactFilter(null, null, null, null, null, null, null));
+        setFilter(null);
+        setLoad(false);
+    }
+
     const handleFilterChange = (event) => {
         event.preventDefault();
 
@@ -146,16 +155,7 @@ function Filter({setLoad, setFilter}) {
                 <button
                     type="reset"
                     className="border p-2 rounded-lg"
-                    onClick={(event) => {
-                        event.preventDefault();
-
-                        setCheck(-1);
-                        setLocalFilter(new ContactFilter(null, null, null, null, null, null, null));
-                        setFilter(new ContactFilter(null, null, null, null, null, null, null));
-                        setLoad(false);
-                    }}
-                >
-                    Reset
+                    onClick={handleReset}>Reset
                 </button>
             </div>
         </form>

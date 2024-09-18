@@ -29,6 +29,9 @@ class ProfessionalServiceImpl(
         location: String?,
         employmentState: EmploymentState?
     ): List<ProfessionalDTO> {
+        println(skills)
+        println(location)
+        println(employmentState)
         val cb: CriteriaBuilder = entityManager.criteriaBuilder
 
         val cqProfessional: CriteriaQuery<Professional> = cb.createQuery(Professional::class.java)
@@ -56,7 +59,9 @@ class ProfessionalServiceImpl(
         query.firstResult = pageNumber * pageSize
         query.maxResults = pageSize
 
-        return query.resultList.map { it.toDto() }
+        val res = query.resultList.map { it.toDto() }
+        println(res)
+        return res
     }
 
     override fun getProfessionalById(professionalId: Long): ProfessionalDTO {
