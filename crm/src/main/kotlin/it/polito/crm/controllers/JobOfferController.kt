@@ -65,14 +65,16 @@ class JobOfferController(val jobOfferService: JobOfferService) {
         jobOfferService.deleteJobOfferById(jobOfferId)
     }
 
-    @PostMapping("/{jobOfferId}/{professionalId}")
+    @GetMapping("/{jobOfferId}/history")
+    @PreAuthorize("hasAnyRole('ROLE_operator', 'ROLE_guest', 'ROLE_manager')")
+    fun getJobOfferHistory(@PathVariable("jobOfferId", required = true) jobOfferId: Long): List<JobOfferHistoryDTO> {
+        return jobOfferService.getJobOfferHistory(jobOfferId)
+    }
+
+    @GetMapping("/{jobOfferId}/value")
     @PreAuthorize("hasAnyRole('ROLE_operator', 'ROLE_manager', 'ROLE_recruiter')")
-    @ResponseStatus(HttpStatus.CREATED)
-    fun insertNewApplication(
-        @PathVariable(name = "jobOfferId", required = true) jobOfferId: Long,
-        @PathVariable(name = "professionalId", required = true) professionalId: Long
-    ) {
-        jobOfferService.insertNewApplication(jobOfferId, professionalId)
+    fun getJobOfferValue(@PathVariable("jobOfferId", required = true) jobOfferId: Long): Float {
+        return jobOfferService.getJobOfferValue(jobOfferId)
     }
 
     @DeleteMapping("/{jobOfferId}/{professionalId}")
@@ -83,12 +85,6 @@ class JobOfferController(val jobOfferService: JobOfferService) {
         @PathVariable(name = "professionalId", required = true) professionalId: Long
     ) {
         jobOfferService.deleteApplication(jobOfferId, professionalId)
-    }
-
-    @GetMapping("/{jobOfferId}/value")
-    @PreAuthorize("hasAnyRole('ROLE_operator', 'ROLE_manager', 'ROLE_recruiter')")
-    fun getJobOfferValue(@PathVariable("jobOfferId", required = true) jobOfferId: Long): Float {
-        return jobOfferService.getJobOfferValue(jobOfferId)
     }
 
     @GetMapping("", "/")
@@ -110,9 +106,13 @@ class JobOfferController(val jobOfferService: JobOfferService) {
         return jobOfferService.getAllJobOffers(pageNumber, pageSize, category, id, status ?: emptyList())
     }
 
-    @GetMapping("/{jobOfferId}/history")
-    @PreAuthorize("hasAnyRole('ROLE_operator', 'ROLE_guest', 'ROLE_manager')")
-    fun getJobOfferHistory(@PathVariable("jobOfferId", required = true) jobOfferId: Long): List<JobOfferHistoryDTO> {
-        return jobOfferService.getJobOfferHistory(jobOfferId)
+    @PostMapping("/{jobOfferId}/applications/{professionalId}")
+    @PreAuthorize("hasAnyRole('ROLE_operator', 'ROLE_manager', 'ROLE_recruiter')")
+    @ResponseStatus(HttpStatus.CREATED)
+    fun insertNewApplication(
+        @PathVariable(name = "jobOfferId", required = true) jobOfferId: Long,
+        @PathVariable(name = "professionalId", required = true) professionalId: Long
+    ) {
+        jobOfferService.insertNewApplication(jobOfferId, professionalId)
     }
 }
