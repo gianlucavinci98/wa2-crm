@@ -167,13 +167,13 @@ function JobOffersTable({currentUser}) {
                         </thead>
                         <tbody>
                         {jobOffers.map((jobOffer) => (
-                            <tr key={jobOffer.selectedProfessionalId} className={'hover:bg-stone-100 cursor-pointer'} onClick={() => navigate(`/ui/JobOffers/${jobOffer.jobOfferId}`)}>
-                                <td>{jobOffer.description}</td>
-                                <td>{Array.from(jobOffer.requiredSkills).join(', ')}</td>
-                                <td>{jobOffer.duration} days</td>
-                                <td>{jobOffer.value}</td>
-                                <td>{JobOfferStatus[jobOffer.status]}</td>
-                                <td>{jobOffer.details}</td>
+                            <tr key={jobOffer.selectedProfessionalId} className={'hover:bg-stone-100 cursor-pointer'} >
+                                <td onClick={() => navigate(`/ui/JobOffers/${jobOffer.jobOfferId}`)}>{jobOffer.description}</td>
+                                <td onClick={() => navigate(`/ui/JobOffers/${jobOffer.jobOfferId}`)}>{Array.from(jobOffer.requiredSkills).join(', ')}</td>
+                                <td onClick={() => navigate(`/ui/JobOffers/${jobOffer.jobOfferId}`)}>{jobOffer.duration} days</td>
+                                <td onClick={() => navigate(`/ui/JobOffers/${jobOffer.jobOfferId}`)}>{jobOffer.value}</td>
+                                <td onClick={() => navigate(`/ui/JobOffers/${jobOffer.jobOfferId}`)}>{JobOfferStatus[jobOffer.status]}</td>
+                                <td onClick={() => navigate(`/ui/JobOffers/${jobOffer.jobOfferId}`)}>{jobOffer.details}</td>
                                 <td>
                                     <div className={"flex gap-2 items-center"}>
                                         <Icon name={"pencil"} className={'w-4 h-4 fill-blue-500'} onClick={() => {
