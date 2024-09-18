@@ -181,9 +181,7 @@ function Skeleton() {
                                element={!currentUser?.principal ? <Navigate to={"/ui"}/> :
                                    <EditProfessional currentUser={currentUser}/>}/>
                         <Route path={"/ui/JobOffers"}
-                               element={!currentUser?.principal ? <Navigate to={"/ui"}/> :
-                                   <JobOffersTable currentUser={currentUser}/>}/>
-                               element={!currentUser?.principal ? <Navigate to={"/ui"}/> : <JobOffersTable currentUser={currentUser}/>}/>
+                               element={!currentUser?.principal ? <Navigate to={"/ui"}/> :  <JobOffersTable currentUser={currentUser}/>}/>
                         <Route path={"/ui/JobOffers/:jobOfferId"}
                                element={!currentUser?.principal ? <Navigate to={"/ui"}/> : <SingleJobOffer currentUser={currentUser}/>}/>
                         <Route path={"/ui/JobOffers/add"}
