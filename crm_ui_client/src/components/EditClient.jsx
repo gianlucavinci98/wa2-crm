@@ -110,19 +110,6 @@ function EditClient({currentUser}) {
         }
     };
 
-    /*const handleAddNote = async () => {
-        try {
-            if (newNote && customer.customerId) {
-                await CustomerAPI.InsertNewNoteToCustomer(customer.customerId, newNote, currentUser.xsrfToken);
-                alert("Note added successfully!");
-                setNewNote("");
-            }
-        } catch (e) {
-            setError("Failed to add note");
-            console.error(e);
-        }
-    };*/
-
     if (loading) return <h2
         className={"flex-1 flex justify-center text-center items-center text-2xl font-semibold text-blue-500"}>Loading...</h2>;
     if (error) return <h2

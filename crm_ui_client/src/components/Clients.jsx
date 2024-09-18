@@ -139,7 +139,11 @@ function ClientsTable({currentUser}) {
                                 {/*        <div key={email.id}>email.email</div>*/}
                                 {/*    ))}*/}
                                 {/*</td> /!* Emails *!/*/}
-                                <td>{Array.from(customer.notes).join(', ')}</td>
+                                <td className="truncate">
+                                    {
+                                        customer.notes.join(', ')
+                                    }
+                                </td>
                                 <td className={""}>
                                     {!(currentUser?.roles.filter(it => it.includes('recruiter')).length > 0 && location.pathname.includes("Customers")) &&
                                         <div className={"flex gap-2 items-center"}>
